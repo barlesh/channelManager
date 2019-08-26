@@ -5,10 +5,11 @@ import { agentsProtocolEvents } from "./../protocol";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connection";
 import { agentsUtils } from "./agentHandlers";
+import { protoAction } from "./protocol.actions";
 
 export interface IConnectionManager {
-  config(io, channelName, agentsManager: AgentsManager);
-  registerConnectionEvent(cid: connectionID, protocolAction: any);
+  config(io, channelName);
+  registerConnectionEvent(cid: connectionID, protocolAction: protoAction);
   getConnection(cid: connectionID);
   on(eventType: string, func: Function);
   emit(eventType: string, data);
@@ -16,7 +17,7 @@ export interface IConnectionManager {
 
 export enum connectionManagerEvents {
   remoteConnected = "remote-connected",
-  remoteDisconnected = "remote-disconnected",
+  remoteDisconnected = "remote-disconnected"
   // agentRegistered = "agent-registration-event",
   // agentUnRegisterd = "agent-un-register-event"
 }
@@ -51,6 +52,7 @@ export class ConnectionManager implements IConnectionManager {
       throw new Error("parameters not supplied");
     }
 
+    this._connectionsList = new Map();
     this._socketServer = io;
     this._channel = channelName;
 
@@ -117,16 +119,13 @@ export class ConnectionManager implements IConnectionManager {
   // }
 
   /* API for registering connection events using connection ID */
-  registerConnectionEvent(
-    connID: connectionID,
-    protocolAction
-  ) {
+  registerConnectionEvent(connID: connectionID, protocolAction) {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
         `could not find connection with connection id: ${connID}`
-      );
-    }
+        );
+      }
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
 }

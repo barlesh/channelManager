@@ -2,7 +2,7 @@ import * as uid from "uuid";
 import { AgentsManager } from "./agents-manager";
 import { connectionID } from "../../../connections-manager/src/models";
 import { agentID } from "../types/types";
-import { protoAction } from "../../../resource-manager/src/resources/protocol.validation";
+import { protoAction } from "./../../../connections-manager/src/connections/protocol.actions";
 
 export interface IAgent {
   _id;
@@ -30,18 +30,14 @@ export class Agent implements IAgent {
   }
 
   registerProtocolEvent(protocolAction: protoAction) {
-
-    this._manager.registerConnectionEvent(
-      this._connectionID,
-      protocolAction
-    );
+    this._manager.registerConnectionEvent(this._connectionID, protocolAction);
   }
 
-  unregisterProtocolEvent(protocolAction: protoAction){
+  unregisterProtocolEvent(protocolAction: protoAction) {
     // TODO
   }
 
-  getID(){
+  getID() {
     return this._id;
   }
 }

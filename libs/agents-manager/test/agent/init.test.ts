@@ -1,6 +1,5 @@
 import "jest";
 import { Agent, AgentsManager } from "./../../src/agents";
-import { ResourceManager } from "../../../resource-manager/src/resources";
 import { ConnectionManager } from "../../../connections-manager/src/connections";
 import { mockResourceManager } from "../mock/resource-manager.mock";
 describe("Demo", () => {
