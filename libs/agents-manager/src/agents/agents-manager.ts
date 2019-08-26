@@ -12,7 +12,7 @@ import { IResourceManager } from "./../../../resource-manager/src/resources";
 import { connectionID } from "../../../connections-manager/src/models";
 import { protocolActions, protoAction } from "../../../connections-manager/src/connections/protocol.actions";
 
-interface IManager {
+export interface IAgentsManager {
   add(data): agentID;
   get(id): any;
   registerResource(agentID: agentID, resouceID: resourceID);
@@ -24,12 +24,12 @@ interface IManager {
   );
 }
 
-export class AgentsManager implements IManager {
+export class AgentsManager implements IAgentsManager {
   agentsList: Map<agentID, Agent>;
   resourcesManager: IResourceManager;
   connectionManager: IConnectionManager;
 
-  constructor(connectionMnager, resourceManager) {
+  constructor(connectionMnager: IConnectionManager, resourceManager: IResourceManager) {
     this.agentsList = new Map();
     this.connectionManager = connectionMnager;
     this.resourcesManager = resourceManager;
