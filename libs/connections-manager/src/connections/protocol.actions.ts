@@ -37,7 +37,6 @@ export namespace protocolActions {
   }
 
   export function validate_protocol_obj(protocol: protoAction[]): boolean {
-    console.log("validation: protocol: ", protocol);
     if (!(protocol instanceof Array)) {
       throw new TypeError();
     }

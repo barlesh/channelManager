@@ -10,8 +10,13 @@ libs/resource-manager/node_modules
 
 master/lib
 master/node_modules
+master/test/lib
+master/test/
+
 agent/lib
 agent/node_modules
 
 master_old/lib
 master_old/node_modules
+
+tmp

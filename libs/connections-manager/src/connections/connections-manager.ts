@@ -1,14 +1,12 @@
-import { AgentsManager } from "./../../../agents-manager/src/agents";
 import { EventEmitter } from "events";
 import { connectionID } from "./../models";
-import { agentsProtocolEvents } from "./../protocol";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connection";
 import { agentsUtils } from "./agentHandlers";
 import { protoAction } from "./protocol.actions";
 
 export interface IConnectionManager {
-  config(io, channelName);
+  config(io, channelName: string);
   registerConnectionEvent(cid: connectionID, protocolAction: protoAction);
   getConnection(cid: connectionID);
   on(eventType: string, func: Function);
@@ -18,8 +16,6 @@ export interface IConnectionManager {
 export enum connectionManagerEvents {
   remoteConnected = "remote-connected",
   remoteDisconnected = "remote-disconnected"
-  // agentRegistered = "agent-registration-event",
-  // agentUnRegisterd = "agent-un-register-event"
 }
 
 export class ConnectionManager implements IConnectionManager {
@@ -57,10 +53,13 @@ export class ConnectionManager implements IConnectionManager {
     this._channel = channelName;
 
     const nsp = `/${channelName}`;
+    console.info(`Connection manager listening on nsp: ${nsp}`);
     this._nsp = this._socketServer.of(nsp);
     if (!this._nsp) {
       throw new Error("could not set namespace");
     }
+
+    console.log("connection manager, socket: ", this._nsp);
 
     // register handler for the connection event
     this._nsp.on("connection", this.connectionHandler);
@@ -124,8 +123,8 @@ export class ConnectionManager implements IConnectionManager {
     if (!connection) {
       throw new Error(
         `could not find connection with connection id: ${connID}`
-        );
-      }
+      );
+    }
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
 }
