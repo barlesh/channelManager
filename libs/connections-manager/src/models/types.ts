@@ -1,0 +1,1 @@
+export type connectionID = string;

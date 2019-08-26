@@ -1,0 +1,104 @@
+import { resourceID } from "../types/types";
+import { agentID } from "../../../agents-manager/src/types/types";
+import { Agent } from "../../../agents-manager/src/agents";
+import { protocolActions, protoAction } from "./protocol.validation";
+
+export interface IResourceManager {
+  add(data, id);
+  get(id): any;
+  size(): number;
+  attachResourceToAgent(agent: Agent, resourceID: resourceID);
+  detachResourceFromAgent(agent: Agent, resourceID: resourceID);
+}
+
+export class ResourceManager implements IResourceManager {
+  resourcesList: Map<resourceID, any>;
+  resourceAgentMap: Map<resourceID, agentID>;
+  _protocol: protoAction[];
+
+  constructor(protocol: protoAction[]) {
+    if (protocolActions.validate_protocol_obj(protocol)) {
+      // need validation
+      this._protocol = protocol;
+    } else{
+      throw new Error("protocol of bad type")
+    }
+    this.resourcesList = new Map();
+    this.resourceAgentMap = new Map();
+  }
+  add(resource, id) {
+    // validate resource - TODO
+    if (!id) {
+      throw new Error("no unique id supply");
+    }
+    this.resourcesList.set(id, resource);
+  }
+
+  get(id: resourceID) {
+    return this.resourcesList.get(id);
+  }
+
+  size(): number {
+    return this.resourcesList.size;
+  }
+
+  remove(id: resourceID) {
+    this.resourcesList.delete(id);
+  }
+
+  getResourcesList() {
+    return this.resourcesList;
+  }
+
+  attachResourceToAgent(agent: Agent, resourceID: resourceID) {
+    if (!this.resourcesList.get(resourceID)) {
+      throw new Error("resource not exist.");
+    }
+    if (!agent) {
+      console.error("no agent supplied");
+      throw new Error("no agent supplied");
+    }
+
+    const agentID = agent.getID();
+    if (!agentID) {
+      console.error("no agent id supplied in object: ", agent);
+      throw new Error("no agent id supplied in agent object");
+    }
+    this.resourceAgentMap.set(resourceID, agentID);
+
+    // register resource protocol events TODO
+    this.registerProtocolEvents(agent);
+  }
+
+  detachResourceFromAgent(agent: Agent, resouceID: resourceID) {
+    const agentID = agent.getID();
+    console.log(`detaching agent with agentID: ${agentID}`);
+    this.resourceAgentMap.delete(resouceID);
+
+    this.unregisterProtocolEvents(agent);
+  }
+
+  registerProtocolEvents(agent: Agent) {
+    try {
+      this._protocol.forEach(protocolAction => {
+        agent.registerProtocolEvent(protocolAction);
+      });
+    } catch (err) {
+      console.warn("could not load protocol. error: ", err);
+      return;
+    }
+  }
+
+  unregisterProtocolEvents(agent: Agent){
+    try {
+      this._protocol.forEach(protocolElement => {
+        agent.unregisterProtocolEvent(protocolElement);
+      });
+    } catch (err) {
+      console.warn("could not load protocol. error: ", err);
+      return;
+    }
+  }
+
+  myResourceHandler() {}
+}
