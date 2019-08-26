@@ -59,14 +59,17 @@ export class ConnectionManager implements IConnectionManager {
       throw new Error("could not set namespace");
     }
 
-    console.log("connection manager, socket: ", this._nsp);
+    // console.log("connection manager, socket: ", this._nsp);
 
     // register handler for the connection event
-    this._nsp.on("connection", this.connectionHandler);
-    this._nsp.on("reconnect", this.reconnectionHandler);
+    const bindedconnectionHandler = this.connectionHandler.bind(null, this);
+    const bindedreconnectionHandler = this.reconnectionHandler.bind(null, this);
+    this._nsp.on("connection", bindedconnectionHandler);
+    this._nsp.on("reconnect", bindedreconnectionHandler);
   }
 
-  connectionHandler(connectionSocket) {
+  connectionHandler(manager, connectionSocket) {
+    console.log("connection handler: this:", this)
     let connID;
     console.log(`Received connection. socket: ${connectionSocket}`);
     connID = connectionUtils.extractConnectionID(connectionSocket);
@@ -74,9 +77,9 @@ export class ConnectionManager implements IConnectionManager {
       console.warn("received connection without unique connection ID.");
       return;
     }
-    this.setConnection(connID, connectionSocket);
+    manager.setConnection(connID, connectionSocket);
     // notify other manager that new remote connection exist, and publish its ID
-    this.emit(connectionManagerEvents.remoteConnected, connID);
+    manager.emit(connectionManagerEvents.remoteConnected, connID);
   }
 
   reconnectionHandler(connectionSocket) {
