@@ -7,3 +7,9 @@ libs/connection-manager/node_modules
 
 libs/resource-manager/lib
 libs/resource-manager/node_modules
+
+master/lib
+master/node_modules
+
+agent/lib
+agent/node_modules
