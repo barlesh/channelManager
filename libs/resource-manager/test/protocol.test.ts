@@ -1,5 +1,5 @@
 import "jest";
-import { protocolActions } from "./../src/resources/protocol.validation";
+import { protocolActions } from "./../../connections-manager/src/connections/protocol.actions";
 
 describe("Demo", () => {
   let protocol = [];

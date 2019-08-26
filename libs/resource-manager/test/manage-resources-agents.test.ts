@@ -4,7 +4,7 @@ import { ResourceManager } from "../src/resources";
 import { Agent, AgentsManager } from "./../../agents-manager/src/agents";
 import { MockConnectionManager } from "./mock/connectionMnager.mock";
 import { agentID } from "../../agents-manager/src/types/types";
-import { protocolActions } from "../src/resources/protocol.validation";
+import { protocolActions } from "./../../connections-manager/src/connections/protocol.actions";
 
 describe("Demo", () => {
   let agent: Agent;

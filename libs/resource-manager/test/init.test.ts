@@ -1,6 +1,8 @@
 import "jest";
 import { ResourceManager } from "../src/resources";
-import { protocolActions } from "../src/resources/protocol.validation";
+import { protocolActions } from "./../../connections-manager/src/connections/protocol.actions";
+
+
 describe("Demo", () => {
   test("create resource manager > test 1", () => {
     const event = "samlpe event";

@@ -1,9 +1,8 @@
 import "jest";
 import { Agent, AgentsManager } from "../../src/agents";
 import * as uid from "uuid";
-import { ResourceManager } from "../../../resource-manager/src/resources";
 import { ConnectionManager } from "../../../connections-manager/src/connections";
-import { protocolActions } from "../../../resource-manager/src/resources/protocol.validation";
+import { protocolActions } from "./../../../connections-manager/src/connections/protocol.actions";
 import { mockResourceManager } from "../mock/resource-manager.mock";
 
 describe("Demo", () => {

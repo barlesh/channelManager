@@ -10,7 +10,7 @@ import { resourceProtocolEvents } from "../protocol/resource.protocol";
 import { resourceID } from "../../../resource-manager/src/types/types";
 import { IResourceManager } from "./../../../resource-manager/src/resources";
 import { connectionID } from "../../../connections-manager/src/models";
-import { protocolActions, protoAction } from "./../../../resource-manager/src/resources/protocol.validation";
+import { protocolActions, protoAction } from "../../../connections-manager/src/connections/protocol.actions";
 
 interface IManager {
   add(data): agentID;

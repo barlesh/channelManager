@@ -1,9 +1,9 @@
 import "jest";
 import { ResourceManager } from "../src/resources";
-import { resourceID } from "./../src/types/types";
 
 import * as uid from "uuid";
-import { protocolActions } from "../src/resources/protocol.validation";
+import { protocolActions } from "./../../connections-manager/src/connections/protocol.actions";
+
 
 describe("Demo", () => {
   const event = "samlpe event";

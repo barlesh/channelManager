@@ -1,7 +1,7 @@
 import { resourceID } from "../types/types";
 import { agentID } from "../../../agents-manager/src/types/types";
 import { Agent } from "../../../agents-manager/src/agents";
-import { protocolActions, protoAction } from "./protocol.validation";
+import { protocolActions, protoAction } from "../../../connections-manager/src/connections/protocol.actions";
 
 export interface IResourceManager {
   add(data, id);
