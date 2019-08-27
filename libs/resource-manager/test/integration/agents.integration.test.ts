@@ -3,7 +3,6 @@ import * as uid from "uuid";
 import { ResourceManager } from "../../src/resources";
 import { Agent, AgentsManager } from "../../../agents-manager/src/agents";
 import { ioMock, mockConnection } from "./../../../connections-manager/test/mock";
-import { mockAgentsManager } from "../../../agents-manager/test/mock";
 import { agentID } from "../../../agents-manager/src/types/types";
 import { protocolActions } from "../../../connections-manager/src/connections/protocol.actions";
 import { ConnectionManager } from "../../../connections-manager/src/connections";

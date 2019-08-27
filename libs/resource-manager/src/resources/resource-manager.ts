@@ -5,10 +5,11 @@ import {
   protocolActions,
   protoAction
 } from "../../../connections-manager/src/connections/protocol.actions";
+import * as uid from "uuid";
 
 export interface IResourceManager {
   resourceAgentMap: Map<resourceID, agentID>;
-  add(data, id);
+  add(data, id?);
   get(id): any;
   size(): number;
   attachResourceToAgent(agent: Agent, resourceID: resourceID);
@@ -30,12 +31,17 @@ export class ResourceManager implements IResourceManager {
     this.resourcesList = new Map();
     this.resourceAgentMap = new Map();
   }
-  add(resource, id) {
+  add(resource, id?) {
     // validate resource - TODO
     if (!id) {
-      throw new Error("no unique id supply");
+      id = uid();
+    }
+    if (this.resourcesList.get(id)) {
+      console.warn("resource with the same id exist. abort");
+      throw new Error("resource id already exist");
     }
     this.resourcesList.set(id, resource);
+    return id;
   }
 
   get(id: resourceID) {

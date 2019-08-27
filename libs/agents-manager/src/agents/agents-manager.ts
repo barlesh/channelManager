@@ -123,7 +123,7 @@ export class AgentsManager implements IAgentsManager {
 
   registerAgentToResourcesEvents(connectionID, agentID) {
     let Action: protoAction;
-    const bindedattachAgentToResource = this.registerResource.bind(
+    const bindedregisterResource = this.registerResource.bind(
       this,
       agentID
     );
@@ -131,7 +131,7 @@ export class AgentsManager implements IAgentsManager {
 
     Action = protocolActions.createProtocolAction(
       resourceProtocolEvents.resourceAttach,
-      bindedattachAgentToResource,
+      bindedregisterResource,
       undefined,
       undefined
     );
@@ -180,6 +180,7 @@ export class AgentsManager implements IAgentsManager {
     }
     const agent = this.agentsList.get(agentID);
     this.resourcesManager.attachResourceToAgent(agent, resouceID);
+    return true;
   }
 
   unregisterSource(agentID: agentID, resouceID: resourceID) {
@@ -189,6 +190,7 @@ export class AgentsManager implements IAgentsManager {
     }
     const agent = this.agentsList.get(agentID);
     this.resourcesManager.detachResourceFromAgent(agent, resouceID);
+    return true;
   }
 
   registerConnectionEvent(conID: connectionID, protocolAction) {
