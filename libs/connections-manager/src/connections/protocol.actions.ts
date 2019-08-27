@@ -44,6 +44,21 @@ export namespace protocolActions {
     }
   }
 
+  export function createProtocolActionRequest(event: string){
+    try {
+      const action: protoActionRequest = {
+        event,
+      };
+      return action;
+    } catch (err) {
+      console.error(
+        `failed to create protocol action for args: event: ${event}`
+      );
+      console.error(err);
+      return undefined;
+    }
+  }
+
   export function validateProtocolActionResponse(protocol: protoActionResponse[]): boolean {
     if (!(protocol instanceof Array)) {
       throw new TypeError();

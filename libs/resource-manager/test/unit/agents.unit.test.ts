@@ -23,14 +23,17 @@ describe("Demo", () => {
     };
     const retTrue = "sample return true event";
     const retFalse = "sample return false event";
-    let protocol = [];
-    const Action = protocolActions.createProtocolActionResponse(
+    let protocolResponses = [];
+    let protocolRequests = [];
+    const ActionResponse = protocolActions.createProtocolActionResponse(
       event,
       e,
       retTrue,
       retFalse
     );
-    protocol.push(Action);
+    const ActionRequest = protocolActions.createProtocolActionRequest(event);
+    protocolResponses.push(ActionResponse);
+    protocolRequests.push(ActionRequest);
 
   beforeEach((done) => {
     const agentObj = {
@@ -41,7 +44,8 @@ describe("Demo", () => {
       name: "rname"
     };
 
-    myResourceManager = new ResourceManager(protocol, [{event: "hi"}]);
+    // myResourceManager = new ResourceManager(protocol, [{event: "hi"}]);
+    myResourceManager = new ResourceManager(protocolResponses, protocolRequests);
     myConnectionManager = mockConnectionManager;
     myAgentManager = mockAgentsManager;
     myAgentManager.resourcesManager = myResourceManager;

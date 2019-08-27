@@ -1,2 +1,4 @@
-export * from "./protocol.lib";
-export * from "./actions.lib";
+export * from "./requests/actions.lib";
+export * from "./requests/protocol.lib";
+export * from "./responses/actions.lib";
+export * from "./responses/protocol.lib";

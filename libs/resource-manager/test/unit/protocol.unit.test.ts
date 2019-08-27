@@ -1,7 +1,6 @@
 import "jest";
 import { protocolActions } from "../../../connections-manager/src/connections/protocol.actions";
-import { exampleProtocol } from "../lib/protocol.lib";
-import { exampleAction } from "../lib/actions.lib";
+import { exampleActionResponse } from "../lib/";
 
 describe("Demo", () => {
   let protocol = [];
@@ -10,9 +9,9 @@ describe("Demo", () => {
     // clone action and push it to a new rotocol array before each test
     protocol = [];
     const clonedAction = {}
-    const actionKeys = Object.keys(exampleAction);
+    const actionKeys = Object.keys(exampleActionResponse);
     actionKeys.forEach((key)=>{
-      const value = exampleAction[key]
+      const value = exampleActionResponse[key]
       clonedAction[key] = value;
     })
     protocol.push(clonedAction);
