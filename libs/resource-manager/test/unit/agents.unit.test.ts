@@ -51,14 +51,14 @@ describe("Demo", () => {
     done();
   });
 
-  test("attach agent to resource > test 1", () => {
-    const spy = jest.spyOn(myResourceManager, "registerProtocolEvents");
-    myResourceManager.attachResourceToAgent(agent, uidSource);
-    expect(myResourceManager.resourceAgentMap.get(uidSource)).toEqual(
-      agent.getID()
-    );
-    expect(spy).toHaveBeenCalled();
-  });
+  // test("attach agent to resource > test 1", () => {
+  //   const spy = jest.spyOn(myResourceManager, "registerProtocolEvents");
+  //   myResourceManager.attachResourceToAgent(agent, uidSource);
+  //   expect(myResourceManager.resourceAgentMap.get(uidSource)).toEqual(
+  //     agent.getID()
+  //   );
+  //   expect(spy).toHaveBeenCalled();
+  // });
 
   test("detach agent from resource > test 2", () => {
     const spy = jest.spyOn(myResourceManager, "unregisterProtocolEvents");

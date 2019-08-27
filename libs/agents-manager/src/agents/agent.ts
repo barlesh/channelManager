@@ -34,6 +34,9 @@ export class Agent implements IAgent {
   }
 
   unregisterProtocolEvent(protocolAction: protoAction) {
+    console.warn(
+      `need to un register action ${protocolAction} from agent ${this}, Currently not supported`
+    );
     // TODO
   }
 

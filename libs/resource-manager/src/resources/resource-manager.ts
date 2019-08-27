@@ -9,7 +9,7 @@ import * as uid from "uuid";
 
 export interface IResourceManager {
   resourceAgentMap: Map<resourceID, agentID>;
-  add(data, id?);
+  add(data, id?): resourceID;
   get(id): any;
   size(): number;
   attachResourceToAgent(agent: Agent, resourceID: resourceID);
@@ -31,7 +31,7 @@ export class ResourceManager implements IResourceManager {
     this.resourcesList = new Map();
     this.resourceAgentMap = new Map();
   }
-  add(resource, id?) {
+  add(resource, id?): resourceID {
     // validate resource - TODO
     if (!id) {
       id = uid();
@@ -74,16 +74,21 @@ export class ResourceManager implements IResourceManager {
       console.error("no agent id supplied in object: ", agent);
       throw new Error("no agent id supplied in agent object");
     }
+    console.info(
+      `attaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
+    );
     this.resourceAgentMap.set(resourceID, agentID);
 
     // register resource protocol events TODO
     this.registerProtocolEvents(agent);
   }
 
-  detachResourceFromAgent(agent: Agent, resouceID: resourceID) {
+  detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
     const agentID = agent.getID();
-    console.log(`detaching agent with agentID: ${agentID}`);
-    this.resourceAgentMap.delete(resouceID);
+    console.info(
+      `detaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
+    );
+    this.resourceAgentMap.delete(resourceID);
 
     this.unregisterProtocolEvents(agent);
   }

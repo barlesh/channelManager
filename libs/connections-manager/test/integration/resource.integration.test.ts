@@ -49,22 +49,27 @@ describe("Demo", () => {
     const rid = myResourceMnager.add(resource);
     conn.generateEvent(resourceProtocolEvents.resourceAttach, rid);
 
+    // check that the resource is attached to a real agent
+    const agentID = myResourceMnager.resourceAgentMap.get(rid);
+    expect(myAgentMnager.agentsList.get(agentID)).toBeDefined()
     // expect the registration of the resource manager protocol actions in connection
     expect(conn.listeners()).toContain(exampleProtocol[0].event);
 
     
   });
 
-  // test("receive connection & disconnection request > test 1", () => {
-  //   myConnectionMnager._nsp.generateEvent("connection");
-  //   expect(myConnectionMnager._connectionsList.size).toBe(1);
-  //   spy = jest.spyOn(myConnectionMnager, "emit");
-  //   myConnectionMnager._nsp.generateEvent("disconnect");
-  //   expect(myConnectionMnager._connectionsList.size).toBe(0);
-  //   expect(spy).toHaveBeenCalled();
-  //   expect(spy).toHaveBeenCalledWith(
-  //     connectionManagerEvents.remoteDisconnected,
-  //     mockConnection.id
-  //   );
-  // });
+  test("receive resource dettach request > test 1", () => {
+    const resource = {
+      name: "rname"
+    }
+
+    const rid = myResourceMnager.add(resource);
+    conn.generateEvent(resourceProtocolEvents.resourceAttach, rid);
+    conn.generateEvent(resourceProtocolEvents.resouceDetach, rid);
+
+    // expect the registration of the resource manager protocol actions in connection
+    const agentID = myResourceMnager.resourceAgentMap.get(rid);
+    expect(agentID).not.toBeDefined()
+    
+  });
 });

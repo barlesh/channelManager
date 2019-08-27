@@ -87,8 +87,6 @@ export class AgentsManager implements IAgentsManager {
     */
     let Action: protoAction;
     const f = this.agentRegistration
-    // console.log("this:", this)
-    // console.log(`bind ${f} with conn ID ${connectionID}`);
     const bindedagentRegistration = this.agentRegistration.bind(
       this,
       connectionID
@@ -99,12 +97,8 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    console.log(
-      `registering action ${Action} to connection with ID: ${connectionID}`
-    );
     this.connectionManager.registerConnectionEvent(connectionID, Action);
 
-    console.log(`bind agentUnRegistration with conn ID ${connectionID}`);
     const bindedagentUnRegistration = this.agentUnRegistration.bind(
       this,
       connectionID
@@ -114,9 +108,6 @@ export class AgentsManager implements IAgentsManager {
       bindedagentUnRegistration,
       undefined,
       undefined
-    );
-    console.log(
-      `registering action ${Action} to connection with ID: ${connectionID}`
     );
     this.connectionManager.registerConnectionEvent(connectionID, Action);
   }

@@ -36,7 +36,6 @@ describe("Demo", () => {
     expect(manager.getResourcesList().size).toEqual(1);
 
     const receivedResource = manager.get(uidS);
-    console.log(receivedResource);
     expect(receivedResource).toEqual(resource);
   });
 

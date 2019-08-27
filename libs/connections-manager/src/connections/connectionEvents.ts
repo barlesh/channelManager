@@ -5,11 +5,9 @@ export namespace connectionEvents {
     const retTrue = protocolAction.response_truthy;
     const retFalse = protocolAction.response_falsly;
 
-    console.log(`registering event: ${event} with handler: ${exec} to connection: ${connection}`)
     const cb = async data => {
       let ans = false;
       try {
-        console.log("executing method: ", exec)
         ans = await exec(data);
       } catch (err) {
         ans = false;

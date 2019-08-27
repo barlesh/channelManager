@@ -47,19 +47,19 @@ describe("Demo", () => {
     expect(conn.listeners()).toContain(resourceProtocolEvents.resourceAttach);
     expect(conn.listeners()).toContain(resourceProtocolEvents.resourceAttach);
 
-    
+
   });
 
-  // test("receive connection & disconnection request > test 1", () => {
-  //   myConnectionMnager._nsp.generateEvent("connection");
-  //   expect(myConnectionMnager._connectionsList.size).toBe(1);
-  //   spy = jest.spyOn(myConnectionMnager, "emit");
-  //   myConnectionMnager._nsp.generateEvent("disconnect");
-  //   expect(myConnectionMnager._connectionsList.size).toBe(0);
-  //   expect(spy).toHaveBeenCalled();
-  //   expect(spy).toHaveBeenCalledWith(
-  //     connectionManagerEvents.remoteDisconnected,
-  //     mockConnection.id
-  //   );
-  // });
+  test("receive connection & disconnection request > test 1", () => {
+    myConnectionMnager._nsp.generateEvent("connection");
+    expect(myConnectionMnager._connectionsList.size).toBe(1);
+    spy = jest.spyOn(myConnectionMnager, "emit");
+    myConnectionMnager._nsp.generateEvent("disconnect");
+    expect(myConnectionMnager._connectionsList.size).toBe(0);
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(
+      connectionManagerEvents.remoteDisconnected,
+      mockConnection.id
+    );
+  });
 });
