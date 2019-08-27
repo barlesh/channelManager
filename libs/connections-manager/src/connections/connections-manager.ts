@@ -7,7 +7,8 @@ import { connectionManagerEvents } from "./connections-server";
 
 export interface IConnectionManager {
   config(any);
-  listenToConnectionEvent(cid: connectionID, protocolAction: protoAction);
+  subscribeToConnectionEvent(cid: connectionID, protocolAction: protoAction);
+  publishConnectionEvent(cid: connectionID, protocolAction: protoAction, data);
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
   on(eventType: string, func: Function);
@@ -67,7 +68,7 @@ export abstract class ConnectionManager implements IConnectionManager {
     manager.setConnection(connID, connectionSocket);
   }
 
-  disconnectionHandler(manager: ConnectionManager, connectionSocket){
+  disconnectionHandler(manager: ConnectionManager, connectionSocket) {
     let connID;
     connID = connectionUtils.extractConnectionID(connectionSocket);
     if (!connID) {
@@ -78,8 +79,8 @@ export abstract class ConnectionManager implements IConnectionManager {
     manager.destroyConnection(connID);
   }
 
-  /* API for registering connection events using connection ID */
-  listenToConnectionEvent(connID: connectionID, protocolAction) {
+  /* API for registering (subscribing to) connection events using connection ID */
+  subscribeToConnectionEvent(connID: connectionID, protocolAction) {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
@@ -89,5 +90,14 @@ export abstract class ConnectionManager implements IConnectionManager {
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
 
-  
+  /* API for sending (publishing to) connection events using connection ID */
+  publishConnectionEvent(connID: connectionID, protocolAction, data) {
+    const connection = this.getConnection(connID);
+    if (!connection) {
+      throw new Error(
+        `could not find connection with connection id: ${connID}`
+      );
+    }
+    connectionEvents.sendConnectionEvent(connection, protocolAction, data);
+  }
 }

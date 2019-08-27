@@ -29,4 +29,13 @@ export namespace connectionEvents {
     };
     connection.on(event, cb);
   }
+
+  export function sendConnectionEvent(connection, protocolAction, data){
+    if(!connection){
+      console.warn("no connection supplied. cannot send event");
+    }
+
+    const event = protocolAction.event;
+    connection.emit(event, data)
+  }
 }

@@ -3,10 +3,13 @@ import { connectionID } from "./../../src/models/";
 const map = new Map();
 export const mockConnectionManager = {
   _connectionsList: map,
-  config: (io, name) => {},
+  config: (conf: any) => {},
 
   getConnection: cid => {
     return map.get(cid);
+  },
+  setConnection: (cid, connection) => {
+    map.set(cid, connection);
   },
 
   listenToConnectionEvent: (conID, protocolAction) => {
@@ -22,7 +25,6 @@ export const mockConnectionManager = {
 
   emit: (event, data?) => {},
 
-  setConnection: (cid, connection) => {
-      map.set(cid, connection);
-  }
+  subscribeToConnectionEvent: () => {},
+  publishConnectionEvent: () => {}
 };

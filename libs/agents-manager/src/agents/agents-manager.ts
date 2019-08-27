@@ -22,9 +22,9 @@ export interface IAgentsManager {
   getAgentConnection(agentID: agentID);
   registerConnectionEvent(
     conID: connectionID,
-    event: string,
-    handler: Function
+    action: protoAction
   );
+  publishEvent(conID: connectionID, protocolAction, data);
 }
 
 export class AgentsManager implements IAgentsManager {
@@ -97,7 +97,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.listenToConnectionEvent(connectionID, Action);
+    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
 
     const bindedagentUnRegistration = this.agentUnRegistration.bind(
       this,
@@ -109,7 +109,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.listenToConnectionEvent(connectionID, Action);
+    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
   }
 
   registerAgentToResourcesEvents(connectionID, agentID) {
@@ -126,7 +126,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.listenToConnectionEvent(connectionID, Action);
+    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
 
     Action = protocolActions.createProtocolAction(
       resourceProtocolEvents.resouceDetach,
@@ -134,7 +134,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.listenToConnectionEvent(connectionID, Action);
+    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
   }
 
   getAgentConnection(connectionID) {
@@ -185,6 +185,10 @@ export class AgentsManager implements IAgentsManager {
   }
 
   registerConnectionEvent(conID: connectionID, protocolAction) {
-    this.connectionManager.listenToConnectionEvent(conID, protocolAction);
+    this.connectionManager.subscribeToConnectionEvent(conID, protocolAction);
+  }
+
+  publishEvent(conID: connectionID, protocolAction, data){
+    this.connectionManager.publishConnectionEvent(conID, protocolAction, data);
   }
 }

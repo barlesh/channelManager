@@ -1,5 +1,5 @@
 import * as uid from "uuid";
-import { AgentsManager } from "./agents-manager";
+import { AgentsManager, IAgentsManager } from "./agents-manager";
 import { connectionID } from "../../../connections-manager/src/models";
 import { agentID } from "../types/types";
 import { protoAction } from "./../../../connections-manager/src/connections/protocol.actions";
@@ -16,9 +16,9 @@ export interface IAgent {
 export class Agent implements IAgent {
   _id;
   _connectionID: connectionID;
-  _manager: AgentsManager;
+  _manager: IAgentsManager;
 
-  constructor(agentObj, agentManager: AgentsManager) {
+  constructor(agentObj, agentManager: IAgentsManager) {
     try {
       this._id = agentObj.agentID || uid();
     } catch (err) {
@@ -38,6 +38,10 @@ export class Agent implements IAgent {
       `need to un register action ${protocolAction} from agent ${this}, Currently not supported`
     );
     // TODO
+  }
+
+  publishEvent(protocolAction: protoAction, data){
+    this._manager.publishEvent(this._connectionID, protocolAction, data);
   }
 
   getID() {

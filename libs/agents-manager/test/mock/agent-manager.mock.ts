@@ -31,5 +31,8 @@ export const mockAgentsManager = {
   remove: id => {},
   getAgentsList: (): Map<string, Agent> => {
     return agentMap;
+  },
+  publishEvent: (connID, action, data) => {
+
   }
 };

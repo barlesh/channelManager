@@ -116,5 +116,11 @@ export class ResourceManager implements IResourceManager {
     }
   }
 
+  publishEvent(resourceID: resourceID, event: string){
+    const agentID = this.resourceAgentMap.get(resourceID);
+    
+
+  }
+
   myResourceHandler() {}
 }
