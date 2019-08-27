@@ -10,6 +10,7 @@ import { agentsProtocolEvents } from "../../src/protocol";
 import { resourceProtocolEvents } from "../../../agents-manager/src/protocol/resource.protocol";
 import { ResourceManager } from "../../../resource-manager/src/resources";
 import { exampleProtocol } from "../../../resource-manager/test/lib";
+import { ConnectionServer } from "../../src/connections/connections-server";
 let serverIO;
 const channelName = channelSockets.testSocketPath;
 let myResourceMnager: ResourceManager, myAgentMnager: AgentsManager, myConnectionMnager;
@@ -26,7 +27,7 @@ describe("Demo", () => {
     // connection attampt
     // agent registration
     myResourceMnager = new ResourceManager(exampleProtocol);
-    myConnectionMnager = new ConnectionManager();
+    myConnectionMnager = new ConnectionServer();
     myConnectionMnager.config(serverIO, channelName);
     myAgentMnager = new AgentsManager(myConnectionMnager, myResourceMnager);
     const agentObj = {

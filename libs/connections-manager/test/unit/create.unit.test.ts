@@ -1,5 +1,5 @@
 import "jest";
-import { ConnectionManager } from "../../src/connections";
+import { ConnectionServer } from "../../src/connections/connections-server";
 
 
 describe("Demo", () => {
@@ -8,7 +8,7 @@ describe("Demo", () => {
   });
 
   test("create connection manager > test 1", () => {
-    const connectionMnager = new ConnectionManager();
+    const connectionMnager = new ConnectionServer();
     expect(connectionMnager._nsp).not.toBeDefined();
   });
 

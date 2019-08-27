@@ -9,6 +9,7 @@ import { ioMock } from "../mock/io.mock";
 import { mockResourceManager } from "./../../../resource-manager/test/mock";
 import { mockAgentsManager } from "./../../../agents-manager/test/mock";
 import { mockConnection } from "../mock";
+import { ConnectionServer } from "../../src/connections/connections-server";
 let serverIO;
 const channelName = channelSockets.testSocketPath;
 let myResourceMnager, myAgentMnager, myConnectionMnager;
@@ -23,7 +24,7 @@ describe("Demo", () => {
   beforeEach(() => {
     myResourceMnager = mockResourceManager;
     myAgentMnager = mockAgentsManager;
-    myConnectionMnager = new ConnectionManager();
+    myConnectionMnager = new ConnectionServer();
     myConnectionMnager.config(serverIO, channelName);
   });
 

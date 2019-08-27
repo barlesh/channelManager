@@ -9,8 +9,8 @@ let myConnectionMnager: ConnectionManager, myAgentMnager;
 const channelName = channelSockets.testSocketPath;
 
 import { mockConnection } from "../mock/connection.mock";
-import { protocolActions } from "../../src/connections/protocol.actions";
 import { ioMock } from "../mock/io.mock";
+import { ConnectionServer } from "../../src/connections/connections-server";
 
 describe("Demo", () => {
   let spy;
@@ -21,7 +21,7 @@ describe("Demo", () => {
   });
 
   beforeEach(() => {
-    myConnectionMnager = new ConnectionManager();
+    myConnectionMnager = new ConnectionServer();
     myConnectionMnager.config(serverIO, channelName);
   });
 

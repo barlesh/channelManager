@@ -12,6 +12,7 @@ import { mockConnection } from "../mock";
 import { AgentsManager } from "../../../agents-manager/src/agents";
 import { agentsProtocolEvents } from "../../src/protocol";
 import { resourceProtocolEvents } from "../../../agents-manager/src/protocol/resource.protocol";
+import { ConnectionServer } from "../../src/connections/connections-server";
 let serverIO;
 const channelName = channelSockets.testSocketPath;
 let myResourceMnager, myAgentMnager: AgentsManager, myConnectionMnager;
@@ -25,7 +26,7 @@ describe("Demo", () => {
 
   beforeEach(() => {
     myResourceMnager = mockResourceManager;
-    myConnectionMnager = new ConnectionManager();
+    myConnectionMnager = new ConnectionServer();
     myConnectionMnager.config(serverIO, channelName);
     myAgentMnager = new AgentsManager(myConnectionMnager, myResourceMnager);
   });
