@@ -17,6 +17,7 @@ export interface IResourceManager {
   size(): number;
   attachResourceToAgent(agent: Agent, resourceID: resourceID);
   detachResourceFromAgent(agent: Agent, resourceID: resourceID);
+  publishEvent(resourceID: resourceID, event: string, data);
 }
 
 export class ResourceManager implements IResourceManager {
@@ -120,8 +121,10 @@ export class ResourceManager implements IResourceManager {
     }
   }
 
-  publishEvent(resourceID: resourceID, event: string){
-    const agentID = this.resourceAgentMap.get(resourceID);
+  publishEvent(resourceID: resourceID, event: string, data){
+    const agent = this.resourceAgentMap.get(resourceID);
+    const action = this._protocolRequest.get(event);
+    agent.publishEvent(action, data);
 
 
   }

@@ -2,7 +2,7 @@ import * as uid from "uuid";
 import { AgentsManager, IAgentsManager } from "./agents-manager";
 import { connectionID } from "../../../connections-manager/src/models";
 import { agentID } from "../types/types";
-import { protoActionResponse } from "./../../../connections-manager/src/connections/protocol.actions";
+import { protoActionResponse, protoActionRequest } from "./../../../connections-manager/src/connections/protocol.actions";
 
 export interface IAgent {
   _id;
@@ -40,7 +40,7 @@ export class Agent implements IAgent {
     // TODO
   }
 
-  publishEvent(protocolAction: protoActionResponse, data){
+  publishEvent(protocolAction: protoActionRequest, data){
     this._manager.publishEvent(this._connectionID, protocolAction, data);
   }
 
