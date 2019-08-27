@@ -25,7 +25,7 @@ describe("Demo", () => {
     myResourceMnager = mockResourceManager;
     myAgentMnager = mockAgentsManager;
     myConnectionMnager = new ConnectionServer();
-    myConnectionMnager.config(serverIO, channelName);
+    myConnectionMnager.config({io: serverIO, channel: channelName});
   });
 
   afterEach(() => {

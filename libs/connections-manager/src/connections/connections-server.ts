@@ -23,7 +23,9 @@ export class ConnectionServer extends ConnectionManager {
     }
   }
 
-  config(io, channelName) {
+  config(conf) {
+    const io = conf["io"];
+    const channelName = conf["channel"];
     if (!io || !channelName) {
       throw new Error("parameters not supplied");
     }

@@ -27,7 +27,7 @@ describe("Demo", () => {
   beforeEach(() => {
     myResourceMnager = mockResourceManager;
     myConnectionMnager = new ConnectionServer();
-    myConnectionMnager.config(serverIO, channelName);
+    myConnectionMnager.config({io: serverIO, channel: channelName});
     myAgentMnager = new AgentsManager(myConnectionMnager, myResourceMnager);
   });
 

@@ -17,11 +17,11 @@ describe("Demo", () => {
   beforeEach(() => {});
 
   test("config connection manager > test 1", () => {
-    const channelName = channelSockets.testSocketPath;
+    const channel = channelSockets.testSocketPath;
     const myConnectionMnager = new ConnectionServer();
-    myConnectionMnager.config(io, channelName);
+    myConnectionMnager.config({io, channel});
     expect(myConnectionMnager._socketServer).toEqual(io);
-    expect(myConnectionMnager._channel).toEqual(channelName);
+    expect(myConnectionMnager._channel).toEqual(channel);
     expect(myConnectionMnager._nsp).toBeDefined();
   });
 });

@@ -28,7 +28,7 @@ describe("Demo", () => {
     // agent registration
     myResourceMnager = new ResourceManager(exampleProtocol);
     myConnectionMnager = new ConnectionServer();
-    myConnectionMnager.config(serverIO, channelName);
+    myConnectionMnager.config({io: serverIO, channel: channelName});
     myAgentMnager = new AgentsManager(myConnectionMnager, myResourceMnager);
     const agentObj = {
       name: "aname"

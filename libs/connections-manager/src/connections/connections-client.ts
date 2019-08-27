@@ -26,14 +26,21 @@ export class ConnectionClient extends ConnectionManager {
     this.setConnection(connID, this._nsp);
   }
 
-  config(io, channelName) {
-    if (!io || !channelName) {
+  config(conf) {
+    const io = conf["io"];
+    const channelName = conf["channel"];
+    const serverAddr = conf["address"];
+    const serverPort = conf["port"];
+
+    if (!io || !channelName || !serverAddr || !serverPort) {
       throw new Error("parameters not supplied");
     }
 
     this._connectionsList = new Map();
     this._socketServer = io;
     this._channel = channelName;
+    this._serverAddr = serverAddr;
+    this._serverPort = serverPort;
 
     this.connect();
     this.registerToListenToRemoteConnections();

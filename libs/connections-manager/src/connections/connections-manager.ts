@@ -5,7 +5,7 @@ import { connectionUtils } from "./connectionUtils";
 import { protoAction } from "./protocol.actions";
 
 export interface IConnectionManager {
-  config(io, channelName: string);
+  config(any);
   registerConnectionEvent(cid: connectionID, protocolAction: protoAction);
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
@@ -35,7 +35,7 @@ export abstract class ConnectionManager implements IConnectionManager {
     this.eve.emit(eventType, data);
   }
 
-  abstract config(io, channelName);
+  abstract config(conf: any);
 
   // getters & setters
   setConnection(cid: connectionID, connection) {
