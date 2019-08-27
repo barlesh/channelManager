@@ -3,10 +3,11 @@ import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connectionUtils";
 import { protoAction } from "./protocol.actions";
+import { connectionManagerEvents } from "./connections-server";
 
 export interface IConnectionManager {
   config(any);
-  registerConnectionEvent(cid: connectionID, protocolAction: protoAction);
+  listenToConnectionEvent(cid: connectionID, protocolAction: protoAction);
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
   on(eventType: string, func: Function);
@@ -14,10 +15,10 @@ export interface IConnectionManager {
   _connectionsList: Map<connectionID, any>;
 }
 
-export enum connectionManagerEvents {
-  remoteConnected = "remote-connected",
-  remoteDisconnected = "remote-disconnected"
-}
+// export enum connectionManagerEvents {
+//   remoteConnected = "remote-connected",
+//   remoteDisconnected = "remote-disconnected"
+// }
 
 export abstract class ConnectionManager implements IConnectionManager {
   _nsp;
@@ -78,7 +79,7 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   /* API for registering connection events using connection ID */
-  registerConnectionEvent(connID: connectionID, protocolAction) {
+  listenToConnectionEvent(connID: connectionID, protocolAction) {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
@@ -87,4 +88,6 @@ export abstract class ConnectionManager implements IConnectionManager {
     }
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
+
+  
 }

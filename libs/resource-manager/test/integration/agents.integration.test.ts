@@ -5,7 +5,7 @@ import { Agent, AgentsManager } from "../../../agents-manager/src/agents";
 import { ioMock, mockConnection } from "./../../../connections-manager/test/mock";
 import { agentID } from "../../../agents-manager/src/types/types";
 import { protocolActions } from "../../../connections-manager/src/connections/protocol.actions";
-import { ConnectionManager } from "../../../connections-manager/src/connections";
+import { ConnectionManager, ConnectionServer } from "../../../connections-manager/src/connections";
 
 describe("Demo", () => {
   let agent: Agent;
@@ -43,8 +43,8 @@ describe("Demo", () => {
     };
 
     myResourceManager = new ResourceManager(protocol);
-    myConnectionManager = new ConnectionManager();
-    myConnectionManager.config(ioMock, cname);
+    myConnectionManager = new ConnectionServer();
+    myConnectionManager.config({io: ioMock, channel: cname});
     // incoming connection
     myConnectionManager.connectionHandler(myConnectionManager, mockConnection)
     myAgentManager = new AgentsManager(myConnectionManager, myResourceManager);

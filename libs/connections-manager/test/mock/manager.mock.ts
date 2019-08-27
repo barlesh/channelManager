@@ -9,7 +9,7 @@ export const mockConnectionManager = {
     return map.get(cid);
   },
 
-  registerConnectionEvent: (conID, protocolAction) => {
+  listenToConnectionEvent: (conID, protocolAction) => {
     const connection = map.get(conID);
     const event = protocolAction.event;
     const handler = protocolAction.exec;

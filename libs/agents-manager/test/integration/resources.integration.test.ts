@@ -2,7 +2,8 @@ import "jest";
 import { AgentsManager } from "../../src/agents";
 import {
   ConnectionManager,
-  IConnectionManager
+  IConnectionManager,
+  ConnectionServer
 } from "../../../connections-manager/src/connections";
 import { protocolActions } from "../../../connections-manager/src/connections/protocol.actions";
 import * as uid from "uuid";
@@ -14,10 +15,10 @@ import { agentID } from "../../src/types/types";
 import { ioMock, mockConnection } from "../../../connections-manager/test/mock";
 
 describe("Demo", () => {
-  let myConnectionManager: IConnectionManager;
+  let myConnectionManager;
   let agentID: agentID;
   let myAgentsManager: AgentsManager;
-  let myResourceManager: IResourceManager;
+  let myResourceManager;
   let event;
   const cname = "test";
   const cid = "a";
@@ -43,8 +44,8 @@ describe("Demo", () => {
     );
     protocol.push(Action);
 
-    myConnectionManager = new ConnectionManager();
-    myConnectionManager.config(ioMock, cname);
+    myConnectionManager = new ConnectionServer();
+    myConnectionManager.config({io: ioMock, channel: cname});
     myResourceManager = new ResourceManager(protocol);
     myAgentsManager = new AgentsManager(myConnectionManager, myResourceManager);
     agentID = myAgentsManager.add(agentObj);

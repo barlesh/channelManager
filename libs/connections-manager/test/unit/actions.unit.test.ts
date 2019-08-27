@@ -39,7 +39,7 @@ describe("Demo", () => {
 
     spy = jest.spyOn(connection, "on");
     // const spyOfEmit = jest.spyOn(connection, "emit");
-    myConnectionMnager.registerConnectionEvent(cid, Action);
+    myConnectionMnager.listenToConnectionEvent(cid, Action);
     expect(spy).toHaveBeenCalled();
     // expect(spy).toHaveBeenCalledWith(event);
   });
@@ -51,7 +51,7 @@ describe("Demo", () => {
     const Action = exampleAction;
 
     spy = jest.spyOn(Action, "exec");
-    myConnectionMnager.registerConnectionEvent(cid, Action);
+    myConnectionMnager.listenToConnectionEvent(cid, Action);
     connection.generateEvent(Action.event);
     expect(spy).toHaveBeenCalled();
   });

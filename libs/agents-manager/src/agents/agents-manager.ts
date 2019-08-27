@@ -97,7 +97,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.registerConnectionEvent(connectionID, Action);
+    this.connectionManager.listenToConnectionEvent(connectionID, Action);
 
     const bindedagentUnRegistration = this.agentUnRegistration.bind(
       this,
@@ -109,7 +109,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.registerConnectionEvent(connectionID, Action);
+    this.connectionManager.listenToConnectionEvent(connectionID, Action);
   }
 
   registerAgentToResourcesEvents(connectionID, agentID) {
@@ -126,7 +126,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.registerConnectionEvent(connectionID, Action);
+    this.connectionManager.listenToConnectionEvent(connectionID, Action);
 
     Action = protocolActions.createProtocolAction(
       resourceProtocolEvents.resouceDetach,
@@ -134,7 +134,7 @@ export class AgentsManager implements IAgentsManager {
       undefined,
       undefined
     );
-    this.connectionManager.registerConnectionEvent(connectionID, Action);
+    this.connectionManager.listenToConnectionEvent(connectionID, Action);
   }
 
   getAgentConnection(connectionID) {
@@ -185,6 +185,6 @@ export class AgentsManager implements IAgentsManager {
   }
 
   registerConnectionEvent(conID: connectionID, protocolAction) {
-    this.connectionManager.registerConnectionEvent(conID, protocolAction);
+    this.connectionManager.listenToConnectionEvent(conID, protocolAction);
   }
 }
