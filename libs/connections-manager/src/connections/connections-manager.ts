@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
-import { connectionUtils } from "./connection";
+import { connectionUtils } from "./connectionUtils";
 import { agentsUtils } from "./agentHandlers";
 import { protoAction } from "./protocol.actions";
 
@@ -9,6 +9,7 @@ export interface IConnectionManager {
   config(io, channelName: string);
   registerConnectionEvent(cid: connectionID, protocolAction: protoAction);
   getConnection(cid: connectionID);
+  setConnection(cid: connectionID, connection/*: IConnection*/);
   on(eventType: string, func: Function);
   emit(eventType: string, data);
 }
@@ -62,21 +63,20 @@ export class ConnectionManager implements IConnectionManager {
     // console.log("connection manager, socket: ", this._nsp);
 
     // register handler for the connection event
-    const bindedconnectionHandler = this.connectionHandler.bind(null, this);
-    const bindedreconnectionHandler = this.reconnectionHandler.bind(null, this);
+    const bindedconnectionHandler = this.connectionHandler.bind(this._nsp, this);
+    const bindedreconnectionHandler = this.reconnectionHandler.bind(this._nsp, this);
     this._nsp.on("connection", bindedconnectionHandler);
     this._nsp.on("reconnect", bindedreconnectionHandler);
   }
 
   connectionHandler(manager, connectionSocket) {
-    console.log("connection handler: this:", this)
     let connID;
-    console.log(`Received connection. socket: ${connectionSocket}`);
     connID = connectionUtils.extractConnectionID(connectionSocket);
     if (!connID) {
       console.warn("received connection without unique connection ID.");
       return;
     }
+    console.info(`Received connection. socket ID: ${connID}`);
     manager.setConnection(connID, connectionSocket);
     // notify other manager that new remote connection exist, and publish its ID
     manager.emit(connectionManagerEvents.remoteConnected, connID);
@@ -86,39 +86,6 @@ export class ConnectionManager implements IConnectionManager {
     //TODO
     //   this._connectionsList.delete()
   }
-
-  /* Agent registration LOGIC */
-  agentRegistrationHandler(connection, data) {
-    const d = agentsUtils.agentRegistrationValidation(connection, data);
-    // this.eve.emit(connectionManagerEvents.agentRegistered, d);
-  }
-
-  /* Agent unregistration LOGIC */
-  agentUnRegistrationHandler(connection, data) {
-    const d = agentsUtils.agentUnRegistrationValidation(connection, data);
-    // this.eve.emit(connectionManagerEvents.agentUnRegisterd, d);
-  }
-
-  // /* Class's LOGIC.  */
-  // registerAgentHandlers(connection) {
-  //   // bind specific socket to the handlers
-  //   const bindedagentRegistrationHandler = this.agentRegistrationHandler.bind(
-  //     this,
-  //     connection
-  //   );
-  //   const bindedagentUnRegistrationHandler = this.agentRegistrationHandler.bind(
-  //     this,
-  //     connection
-  //   );
-  //   connection.on(
-  //     agentsProtocolEvents.agentRegister,
-  //     bindedagentRegistrationHandler
-  //   );
-  //   connection.on(
-  //     agentsProtocolEvents.agentUnRegister,
-  //     bindedagentUnRegistrationHandler
-  //   );
-  // }
 
   /* API for registering connection events using connection ID */
   registerConnectionEvent(connID: connectionID, protocolAction) {

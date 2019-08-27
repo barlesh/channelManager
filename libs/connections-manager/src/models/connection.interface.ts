@@ -3,4 +3,5 @@ export interface IConnection {
   id;
   on(eve: string, handler: any);
   emit(eve: string, data?: any);
+  listeners();
 }

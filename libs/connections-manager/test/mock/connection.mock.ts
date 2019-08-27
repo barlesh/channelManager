@@ -16,5 +16,9 @@ export const mockConnection = {
     if (h) {
       const ans = await h();
     }
+  },
+
+  listeners: () => {
+    return Array.from(eventsMap.keys());
   }
 };

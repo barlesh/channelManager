@@ -1,9 +1,13 @@
 import { resourceID } from "../types/types";
 import { agentID } from "../../../agents-manager/src/types/types";
 import { Agent } from "../../../agents-manager/src/agents";
-import { protocolActions, protoAction } from "../../../connections-manager/src/connections/protocol.actions";
+import {
+  protocolActions,
+  protoAction
+} from "../../../connections-manager/src/connections/protocol.actions";
 
 export interface IResourceManager {
+  resourceAgentMap: Map<resourceID, agentID>;
   add(data, id);
   get(id): any;
   size(): number;
@@ -20,8 +24,8 @@ export class ResourceManager implements IResourceManager {
     if (protocolActions.validate_protocol_obj(protocol)) {
       // need validation
       this._protocol = protocol;
-    } else{
-      throw new Error("protocol of bad type")
+    } else {
+      throw new Error("protocol of bad type");
     }
     this.resourcesList = new Map();
     this.resourceAgentMap = new Map();
@@ -89,7 +93,7 @@ export class ResourceManager implements IResourceManager {
     }
   }
 
-  unregisterProtocolEvents(agent: Agent){
+  unregisterProtocolEvents(agent: Agent) {
     try {
       this._protocol.forEach(protocolElement => {
         agent.unregisterProtocolEvent(protocolElement);
