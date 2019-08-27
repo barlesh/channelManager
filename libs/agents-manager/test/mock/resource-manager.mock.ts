@@ -6,13 +6,19 @@ const e = data => {
 };
 const retTrue = "sample return true event";
 const retFalse = "sample return false event";
-const mockProtocol = [];
-const Action = protocolActions.createProtocolActionResponse(
+const mockProtocolResponse = [];
+const ActionResponse = protocolActions.createProtocolActionResponse(
   event,
   e,
   retTrue,
   retFalse
 );
-mockProtocol.push(Action);
+mockProtocolResponse.push(ActionResponse);
 
-export const mockResourceManager = new ResourceManager(mockProtocol);
+const mockProtocolRequest = [];
+const ActionRequest = protocolActions.createProtocolActionRequest(
+  event,
+);
+mockProtocolRequest.push(ActionRequest);
+
+export const mockResourceManager = new ResourceManager(mockProtocolResponse, mockProtocolRequest);

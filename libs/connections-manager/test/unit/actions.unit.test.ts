@@ -2,7 +2,7 @@ import "jest";
 import { ConnectionManager } from "../../src/connections";
 import { channelSockets } from "../../src/models/sockets";
 import * as uid from "uuid";
-import { exampleAction } from "./../../../resource-manager/test/lib/";
+import { exampleActionResponse } from "./../../../resource-manager/test/lib/";
 
 let serverIO;
 let myConnectionMnager: ConnectionManager, myAgentMnager;
@@ -35,7 +35,7 @@ describe("Demo", () => {
     const connection = mockConnection;
     myConnectionMnager.setConnection(cid, connection);
 
-    const Action = exampleAction;
+    const Action = exampleActionResponse;
 
     spy = jest.spyOn(connection, "on");
     // const spyOfEmit = jest.spyOn(connection, "emit");
@@ -48,7 +48,7 @@ describe("Demo", () => {
     const cid = uid();
     const connection = mockConnection;
     myConnectionMnager.setConnection(cid, connection);
-    const Action = exampleAction;
+    const Action = exampleActionResponse;
 
     spy = jest.spyOn(Action, "exec");
     myConnectionMnager.subscribeToConnectionEvent(cid, Action);

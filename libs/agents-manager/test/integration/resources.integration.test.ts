@@ -35,18 +35,21 @@ describe("Demo", () => {
     };
     const retTrue = "sample return true event";
     const retFalse = "sample return false event";
-    const protocol = [];
-    const Action = protocolActions.createProtocolActionResponse(
+    let protocolResponses = [];
+    let protocolRequests = [];
+    const ActionResponse = protocolActions.createProtocolActionResponse(
       event,
       e,
       retTrue,
       retFalse
     );
-    protocol.push(Action);
+    const ActionRequest = protocolActions.createProtocolActionRequest(event);
+    protocolResponses.push(ActionResponse);
+    protocolRequests.push(ActionRequest);
 
     myConnectionManager = new ConnectionServer();
     myConnectionManager.config({io: ioMock, channel: cname});
-    myResourceManager = new ResourceManager(protocol);
+    myResourceManager = new ResourceManager(protocolResponses, protocolRequests);
     myAgentsManager = new AgentsManager(myConnectionManager, myResourceManager);
     agentID = myAgentsManager.add(agentObj);
   });
@@ -55,7 +58,6 @@ describe("Demo", () => {
     const resource = {
       name: "rname"
     };
-
     const rid: string = uid();
     myConnectionManager.setConnection(cid, mockConnection);
     myResourceManager.add(resource, rid);

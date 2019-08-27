@@ -9,7 +9,7 @@ import { AgentsManager } from "../../../agents-manager/src/agents";
 import { agentsProtocolEvents } from "../../src/protocol";
 import { resourceProtocolEvents } from "../../../agents-manager/src/protocol/resource.protocol";
 import { ResourceManager } from "../../../resource-manager/src/resources";
-import { exampleProtocol } from "../../../resource-manager/test/lib";
+import { exampleProtocolResponses, exampleProtocolRequests } from "../../../resource-manager/test/lib";
 import { ConnectionServer } from "../../src/connections/connections-server";
 let serverIO;
 const channelName = channelSockets.testSocketPath;
@@ -26,7 +26,7 @@ describe("Demo", () => {
     // connection manager init
     // connection attampt
     // agent registration
-    myResourceMnager = new ResourceManager(exampleProtocol);
+    myResourceMnager = new ResourceManager(exampleProtocolResponses, exampleProtocolRequests);
     myConnectionMnager = new ConnectionServer();
     myConnectionMnager.config({io: serverIO, channel: channelName});
     myAgentMnager = new AgentsManager(myConnectionMnager, myResourceMnager);
@@ -54,7 +54,7 @@ describe("Demo", () => {
     const agent = myResourceMnager.resourceAgentMap.get(rid);
     expect(agent).toBeDefined()
     // expect the registration of the resource manager protocol actions in connection
-    expect(conn.listeners()).toContain(exampleProtocol[0].event);
+    expect(conn.listeners()).toContain(exampleProtocolResponses[0].event);
 
     
   });
