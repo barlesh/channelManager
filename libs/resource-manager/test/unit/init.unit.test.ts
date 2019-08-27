@@ -19,7 +19,7 @@ describe("Demo", () => {
       retFalse
     );
     protocol.push(Action);
-    const manager = new ResourceManager(protocol);
+    const manager = new ResourceManager(protocol, []);
     expect(manager.getResourcesList().size).toEqual(0);
   });
 });

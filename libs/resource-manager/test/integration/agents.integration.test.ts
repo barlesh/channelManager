@@ -48,7 +48,7 @@ describe("Demo", () => {
       name: "rname"
     };
 
-    myResourceManager = new ResourceManager(protocol);
+    myResourceManager = new ResourceManager(protocol, []);
     myConnectionManager = new ConnectionServer();
     myConnectionManager.config({ io: ioMock, channel: cname });
     // incoming connection

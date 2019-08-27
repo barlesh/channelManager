@@ -23,7 +23,7 @@ describe("Demo", () => {
   let manager;
 
   beforeEach(() => {
-    manager = new ResourceManager(protocol);
+    manager = new ResourceManager(protocol, []);
   });
 
   test("add resource > test 1", () => {

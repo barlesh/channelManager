@@ -25,16 +25,28 @@ export class ResourceManager implements IResourceManager {
   _protocolResponse: protoActionResponse[];
   _protocolRequest: Map<string, protoActionRequest>;
 
-  constructor(responses: protoActionResponse[]) {
-    if (protocolActions.validate_protocol_obj(responses)) {
-      // need validation
+  constructor(responses: protoActionResponse[], requests: protoActionRequest[]) {
+    if (protocolActions.validateProtocolActionResponse(responses)) {
       this._protocolResponse = responses;
     } else {
-      throw new Error("protocol of bad type");
+      throw new Error("response protocol of bad type");
+    }
+    console.log("calling validateProtocolActionRequest with req object: ", requests)
+    if (protocolActions.validateProtocolActionRequest(requests)) {
+      this.loadRequestsToMap(requests);
+    } else {
+      throw new Error("request protocol of bad type");
     }
     this.resourcesList = new Map();
     this.resourceAgentMap = new Map();
   }
+
+  loadRequestsToMap(actionRequests: protoActionRequest[]){
+    actionRequests.forEach((action)=>{
+      this._protocolRequest.set(action.event, action);
+    })
+  }
+
   add(resource, id?): resourceID {
     // validate resource - TODO
     if (!id) {
