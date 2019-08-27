@@ -1,8 +1,8 @@
 import "jest";
-import { ResourceManager } from "../src/resources";
+import { ResourceManager } from "../../src/resources";
 
 import * as uid from "uuid";
-import { protocolActions } from "./../../connections-manager/src/connections/protocol.actions";
+import { protocolActions } from "../../../connections-manager/src/connections/protocol.actions";
 
 
 describe("Demo", () => {

@@ -1,25 +1,22 @@
 import "jest";
-import { ConnectionManager } from "../src/connections";
-const http = require("http");
-import * as socketIo from "socket.io";
-import { channelSockets } from "../src/models/sockets";
-import { connect } from "socket.io-client";
-import { AgentsManager } from "../../agents-manager/src/agents";
-import { ResourceManager } from "../../resource-manager/src/resources";
+import { ConnectionManager } from "../../src/connections";
+import { channelSockets } from "../../src/models/sockets";
 import * as uid from "uuid";
+import { exampleAction } from "./../../../resource-manager/test/lib/";
 
-let httpServer, serverIO, clientIO, httpServerAddr;
+let serverIO;
 let myConnectionMnager: ConnectionManager, myAgentMnager;
 const channelName = channelSockets.testSocketPath;
 
-import { mockConnection } from "./mock/connection.mock";
-import { protocolActions } from "../src/connections/protocol.actions";
+import { mockConnection } from "../mock/connection.mock";
+import { protocolActions } from "../../src/connections/protocol.actions";
+import { ioMock } from "../mock/io.mock";
 
 describe("Demo", () => {
   let spy;
+
   beforeAll(done => {
-    httpServer = http.createServer();
-    serverIO = socketIo(httpServer);
+    serverIO = ioMock;
     done();
   });
 
@@ -37,20 +34,7 @@ describe("Demo", () => {
     const connection = mockConnection;
     myConnectionMnager.setConnection(cid, connection);
 
-    const event = "samlpe event";
-    const e = data => {
-      return data;
-    };
-    const retTrue = "sample return true event";
-    const retFalse = "sample return false event";
-    const protocol = [];
-    const Action = protocolActions.createProtocolAction(
-      event,
-      e,
-      retTrue,
-      retFalse
-    );
-    protocol.push(Action);
+    const Action = exampleAction;
 
     spy = jest.spyOn(connection, "on");
     // const spyOfEmit = jest.spyOn(connection, "emit");
@@ -63,25 +47,11 @@ describe("Demo", () => {
     const cid = uid();
     const connection = mockConnection;
     myConnectionMnager.setConnection(cid, connection);
-
-    const event = "samlpe event";
-    const e = data => {
-      return false;
-    };
-    const retTrue = "sample return true event";
-    const retFalse = "sample return false event";
-    const protocol = [];
-    const Action = protocolActions.createProtocolAction(
-      event,
-      e,
-      retTrue,
-      retFalse
-    );
-    protocol.push(Action);
+    const Action = exampleAction;
 
     spy = jest.spyOn(Action, "exec");
     myConnectionMnager.registerConnectionEvent(cid, Action);
-    connection.generateEvent(event);
+    connection.generateEvent(Action.event);
     expect(spy).toHaveBeenCalled();
   });
 

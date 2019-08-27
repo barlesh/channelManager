@@ -1,5 +1,5 @@
 import "jest";
-import { ConnectionManager } from "../src/connections";
+import { ConnectionManager } from "../../src/connections";
 
 
 describe("Demo", () => {

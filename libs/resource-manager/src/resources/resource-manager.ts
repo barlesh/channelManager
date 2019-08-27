@@ -85,6 +85,7 @@ export class ResourceManager implements IResourceManager {
   registerProtocolEvents(agent: Agent) {
     try {
       this._protocol.forEach(protocolAction => {
+        // console.log(`registering protocol action :${protocolAction} to agent: ${agent}`)
         agent.registerProtocolEvent(protocolAction);
       });
     } catch (err) {

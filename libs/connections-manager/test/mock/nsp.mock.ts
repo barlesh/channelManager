@@ -1,10 +1,8 @@
+import { mockConnection } from "./connection.mock";
+
 const eventsMap = new Map();
 
-export const mockConnection = {
-  id: "1",
-  client: {
-    id: "1"
-  },
+export const mockNSP = {
   eventsMap,
   on: (event, handler) => {
     eventsMap.set(event, handler);
@@ -13,10 +11,10 @@ export const mockConnection = {
     return true;
   },
 
-  generateEvent: async (event, data?) => {
+  generateEvent: async event => {
     const h = eventsMap.get(event);
     if (h) {
-      const ans = await h(data);
+      const ans = await h(mockConnection);
     }
   },
 

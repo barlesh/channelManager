@@ -1,18 +1,15 @@
 import "jest";
-import { ConnectionManager } from "../src/connections";
+import { ConnectionManager } from "../../src/connections";
 const http = require("http");
 import * as socketIo from "socket.io";
-import { channelSockets } from "../src/models/sockets";
-import { AgentsManager } from "../../agents-manager/src/agents";
-import { ResourceManager } from "../../resource-manager/src/resources";
-const express = require("express");
+import { channelSockets } from "../../src/models/sockets";
+import { ioMock } from "../mock/io.mock";
 
 let httpServer, io;
 
 describe("Demo", () => {
   beforeAll(done => {
-    httpServer = http.createServer();
-    io = socketIo(httpServer, { path: channelSockets.testSocketPath });
+    io = ioMock;
     done();
   });
 

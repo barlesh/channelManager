@@ -9,9 +9,10 @@ export interface IConnectionManager {
   config(io, channelName: string);
   registerConnectionEvent(cid: connectionID, protocolAction: protoAction);
   getConnection(cid: connectionID);
-  setConnection(cid: connectionID, connection/*: IConnection*/);
+  setConnection(cid: connectionID, connection /*: IConnection*/);
   on(eventType: string, func: Function);
   emit(eventType: string, data);
+  _connectionsList: Map<connectionID, any>;
 }
 
 export enum connectionManagerEvents {
@@ -36,8 +37,12 @@ export class ConnectionManager implements IConnectionManager {
   }
 
   // getters & setters
-  setConnection(cid, connection) {
+  setConnection(cid: connectionID, connection) {
     this._connectionsList.set(cid, connection);
+  }
+
+  destroyConnection(cid: connectionID) {
+    this._connectionsList.delete(cid);
   }
 
   getConnection(cid: connectionID) {
@@ -63,9 +68,22 @@ export class ConnectionManager implements IConnectionManager {
     // console.log("connection manager, socket: ", this._nsp);
 
     // register handler for the connection event
-    const bindedconnectionHandler = this.connectionHandler.bind(this._nsp, this);
-    const bindedreconnectionHandler = this.reconnectionHandler.bind(this._nsp, this);
+    const bindedconnectionHandler = this.connectionHandler.bind(
+      this._nsp,
+      this
+    );
+
+    const bindeddisconnectionHandler = this.disconnectionHandler.bind(
+      this._nsp,
+      this
+    );
+
+    const bindedreconnectionHandler = this.reconnectionHandler.bind(
+      this._nsp,
+      this
+    );
     this._nsp.on("connection", bindedconnectionHandler);
+    this._nsp.on("disconnect", bindeddisconnectionHandler);
     this._nsp.on("reconnect", bindedreconnectionHandler);
   }
 
@@ -76,7 +94,7 @@ export class ConnectionManager implements IConnectionManager {
       console.warn("received connection without unique connection ID.");
       return;
     }
-    console.info(`Received connection. socket ID: ${connID}`);
+    console.info(`Received incoming connection. connection ID: ${connID}`);
     manager.setConnection(connID, connectionSocket);
     // notify other manager that new remote connection exist, and publish its ID
     manager.emit(connectionManagerEvents.remoteConnected, connID);
@@ -85,6 +103,19 @@ export class ConnectionManager implements IConnectionManager {
   reconnectionHandler(connectionSocket) {
     //TODO
     //   this._connectionsList.delete()
+  }
+
+  disconnectionHandler(manager: ConnectionManager, connectionSocket){
+    let connID;
+    connID = connectionUtils.extractConnectionID(connectionSocket);
+    if (!connID) {
+      console.warn("received connection without unique connection ID.");
+      return;
+    }
+    console.info(`Received incoming disconnection. connection ID: ${connID}`);
+    manager.destroyConnection(connID);
+    // notify other manager that new remote connection exist, and publish its ID
+    manager.emit(connectionManagerEvents.remoteDisconnected, connID);
   }
 
   /* API for registering connection events using connection ID */

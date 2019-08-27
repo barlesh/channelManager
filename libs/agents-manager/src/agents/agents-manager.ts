@@ -10,7 +10,10 @@ import { resourceProtocolEvents } from "../protocol/resource.protocol";
 import { resourceID } from "../../../resource-manager/src/types/types";
 import { IResourceManager } from "./../../../resource-manager/src/resources";
 import { connectionID } from "../../../connections-manager/src/models";
-import { protocolActions, protoAction } from "../../../connections-manager/src/connections/protocol.actions";
+import {
+  protocolActions,
+  protoAction
+} from "../../../connections-manager/src/connections/protocol.actions";
 
 export interface IAgentsManager {
   add(data): agentID;
@@ -29,15 +32,42 @@ export class AgentsManager implements IAgentsManager {
   resourcesManager: IResourceManager;
   connectionManager: IConnectionManager;
 
-  constructor(connectionMnager: IConnectionManager, resourceManager: IResourceManager) {
+  constructor(
+    connectionMnager: IConnectionManager,
+    resourceManager: IResourceManager
+  ) {
     this.agentsList = new Map();
     this.connectionManager = connectionMnager;
     this.resourcesManager = resourceManager;
 
     this.connectionManager.on(
       connectionManagerEvents.remoteConnected,
-      this.registerToAgentRegistrationEvents
+      this.registerToAgentRegistrationEvents.bind(this)
     );
+  }
+
+  agentRegistration(connectionID, agentData) {
+    // validate agent data
+    // TODO
+    //attach connection id to the validated agent data
+    agentData["connectionID"] = connectionID;
+    // create new agent
+    const agentID = this.add(agentData);
+    // register the agents events to the connection object
+    this.registerAgentToResourcesEvents(connectionID, agentID);
+    return true;
+  }
+
+  agentUnRegistration(data) {
+    try {
+      const { connectionID } = data;
+    } catch (err) {
+      console.log("could not extract agent data and/or connection ID");
+      return false;
+    }
+    return true;
+
+    // remove the agent with the attached connection ID
   }
 
   registerToAgentRegistrationEvents(connectionID) {
@@ -55,46 +85,40 @@ export class AgentsManager implements IAgentsManager {
       !!!!!!!!! CHECK IF CONNECTION OBJECT DOES NOT OVERIDE THE this OBJECT, AND THE AGENT-MANAGER WILL NOT BE ACCASSIABLE
       IN THIS CASE, THE AGENT-MANAGER WILL BE NEEDED TO BE BIND !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     */
-   let Action: protoAction;
+    let Action: protoAction;
+    const f = this.agentRegistration
+    // console.log("this:", this)
+    // console.log(`bind ${f} with conn ID ${connectionID}`);
     const bindedagentRegistration = this.agentRegistration.bind(
       this,
       connectionID
     );
-    Action = protocolActions.createProtocolAction(agentsProtocolEvents.agentRegister, bindedagentRegistration, undefined, undefined);
-    this.connectionManager.registerConnectionEvent(
-      connectionID,
-      Action
+    Action = protocolActions.createProtocolAction(
+      agentsProtocolEvents.agentRegister,
+      bindedagentRegistration,
+      undefined,
+      undefined
     );
+    console.log(
+      `registering action ${Action} to connection with ID: ${connectionID}`
+    );
+    this.connectionManager.registerConnectionEvent(connectionID, Action);
+
+    console.log(`bind agentUnRegistration with conn ID ${connectionID}`);
     const bindedagentUnRegistration = this.agentUnRegistration.bind(
       this,
       connectionID
     );
-    Action = protocolActions.createProtocolAction(agentsProtocolEvents.agentUnRegister, bindedagentUnRegistration, undefined, undefined);
-    this.connectionManager.registerConnectionEvent(
-      connectionID,
-      Action
+    Action = protocolActions.createProtocolAction(
+      agentsProtocolEvents.agentUnRegister,
+      bindedagentUnRegistration,
+      undefined,
+      undefined
     );
-  }
-
-  agentRegistration(connectionID, agentData) {
-    // validate agent data
-    // TODO
-    //attach connection id to the validated agent data
-    agentData["connectionID"] = connectionID;
-    // create new agent
-    const agentID = this.add(agentData);
-    // register the agents events to the connection object
-    this.registerAgentToResourcesEvents(connectionID, agentID);
-  }
-
-  agentUnRegistration(data) {
-    try {
-      const { connectionID } = data;
-    } catch (err) {
-      console.log("could not extract agent data and/or connection ID");
-    }
-
-    // remove the agent with the attached connection ID
+    console.log(
+      `registering action ${Action} to connection with ID: ${connectionID}`
+    );
+    this.connectionManager.registerConnectionEvent(connectionID, Action);
   }
 
   registerAgentToResourcesEvents(connectionID, agentID) {
@@ -104,18 +128,22 @@ export class AgentsManager implements IAgentsManager {
       agentID
     );
     const bindedunregisterSource = this.unregisterSource.bind(this, agentID);
-    
-    Action = protocolActions.createProtocolAction(resourceProtocolEvents.resourceAttach, bindedattachAgentToResource, undefined, undefined);
-    this.connectionManager.registerConnectionEvent(
-      connectionID,
-      Action
-    );
 
-    Action = protocolActions.createProtocolAction(resourceProtocolEvents.resouceDetach, bindedunregisterSource, undefined, undefined);
-    this.connectionManager.registerConnectionEvent(
-      connectionID,
-      Action
+    Action = protocolActions.createProtocolAction(
+      resourceProtocolEvents.resourceAttach,
+      bindedattachAgentToResource,
+      undefined,
+      undefined
     );
+    this.connectionManager.registerConnectionEvent(connectionID, Action);
+
+    Action = protocolActions.createProtocolAction(
+      resourceProtocolEvents.resouceDetach,
+      bindedunregisterSource,
+      undefined,
+      undefined
+    );
+    this.connectionManager.registerConnectionEvent(connectionID, Action);
   }
 
   getAgentConnection(connectionID) {
@@ -163,10 +191,7 @@ export class AgentsManager implements IAgentsManager {
     this.resourcesManager.detachResourceFromAgent(agent, resouceID);
   }
 
-  registerConnectionEvent(
-    conID: connectionID,
-    protocolAction
-  ) {
+  registerConnectionEvent(conID: connectionID, protocolAction) {
     this.connectionManager.registerConnectionEvent(conID, protocolAction);
   }
 }
