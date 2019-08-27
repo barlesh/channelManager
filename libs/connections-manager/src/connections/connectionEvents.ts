@@ -1,5 +1,7 @@
+import { protoActionRequest, protoActionResponse } from "./protocol.actions";
+
 export namespace connectionEvents {
-  export function registerConnectionEvent(connection, protocolAction) {
+  export function registerConnectionEvent(connection, protocolAction: protoActionResponse) {
     const event = protocolAction.event;
     const exec = protocolAction.exec;
     const retTrue = protocolAction.response_truthy;
@@ -30,7 +32,7 @@ export namespace connectionEvents {
     connection.on(event, cb);
   }
 
-  export function sendConnectionEvent(connection, protocolAction, data){
+  export function sendConnectionEvent(connection, protocolAction: protoActionRequest, data){
     if(!connection){
       console.warn("no connection supplied. cannot send event");
     }

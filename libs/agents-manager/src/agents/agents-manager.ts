@@ -12,7 +12,8 @@ import { IResourceManager } from "./../../../resource-manager/src/resources";
 import { connectionID } from "../../../connections-manager/src/models";
 import {
   protocolActions,
-  protoActionResponse
+  protoActionResponse,
+  protoActionRequest
 } from "../../../connections-manager/src/connections/protocol.actions";
 
 export interface IAgentsManager {
@@ -184,11 +185,11 @@ export class AgentsManager implements IAgentsManager {
     return true;
   }
 
-  registerConnectionEvent(conID: connectionID, protocolAction) {
+  registerConnectionEvent(conID: connectionID, protocolAction: protoActionResponse) {
     this.connectionManager.subscribeToConnectionEvent(conID, protocolAction);
   }
 
-  publishEvent(conID: connectionID, protocolAction, data){
+  publishEvent(conID: connectionID, protocolAction: protoActionRequest, data){
     this.connectionManager.publishConnectionEvent(conID, protocolAction, data);
   }
 }

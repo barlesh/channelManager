@@ -2,13 +2,13 @@ import { EventEmitter } from "events";
 import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connectionUtils";
-import { protoActionResponse } from "./protocol.actions";
+import { protoActionResponse, protoActionRequest } from "./protocol.actions";
 import { connectionManagerEvents } from "./connections-server";
 
 export interface IConnectionManager {
   config(any);
   subscribeToConnectionEvent(cid: connectionID, protocolAction: protoActionResponse);
-  publishConnectionEvent(cid: connectionID, protocolAction: protoActionResponse, data);
+  publishConnectionEvent(cid: connectionID, protocolAction: protoActionRequest, data);
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
   on(eventType: string, func: Function);
@@ -80,7 +80,7 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   /* API for registering (subscribing to) connection events using connection ID */
-  subscribeToConnectionEvent(connID: connectionID, protocolAction) {
+  subscribeToConnectionEvent(connID: connectionID, protocolAction: protoActionResponse) {
 
     const connection = this.getConnection(connID);
     if (!connection) {
@@ -92,7 +92,7 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   /* API for sending (publishing to) connection events using connection ID */
-  publishConnectionEvent(connID: connectionID, protocolAction, data) {
+  publishConnectionEvent(connID: connectionID, protocolAction: protoActionRequest, data) {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(

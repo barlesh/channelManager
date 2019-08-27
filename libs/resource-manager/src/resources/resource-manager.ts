@@ -1,5 +1,4 @@
 import { resourceID } from "../types/types";
-import { agentID } from "../../../agents-manager/src/types/types";
 import { Agent } from "../../../agents-manager/src/agents";
 import {
   protocolActions,
