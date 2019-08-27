@@ -9,7 +9,7 @@ const e = data => {
 const retTrue = "sample return true event";
 const retFalse = "sample return false event";
 
-exampleAction = protocolActions.createProtocolAction(
+exampleAction = protocolActions.createProtocolActionResponse(
   event,
   e,
   retTrue,

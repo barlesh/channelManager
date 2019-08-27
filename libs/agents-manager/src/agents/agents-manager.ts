@@ -12,7 +12,7 @@ import { IResourceManager } from "./../../../resource-manager/src/resources";
 import { connectionID } from "../../../connections-manager/src/models";
 import {
   protocolActions,
-  protoAction
+  protoActionResponse
 } from "../../../connections-manager/src/connections/protocol.actions";
 
 export interface IAgentsManager {
@@ -22,7 +22,7 @@ export interface IAgentsManager {
   getAgentConnection(agentID: agentID);
   registerConnectionEvent(
     conID: connectionID,
-    action: protoAction
+    action: protoActionResponse
   );
   publishEvent(conID: connectionID, protocolAction, data);
 }
@@ -85,13 +85,13 @@ export class AgentsManager implements IAgentsManager {
       !!!!!!!!! CHECK IF CONNECTION OBJECT DOES NOT OVERIDE THE this OBJECT, AND THE AGENT-MANAGER WILL NOT BE ACCASSIABLE
       IN THIS CASE, THE AGENT-MANAGER WILL BE NEEDED TO BE BIND !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     */
-    let Action: protoAction;
+    let Action: protoActionResponse;
     const f = this.agentRegistration
     const bindedagentRegistration = this.agentRegistration.bind(
       this,
       connectionID
     );
-    Action = protocolActions.createProtocolAction(
+    Action = protocolActions.createProtocolActionResponse(
       agentsProtocolEvents.agentRegister,
       bindedagentRegistration,
       undefined,
@@ -103,7 +103,7 @@ export class AgentsManager implements IAgentsManager {
       this,
       connectionID
     );
-    Action = protocolActions.createProtocolAction(
+    Action = protocolActions.createProtocolActionResponse(
       agentsProtocolEvents.agentUnRegister,
       bindedagentUnRegistration,
       undefined,
@@ -113,14 +113,14 @@ export class AgentsManager implements IAgentsManager {
   }
 
   registerAgentToResourcesEvents(connectionID, agentID) {
-    let Action: protoAction;
+    let Action: protoActionResponse;
     const bindedregisterResource = this.registerResource.bind(
       this,
       agentID
     );
     const bindedunregisterSource = this.unregisterSource.bind(this, agentID);
 
-    Action = protocolActions.createProtocolAction(
+    Action = protocolActions.createProtocolActionResponse(
       resourceProtocolEvents.resourceAttach,
       bindedregisterResource,
       undefined,
@@ -128,7 +128,7 @@ export class AgentsManager implements IAgentsManager {
     );
     this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
 
-    Action = protocolActions.createProtocolAction(
+    Action = protocolActions.createProtocolActionResponse(
       resourceProtocolEvents.resouceDetach,
       bindedunregisterSource,
       undefined,

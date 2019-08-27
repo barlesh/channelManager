@@ -12,7 +12,7 @@ describe("Demo", () => {
     const retTrue = "sample return true event";
     const retFalse = "sample return false event";
     const protocol = [];
-    const Action = protocolActions.createProtocolAction(
+    const Action = protocolActions.createProtocolActionResponse(
       event,
       e,
       retTrue,

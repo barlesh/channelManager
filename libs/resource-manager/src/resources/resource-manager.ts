@@ -3,11 +3,14 @@ import { agentID } from "../../../agents-manager/src/types/types";
 import { Agent } from "../../../agents-manager/src/agents";
 import {
   protocolActions,
-  protoAction
+  protoActionResponse,
+  protoActionRequest
 } from "../../../connections-manager/src/connections/protocol.actions";
 import * as uid from "uuid";
 
 export interface IResourceManager {
+  _protocolResponse: protoActionResponse[];
+  _protocolRequest: Map<string, protoActionRequest>;
   resourceAgentMap: Map<resourceID, Agent>;
   add(data, id?): resourceID;
   get(id): any;
@@ -19,12 +22,13 @@ export interface IResourceManager {
 export class ResourceManager implements IResourceManager {
   resourcesList: Map<resourceID, any>;
   resourceAgentMap: Map<resourceID, Agent>;
-  _protocol: protoAction[];
+  _protocolResponse: protoActionResponse[];
+  _protocolRequest: Map<string, protoActionRequest>;
 
-  constructor(protocol: protoAction[]) {
-    if (protocolActions.validate_protocol_obj(protocol)) {
+  constructor(responses: protoActionResponse[]) {
+    if (protocolActions.validate_protocol_obj(responses)) {
       // need validation
-      this._protocol = protocol;
+      this._protocolResponse = responses;
     } else {
       throw new Error("protocol of bad type");
     }
@@ -95,7 +99,7 @@ export class ResourceManager implements IResourceManager {
 
   registerProtocolEvents(agent: Agent) {
     try {
-      this._protocol.forEach(protocolAction => {
+      this._protocolResponse.forEach(protocolAction => {
         // console.log(`registering protocol action :${protocolAction} to agent: ${agent}`)
         agent.registerProtocolEvent(protocolAction);
       });
@@ -107,7 +111,7 @@ export class ResourceManager implements IResourceManager {
 
   unregisterProtocolEvents(agent: Agent) {
     try {
-      this._protocol.forEach(protocolElement => {
+      this._protocolResponse.forEach(protocolElement => {
         agent.unregisterProtocolEvent(protocolElement);
       });
     } catch (err) {

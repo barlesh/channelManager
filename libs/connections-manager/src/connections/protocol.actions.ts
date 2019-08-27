@@ -1,9 +1,13 @@
-export type protoAction = {
+export type protoActionResponse = {
   event: string;
   exec: Function;
   response_truthy: string;
   response_falsly: string;
 };
+
+export type protoActionRequest = {
+  event: string;
+}
 
 export namespace protocolActions {
   const expectedProtocolActionKeys = [
@@ -13,14 +17,14 @@ export namespace protocolActions {
     "response_falsly"
   ];
 
-  export function createProtocolAction(
+  export function createProtocolActionResponse(
     event: string,
     exec: Function,
     retTrue: string,
     retFalse: string
-  ): protoAction {
+  ): protoActionResponse {
     try {
-      const action: protoAction = {
+      const action: protoActionResponse = {
         event,
         exec,
         response_truthy: retTrue,
@@ -36,7 +40,7 @@ export namespace protocolActions {
     }
   }
 
-  export function validate_protocol_obj(protocol: protoAction[]): boolean {
+  export function validate_protocol_obj(protocol: protoActionResponse[]): boolean {
     if (!(protocol instanceof Array)) {
       throw new TypeError();
     }

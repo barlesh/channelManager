@@ -2,13 +2,13 @@ import { EventEmitter } from "events";
 import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connectionUtils";
-import { protoAction } from "./protocol.actions";
+import { protoActionResponse } from "./protocol.actions";
 import { connectionManagerEvents } from "./connections-server";
 
 export interface IConnectionManager {
   config(any);
-  subscribeToConnectionEvent(cid: connectionID, protocolAction: protoAction);
-  publishConnectionEvent(cid: connectionID, protocolAction: protoAction, data);
+  subscribeToConnectionEvent(cid: connectionID, protocolAction: protoActionResponse);
+  publishConnectionEvent(cid: connectionID, protocolAction: protoActionResponse, data);
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
   on(eventType: string, func: Function);
