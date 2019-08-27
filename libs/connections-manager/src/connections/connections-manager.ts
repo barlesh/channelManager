@@ -81,12 +81,13 @@ export abstract class ConnectionManager implements IConnectionManager {
 
   /* API for registering (subscribing to) connection events using connection ID */
   subscribeToConnectionEvent(connID: connectionID, protocolAction) {
+
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
         `could not find connection with connection id: ${connID}`
-      );
-    }
+        );
+      }
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
 

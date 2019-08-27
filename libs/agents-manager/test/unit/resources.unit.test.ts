@@ -37,7 +37,7 @@ describe("Demo", () => {
     const retTrue = "sample return true event";
     const retFalse = "sample return false event";
     const protocol = [];
-    const Action = protocolActions.createProtocolAction(
+    const Action = protocolActions.createProtocolActionResponse(
       event,
       e,
       retTrue,
@@ -46,7 +46,7 @@ describe("Demo", () => {
     protocol.push(Action);
 
     myConnectionManager = mockConnectionManager;
-    myConnectionManager.config(ioMock, cname);
+    myConnectionManager.config({io: ioMock, channel: cname});
     myResourceMnager = mockResourceManager;
     myAgentsManager = new AgentsManager(myConnectionManager, myResourceMnager);
     agentID = myAgentsManager.add(agentObj);

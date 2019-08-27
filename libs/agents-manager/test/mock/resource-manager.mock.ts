@@ -7,7 +7,7 @@ const e = data => {
 const retTrue = "sample return true event";
 const retFalse = "sample return false event";
 const mockProtocol = [];
-const Action = protocolActions.createProtocolAction(
+const Action = protocolActions.createProtocolActionResponse(
   event,
   e,
   retTrue,

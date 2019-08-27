@@ -25,6 +25,10 @@ export const mockConnectionManager = {
 
   emit: (event, data?) => {},
 
-  subscribeToConnectionEvent: () => {},
+  subscribeToConnectionEvent: (conID, protocolAction) => {
+    const conn = map.get(conID);
+    conn.on(protocolAction.event, protocolAction.exec)
+
+  },
   publishConnectionEvent: () => {}
 };

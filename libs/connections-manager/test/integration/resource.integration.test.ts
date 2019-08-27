@@ -51,8 +51,8 @@ describe("Demo", () => {
     conn.generateEvent(resourceProtocolEvents.resourceAttach, rid);
 
     // check that the resource is attached to a real agent
-    const agentID = myResourceMnager.resourceAgentMap.get(rid);
-    expect(myAgentMnager.agentsList.get(agentID)).toBeDefined()
+    const agent = myResourceMnager.resourceAgentMap.get(rid);
+    expect(agent).toBeDefined()
     // expect the registration of the resource manager protocol actions in connection
     expect(conn.listeners()).toContain(exampleProtocol[0].event);
 
