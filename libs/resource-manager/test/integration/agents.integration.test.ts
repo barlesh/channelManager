@@ -2,10 +2,16 @@ import "jest";
 import * as uid from "uuid";
 import { ResourceManager } from "../../src/resources";
 import { Agent, AgentsManager } from "../../../agents-manager/src/agents";
-import { ioMock, mockConnection } from "./../../../connections-manager/test/mock";
+import {
+  ioMock,
+  mockConnection
+} from "./../../../connections-manager/test/mock";
 import { agentID } from "../../../agents-manager/src/types/types";
 import { protocolActions } from "../../../connections-manager/src/connections/protocol.actions";
-import { ConnectionManager, ConnectionServer } from "../../../connections-manager/src/connections";
+import {
+  ConnectionManager,
+  ConnectionServer
+} from "../../../connections-manager/src/connections";
 
 describe("Demo", () => {
   let agent: Agent;
@@ -44,9 +50,9 @@ describe("Demo", () => {
 
     myResourceManager = new ResourceManager(protocol);
     myConnectionManager = new ConnectionServer();
-    myConnectionManager.config({io: ioMock, channel: cname});
+    myConnectionManager.config({ io: ioMock, channel: cname });
     // incoming connection
-    myConnectionManager.connectionHandler(myConnectionManager, mockConnection)
+    myConnectionManager.connectionHandler(myConnectionManager, mockConnection);
     myAgentManager = new AgentsManager(myConnectionManager, myResourceManager);
     myResourceManager.add(resource, uidSource);
     agentID = myAgentManager.add(agentObj);
@@ -57,9 +63,7 @@ describe("Demo", () => {
   test("attach agent to resource > test 1", () => {
     const spy = jest.spyOn(myResourceManager, "registerProtocolEvents");
     myResourceManager.attachResourceToAgent(agent, uidSource);
-    expect(myResourceManager.resourceAgentMap.get(uidSource)).toEqual(
-      agent.getID()
-    );
+    expect(myResourceManager.resourceAgentMap.get(uidSource)).toEqual(agent);
     expect(spy).toHaveBeenCalled();
   });
 

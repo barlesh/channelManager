@@ -8,7 +8,7 @@ import {
 import * as uid from "uuid";
 
 export interface IResourceManager {
-  resourceAgentMap: Map<resourceID, agentID>;
+  resourceAgentMap: Map<resourceID, Agent>;
   add(data, id?): resourceID;
   get(id): any;
   size(): number;
@@ -18,7 +18,7 @@ export interface IResourceManager {
 
 export class ResourceManager implements IResourceManager {
   resourcesList: Map<resourceID, any>;
-  resourceAgentMap: Map<resourceID, agentID>;
+  resourceAgentMap: Map<resourceID, Agent>;
   _protocol: protoAction[];
 
   constructor(protocol: protoAction[]) {
@@ -77,7 +77,7 @@ export class ResourceManager implements IResourceManager {
     console.info(
       `attaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
     );
-    this.resourceAgentMap.set(resourceID, agentID);
+    this.resourceAgentMap.set(resourceID, agent);
 
     // register resource protocol events TODO
     this.registerProtocolEvents(agent);
@@ -118,7 +118,7 @@ export class ResourceManager implements IResourceManager {
 
   publishEvent(resourceID: resourceID, event: string){
     const agentID = this.resourceAgentMap.get(resourceID);
-    
+
 
   }
 
