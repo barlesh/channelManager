@@ -3,7 +3,7 @@ import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connectionUtils";
 import { protoActionResponse, protoActionRequest } from "./protocol.actions";
-import { connectionManagerEvents } from "./connections-server";
+import { connectionServerManagerEvents } from "./connections-server";
 
 export interface IConnectionManager {
   config(any);
@@ -11,15 +11,10 @@ export interface IConnectionManager {
   publishConnectionEvent(cid: connectionID, protocolAction: protoActionRequest, data);
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
-  on(eventType: string, func: Function);
-  emit(eventType: string, data);
   _connectionsList: Map<connectionID, any>;
+  on(eventType: string, func: Function);
+  emit(eventType: string, data?);
 }
-
-// export enum connectionManagerEvents {
-//   remoteConnected = "remote-connected",
-//   remoteDisconnected = "remote-disconnected"
-// }
 
 export abstract class ConnectionManager implements IConnectionManager {
   _nsp;
@@ -29,11 +24,11 @@ export abstract class ConnectionManager implements IConnectionManager {
 
   eve = new EventEmitter();
 
-  on(eventType: connectionManagerEvents, func) {
+  on(eventType: string, func) {
     this.eve.on(eventType, func);
   }
 
-  emit(eventType: connectionManagerEvents, data) {
+  emit(eventType: string, data?) {
     this.eve.emit(eventType, data);
   }
 

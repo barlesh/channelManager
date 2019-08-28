@@ -1,6 +1,11 @@
 import { connectionUtils } from "./connectionUtils";
 import { ConnectionManager } from "./connections-manager";
 
+export enum connectionClientManagerEvents {
+  connectedToRemote = "connected-to-remote",
+  disconnectedFromRemote = "disconnected-from-remote"
+}
+
 export class ConnectionClient extends ConnectionManager {
   _serverAddr;
   _serverPort;
@@ -43,6 +48,7 @@ export class ConnectionClient extends ConnectionManager {
     this._serverPort = serverPort;
 
     this.connect();
+    this.emit(connectionClientManagerEvents.connectedToRemote)
     this.registerToListenToRemoteConnections();
   }
 

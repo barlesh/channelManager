@@ -4,7 +4,7 @@ import { Agent, IAgent } from "./agent";
 import { agentsProtocolEvents } from "./../../../connections-manager/src/protocol";
 import {
   IConnectionManager,
-  connectionManagerEvents
+  connectionServerManagerEvents
 } from "./../../../connections-manager/src/connections";
 import { resourceProtocolEvents } from "../protocol/resource.protocol";
 import { resourceID } from "../../../resource-manager/src/types/types";
@@ -41,10 +41,19 @@ export class AgentsManager implements IAgentsManager {
     this.connectionManager = connectionMnager;
     this.resourcesManager = resourceManager;
 
+    /* 
+      listen to a connection manager (server) events, regarding new connection
+      This will register a new listener to the connection, expecting for the remote conncetion to send "agent registration" event
+    */
     this.connectionManager.on(
-      connectionManagerEvents.remoteConnected,
+      connectionServerManagerEvents.remoteConnected,
       this.registerToAgentRegistrationEvents.bind(this)
     );
+    /* 
+      listen to a connection manager (client) events, regarding new succsessfull connection attampt toward the server
+      Upon successfull connection, create an agent instance
+    */
+
   }
 
   agentRegistration(connectionID, agentData) {
@@ -119,7 +128,7 @@ export class AgentsManager implements IAgentsManager {
       this,
       agentID
     );
-    const bindedunregisterSource = this.unregisterSource.bind(this, agentID);
+    const bindedunregisterResource = this.unregisterResource.bind(this, agentID);
 
     Action = protocolActions.createProtocolActionResponse(
       resourceProtocolEvents.resourceAttach,
@@ -131,7 +140,7 @@ export class AgentsManager implements IAgentsManager {
 
     Action = protocolActions.createProtocolActionResponse(
       resourceProtocolEvents.resouceDetach,
-      bindedunregisterSource,
+      bindedunregisterResource,
       undefined,
       undefined
     );
@@ -175,7 +184,7 @@ export class AgentsManager implements IAgentsManager {
     return true;
   }
 
-  unregisterSource(agentID: agentID, resouceID: resourceID) {
+  unregisterResource(agentID: agentID, resouceID: resourceID) {
     if (!agentID) {
       console.warn(`no agent found: ${agentID}.`);
       return;

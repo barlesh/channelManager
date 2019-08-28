@@ -21,7 +21,7 @@ export const mockAgentsManager = {
     return undefined;
   },
   registerResource: (agentID: agentID, resouceID: resourceID) => { return true; },
-  unregisterSource: (agentID: agentID, resouceID: resourceID) => { return true; },
+  unregisterResource: (agentID: agentID, resouceID: resourceID) => { return true; },
   getAgentConnection: (agentID: agentID): any => {},
   registerConnectionEvent: (conID: connectionID, action) => {},
   registerToAgentRegistrationEvents: connectionID => {},

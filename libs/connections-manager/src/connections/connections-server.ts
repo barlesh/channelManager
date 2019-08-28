@@ -3,7 +3,7 @@ import { connectionID } from "../models";
 import { connectionUtils } from "./connectionUtils";
 import { ConnectionManager } from "./connections-manager";
 
-export enum connectionManagerEvents {
+export enum connectionServerManagerEvents {
   remoteConnected = "remote-connected",
   remoteDisconnected = "remote-disconnected"
 }
@@ -65,7 +65,7 @@ export class ConnectionServer extends ConnectionManager {
     // TODO change super's mathode to get ID //TODO
     super.connectionHandler(manager, connectionSocket);
     // notify other manager that new remote connection exist, and publish its ID
-    manager.emit(connectionManagerEvents.remoteConnected, connID);
+    manager.emit(connectionServerManagerEvents.remoteConnected, connID);
   }
 
   disconnectionHandler(manager: ConnectionServer, connectionSocket) {
@@ -73,6 +73,6 @@ export class ConnectionServer extends ConnectionManager {
     connID = connectionUtils.extractConnectionID(connectionSocket);
     // TODO change super's mathode to get ID //TODO
     super.disconnectionHandler(manager, connectionSocket);
-    manager.emit(connectionManagerEvents.remoteDisconnected, connID);
+    manager.emit(connectionServerManagerEvents.remoteDisconnected, connID);
   }
 }
