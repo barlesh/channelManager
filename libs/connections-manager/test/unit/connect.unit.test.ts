@@ -2,7 +2,7 @@ import "jest";
 import {
   ConnectionManager,
   IConnectionManager,
-  connectionManagerEvents
+  connectionServerManagerEvents
 } from "../../src/connections";
 import { channelSockets } from "../../src/models/sockets";
 import { ioMock } from "../mock/io.mock";
@@ -38,7 +38,7 @@ describe("Demo", () => {
     expect(myConnectionMnager._connectionsList.size).toBe(1);
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      connectionManagerEvents.remoteConnected,
+      connectionServerManagerEvents.remoteConnected,
       mockConnection.id
     );
   });
@@ -51,7 +51,7 @@ describe("Demo", () => {
     expect(myConnectionMnager._connectionsList.size).toBe(0);
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      connectionManagerEvents.remoteDisconnected,
+      connectionServerManagerEvents.remoteDisconnected,
       mockConnection.id
     );
   });

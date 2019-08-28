@@ -28,33 +28,35 @@ export interface IAgentsManager {
   publishEvent(conID: connectionID, protocolAction, data);
 }
 
-export class AgentsManager implements IAgentsManager {
+export abstract class AgentsManager implements IAgentsManager {
   agentsList: Map<agentID, Agent>;
   resourcesManager: IResourceManager;
-  connectionManager: IConnectionManager;
+  connectionManager;//: IConnectionManager;
 
-  constructor(
-    connectionMnager: IConnectionManager,
-    resourceManager: IResourceManager
-  ) {
-    this.agentsList = new Map();
-    this.connectionManager = connectionMnager;
-    this.resourcesManager = resourceManager;
+  // constructor(
+  //   connectionMnager: IConnectionManager,
+  //   resourceManager: IResourceManager
+  // ) {
+  //   this.agentsList = new Map();
+  //   this.connectionManager = connectionMnager;
+  //   this.resourcesManager = resourceManager;
 
-    /* 
-      listen to a connection manager (server) events, regarding new connection
-      This will register a new listener to the connection, expecting for the remote conncetion to send "agent registration" event
-    */
-    this.connectionManager.on(
-      connectionServerManagerEvents.remoteConnected,
-      this.registerToAgentRegistrationEvents.bind(this)
-    );
-    /* 
-      listen to a connection manager (client) events, regarding new succsessfull connection attampt toward the server
-      Upon successfull connection, create an agent instance
-    */
+  //   /* 
+  //     listen to a connection manager (server) events, regarding new connection
+  //     This will register a new listener to the connection, expecting for the remote conncetion to send "agent registration" event
+  //   */
+  //   this.connectionManager.on(
+  //     connectionServerManagerEvents.remoteConnected,
+  //     this.registerToAgentRegistrationEvents.bind(this)
+  //   );
+  //   /* 
+  //     listen to a connection manager (client) events, regarding new succsessfull connection attampt toward the server
+  //     Upon successfull connection, create an agent instance
+  //   */
 
-  }
+  // }
+
+  abstract config(conf);
 
   agentRegistration(connectionID, agentData) {
     // validate agent data

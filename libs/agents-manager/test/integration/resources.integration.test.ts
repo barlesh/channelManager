@@ -1,5 +1,5 @@
 import "jest";
-import { AgentsManager } from "../../src/agents";
+import { AgentsManager, AgentsManagerServer } from "../../src/agents";
 import {
   ConnectionManager,
   IConnectionManager,
@@ -48,9 +48,16 @@ describe("Demo", () => {
     protocolRequests.push(ActionRequest);
 
     myConnectionManager = new ConnectionServer();
-    myConnectionManager.config({io: ioMock, channel: cname});
-    myResourceManager = new ResourceManager(protocolResponses, protocolRequests);
-    myAgentsManager = new AgentsManager(myConnectionManager, myResourceManager);
+    myConnectionManager.config({ io: ioMock, channel: cname });
+    myResourceManager = new ResourceManager(
+      protocolResponses,
+      protocolRequests
+    );
+    myAgentsManager = new AgentsManagerServer();
+    myAgentsManager.config({
+      connectionManager: myConnectionManager,
+      resourceManager: myResourceManager
+    });
     agentID = myAgentsManager.add(agentObj);
   });
 

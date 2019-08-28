@@ -2,14 +2,17 @@ import "jest";
 import {
   ConnectionManager,
   IConnectionManager,
-  connectionManagerEvents
+  connectionServerManagerEvents
 } from "../../src/connections";
 import { channelSockets } from "../../src/models/sockets";
 import { ioMock } from "../mock/io.mock";
 import { mockResourceManager } from "../../../resource-manager/test/mock";
 import { mockAgentsManager } from "../../../agents-manager/test/mock";
 import { mockConnection } from "../mock";
-import { AgentsManager } from "../../../agents-manager/src/agents";
+import {
+  AgentsManager,
+  AgentsManagerServer
+} from "../../../agents-manager/src/agents";
 import { agentsProtocolEvents } from "../../src/protocol";
 import { resourceProtocolEvents } from "../../../agents-manager/src/protocol/resource.protocol";
 import { ConnectionServer } from "../../src/connections/connections-server";
@@ -27,8 +30,12 @@ describe("Demo", () => {
   beforeEach(() => {
     myResourceMnager = mockResourceManager;
     myConnectionMnager = new ConnectionServer();
-    myConnectionMnager.config({io: serverIO, channel: channelName});
-    myAgentMnager = new AgentsManager(myConnectionMnager, myResourceMnager);
+    myConnectionMnager.config({ io: serverIO, channel: channelName });
+    myAgentMnager = new AgentsManagerServer();
+    myAgentMnager.config({
+      connectionManager: myConnectionMnager,
+      resourceManager: myResourceMnager
+    });
   });
 
   afterEach(() => {
@@ -38,7 +45,7 @@ describe("Demo", () => {
   test("receive connection request > test 1", () => {
     const agentObj = {
       name: "aname"
-    }
+    };
     spy = jest.spyOn(myConnectionMnager, "emit");
     myConnectionMnager._nsp.generateEvent("connection");
     const conn = myConnectionMnager._connectionsList.get(mockConnection.id);
@@ -47,8 +54,6 @@ describe("Demo", () => {
     expect(myAgentMnager.agentsList.size).toEqual(1);
     expect(conn.listeners()).toContain(resourceProtocolEvents.resourceAttach);
     expect(conn.listeners()).toContain(resourceProtocolEvents.resourceAttach);
-
-
   });
 
   test("receive connection & disconnection request > test 1", () => {
@@ -59,7 +64,7 @@ describe("Demo", () => {
     expect(myConnectionMnager._connectionsList.size).toBe(0);
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith(
-      connectionManagerEvents.remoteDisconnected,
+      connectionServerManagerEvents.remoteDisconnected,
       mockConnection.id
     );
   });

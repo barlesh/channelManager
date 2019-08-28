@@ -1,7 +1,7 @@
 import "jest";
 import * as uid from "uuid";
 import { ResourceManager } from "../../src/resources";
-import { Agent, AgentsManager } from "../../../agents-manager/src/agents";
+import { Agent, AgentsManager, AgentsManagerServer } from "../../../agents-manager/src/agents";
 import {
   ioMock,
   mockConnection
@@ -53,7 +53,9 @@ describe("Demo", () => {
     myConnectionManager.config({ io: ioMock, channel: cname });
     // incoming connection
     myConnectionManager.connectionHandler(myConnectionManager, mockConnection);
-    myAgentManager = new AgentsManager(myConnectionManager, myResourceManager);
+    myAgentManager = new AgentsManagerServer();
+    myAgentManager.config({connectionManager: myConnectionManager, resourceManager:myResourceManager})
+
     myResourceManager.add(resource, uidSource);
     agentID = myAgentManager.add(agentObj);
     agent = myAgentManager.getAgentsList().get(agentID);

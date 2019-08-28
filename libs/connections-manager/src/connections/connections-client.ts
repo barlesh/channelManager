@@ -29,6 +29,7 @@ export class ConnectionClient extends ConnectionManager {
 
     const connID = connectionUtils.extractConnectionID(this._nsp);
     this.setConnection(connID, this._nsp);
+    return connID;
   }
 
   config(conf) {
@@ -46,9 +47,11 @@ export class ConnectionClient extends ConnectionManager {
     this._channel = channelName;
     this._serverAddr = serverAddr;
     this._serverPort = serverPort;
+  }
 
-    this.connect();
-    this.emit(connectionClientManagerEvents.connectedToRemote)
+  connectToServer() {
+    const cid = this.connect();
+    this.emit(connectionClientManagerEvents.connectedToRemote, cid);
     this.registerToListenToRemoteConnections();
   }
 
