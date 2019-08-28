@@ -123,10 +123,11 @@ export namespace protocolActions {
     if (!(typeof protocolAction["event"] === "string")) {
       return false;
     }
-    if (!(typeof protocolAction["response_truthy"] === "string")) {
+    if (protocolAction["response_truthy"] && !(typeof protocolAction["response_truthy"] === "string")) {
+
       return false;
     }
-    if (!(typeof protocolAction["response_falsly"] === "string")) {
+    if (protocolAction["response_falsly"] && !(typeof protocolAction["response_falsly"] === "string")) {
       return false;
     }
     if (!(typeof protocolAction["exec"] === "function")) {
