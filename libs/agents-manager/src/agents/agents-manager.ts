@@ -26,6 +26,7 @@ export interface IAgentsManager {
     action: protoActionResponse
   );
   publishEvent(conID: connectionID, protocolAction, data);
+  config(configuration: any);
 }
 
 export abstract class AgentsManager implements IAgentsManager {

@@ -34,5 +34,6 @@ export const mockAgentsManager = {
   },
   publishEvent: (connID, action, data) => {
 
-  }
+  },
+  config: () => {}
 };

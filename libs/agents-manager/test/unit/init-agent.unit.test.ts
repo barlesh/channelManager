@@ -14,12 +14,12 @@ describe("Demo", () => {
   // const resourceManager = mockResourceManager;
   const agentObj = {
     name: "aname",
-    agentID: 1,
+    id: 1,
     connectionID: 1
   };
   const myAgentsManager = mockAgentsManager; //new AgentsManager(myConnectionManager, resourceManager)
   test("create agent class > test 1", () => {
     const agent = new Agent(agentObj, myAgentsManager);
-    expect(agent.getID()).toEqual(agentObj.agentID);
+    expect(agent.getID()).toEqual(agentObj.id);
   });
 });

@@ -1,22 +1,24 @@
 import {
   IConnectionManager,
-  ConnectionServer
-} from "./../../../libs/connections-manager/src/connections";
+  ConnectionServer,
+  ConnectionClient
+} from "../../../libs/connections-manager/src/connections";
 import {
   IAgentsManager,
   AgentsManager,
-  AgentsManagerServer
-} from "./../../../libs/agents-manager/src/agents/";
+  AgentsManagerServer,
+  AgentsManagerClient
+} from "../../../libs/agents-manager/src/agents";
 import {
   IResourceManager,
   ResourceManager
-} from "./../../../libs/resource-manager/src/resources";
+} from "../../../libs/resource-manager/src/resources";
 import {
   protoActionRequest,
   protoActionResponse
 } from "../../../libs/connections-manager/src/connections/protocol.actions";
 
-export class Master {
+export class Slave {
   _connectionManager: IConnectionManager;
   _agentsManager: IAgentsManager;
   _resourceManager: IResourceManager;
@@ -24,17 +26,21 @@ export class Master {
   constructor(
     io,
     channel: string,
+    masterAddr,
+    masterPort,
     protocolRequests: protoActionRequest[],
-    protocolResponses: protoActionResponse[]
+    protocolResponses: protoActionResponse[],
+    uniqueID: string,
+    slaveName?: string
   ) {
     // receice the connection manager
-    if (!io || !channel || !protocolRequests || !protocolResponses) {
+    if (!io || !channel || !masterAddr || !masterPort || !protocolRequests || !protocolResponses || !uniqueID) {
       throw new Error(
         "no connection manager supplied. cannot connect to outside world"
       );
     }
 
-    this._connectionManager = new ConnectionServer();
+    this._connectionManager = new ConnectionClient();
 
     // init the master's resource manager
     this._resourceManager = new ResourceManager(
@@ -42,16 +48,25 @@ export class Master {
       protocolRequests
     );
 
-    this._agentsManager = new AgentsManagerServer();
+    this._agentsManager = new AgentsManagerClient();
 
     // init agents manager, with the connection & resource managers
     const connectionServerConfiguration = {
       io,
-      channel
+      channel,
+      address: masterAddr,
+      port: masterPort
     };
+
+    const agentID = {
+      id: uniqueID,
+      name: slaveName
+    }
+
     const agentManagerConfiguration = {
       connectionManager: this._connectionManager,
-      resourceManager: this._resourceManager
+      resourceManager: this._resourceManager,
+      agent: agentID
     };
 
     this._connectionManager.config(connectionServerConfiguration);

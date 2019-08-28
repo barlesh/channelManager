@@ -20,7 +20,7 @@ export class Agent implements IAgent {
 
   constructor(agentObj, agentManager: IAgentsManager) {
     try {
-      this._id = agentObj.agentID || uid();
+      this._id = agentObj.id || uid();
     } catch (err) {
       console.warn(`did not received a propare agent oibject: ${agentObj}`);
       return;
