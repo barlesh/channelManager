@@ -1,6 +1,8 @@
 import { Agent } from "./agent";
 import { AgentsManager } from "./agents-manager";
 import { connectionClientManagerEvents } from "./../../../connections-manager/src/connections";
+import { agentsProtocolEvents } from "../../../connections-manager/src/protocol";
+import { connectionID } from "../../../connections-manager/src/models";
 
 export class AgentsManagerClient extends AgentsManager {
   agent;
@@ -32,8 +34,14 @@ export class AgentsManagerClient extends AgentsManager {
     this.connectionManager.config
   }
 
-  createAgent(connection) {
+  createAgent(connectionID: connectionID) {
+    // create agent localy
     const newAgent = new Agent(this.agent, this);
     this.add(newAgent);
+    // publish regarding new agent - to the remote agents manager
+    const Action = {
+      event: agentsProtocolEvents.agentRegister
+    }
+    this.publishEvent(connectionID, Action, this.agent);
   }
 }

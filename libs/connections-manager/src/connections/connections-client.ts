@@ -1,5 +1,6 @@
 import { connectionUtils } from "./connectionUtils";
 import { ConnectionManager } from "./connections-manager";
+import { connectionID } from "../models";
 
 export enum connectionClientManagerEvents {
   connectedToRemote = "connected-to-remote",
@@ -10,7 +11,7 @@ export class ConnectionClient extends ConnectionManager {
   _serverAddr;
   _serverPort;
 
-  connect() {
+  connect() : connectionID{
     const serverAddr = `${this._serverAddr}:${this._serverPort}/${
       this._channel
     }`;
