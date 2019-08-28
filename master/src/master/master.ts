@@ -15,6 +15,7 @@ import {
   protoActionRequest,
   protoActionResponse
 } from "../../../libs/connections-manager/src/connections/protocol.actions";
+import { resourceID } from "../../../libs/resource-manager/src/types/types";
 
 export class Master {
   _connectionManager: IConnectionManager;
@@ -56,5 +57,9 @@ export class Master {
 
     this._connectionManager.config(connectionServerConfiguration);
     this._agentsManager.config(agentManagerConfiguration);
+  }
+
+  publishEventToResource(rid: resourceID, event: string, data?){
+    this._resourceManager.publishEvent(rid, event, data)
   }
 }

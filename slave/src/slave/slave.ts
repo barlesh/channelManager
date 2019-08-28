@@ -1,12 +1,9 @@
 import {
   IConnectionManager,
-  ConnectionServer,
   ConnectionClient
 } from "../../../libs/connections-manager/src/connections";
 import {
   IAgentsManager,
-  AgentsManager,
-  AgentsManagerServer,
   AgentsManagerClient
 } from "../../../libs/agents-manager/src/agents";
 import {
@@ -17,11 +14,14 @@ import {
   protoActionRequest,
   protoActionResponse
 } from "../../../libs/connections-manager/src/connections/protocol.actions";
+import { resourceID } from "../../../libs/resource-manager/src/types/types";
+import { resourceProtocolEvents } from "../../../libs/agents-manager/src/protocol/resource.protocol";
 
 export class Slave {
-  _connectionManager: IConnectionManager;
-  _agentsManager: IAgentsManager;
+  _connectionManager: ConnectionClient;
+  _agentsManager: AgentsManagerClient;
   _resourceManager: IResourceManager;
+  uid: string;
 
   constructor(
     io,
@@ -34,11 +34,21 @@ export class Slave {
     slaveName?: string
   ) {
     // receice the connection manager
-    if (!io || !channel || !masterAddr || !masterPort || !protocolRequests || !protocolResponses || !uniqueID) {
+    if (
+      !io ||
+      !channel ||
+      !masterAddr ||
+      !masterPort ||
+      !protocolRequests ||
+      !protocolResponses ||
+      !uniqueID
+    ) {
       throw new Error(
         "no connection manager supplied. cannot connect to outside world"
       );
     }
+
+    this.uid = uniqueID;
 
     this._connectionManager = new ConnectionClient();
 
@@ -59,9 +69,9 @@ export class Slave {
     };
 
     const agentID = {
-      id: uniqueID,
+      id: this.uid,
       name: slaveName
-    }
+    };
 
     const agentManagerConfiguration = {
       connectionManager: this._connectionManager,
@@ -71,5 +81,19 @@ export class Slave {
 
     this._connectionManager.config(connectionServerConfiguration);
     this._agentsManager.config(agentManagerConfiguration);
+  }
+
+  registerNewResource(rid: resourceID) {
+    const cid = this._agentsManager.get(this.uid)._connectionID;
+    // TODO  - add this action to the protocol actions list and use it instead of building it
+    const action = {
+      event: resourceProtocolEvents.resourceAttach
+    };
+    // send resource registration event toward the master
+    this._connectionManager.publishConnectionEvent(cid, action, rid);
+  }
+
+  publishEventToResource(rid: resourceID, event: string, data?) {
+    this._resourceManager.publishEvent(rid, event, data);
   }
 }

@@ -32,7 +32,6 @@ export class ResourceManager implements IResourceManager {
       throw new Error("response protocol of bad type");
     }
     this._protocolRequest= new Map();
-    console.log("calling validateProtocolActionRequest with req object: ", requests)
     if (protocolActions.validateProtocolActionRequest(requests)) {
       this.loadRequestsToMap(requests);
     } else {

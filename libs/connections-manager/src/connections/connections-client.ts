@@ -52,6 +52,7 @@ export class ConnectionClient extends ConnectionManager {
 
   connectToServer() {
     const cid = this.connect();
+    console.log("connection manager client: emmiting: ", connectionClientManagerEvents.connectedToRemote)
     this.emit(connectionClientManagerEvents.connectedToRemote, cid);
     this.registerToListenToRemoteConnections();
   }

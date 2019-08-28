@@ -20,28 +20,26 @@ export class AgentsManagerClient extends AgentsManager {
     this.connectionManager = connectionManager;
     this.resourcesManager = resourceManager;
 
-    this.connectionManager.connectToServer();
-
     /* 
-      listen to a connection manager (client) events, regarding new succsessfull connection attampt toward the server
-      Upon successfull connection, create an agent instance
+    listen to a connection manager (client) events, regarding new succsessfull connection attampt toward the server
+    Upon successfull connection, create an agent instance
     */
     this.connectionManager.on(
       connectionClientManagerEvents.connectedToRemote,
-      this.createAgent
+      this.createAgent.bind(this)
     );
-
-    this.connectionManager.config
+    this.connectionManager.connectToServer();
   }
 
   createAgent(connectionID: connectionID) {
     // create agent localy
+    console.info(`creating agent: ${this.agent}`);
     const newAgent = new Agent(this.agent, this);
     this.add(newAgent);
     // publish regarding new agent - to the remote agents manager
     const Action = {
       event: agentsProtocolEvents.agentRegister
-    }
+    };
     this.publishEvent(connectionID, Action, this.agent);
   }
 }
