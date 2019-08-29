@@ -1,5 +1,5 @@
 export namespace connectionUtils {
-  export function extractConnectionID(connection) {
+  export function extractConnectionClintID(connection) {
     if (connection && connection.client && connection.client.id) {
       return connection.client.id;
     }

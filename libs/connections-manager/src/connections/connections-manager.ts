@@ -54,13 +54,14 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   reconnectionHandler(connectionSocket) {
+    console.log("reconnectionHandler: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     //TODO
     //   this._connectionsList.delete()
   }
 
   connectionHandler(manager, connectionSocket) {
     let connID;
-    connID = connectionUtils.extractConnectionID(connectionSocket);
+    connID = connectionUtils.extractConnectionClintID(connectionSocket);
     if (!connID) {
       console.warn("received connection without unique connection ID.");
       return;
@@ -72,7 +73,7 @@ export abstract class ConnectionManager implements IConnectionManager {
   disconnectionHandler(manager: ConnectionManager, connectionSocket) {
     console.log("disconnected handler. connectionSocket: ", connectionSocket);
     let connID;
-    connID = connectionUtils.extractConnectionID(connectionSocket);
+    connID = connectionUtils.extractConnectionClintID(connectionSocket);
     if (!connID) {
       console.warn("received connection without unique connection ID.");
       return;

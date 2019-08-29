@@ -60,7 +60,7 @@ export class ConnectionServer extends ConnectionManager {
 
   connectionHandler(manager: ConnectionServer, connectionSocket) {
     let connID;
-    connID = connectionUtils.extractConnectionID(connectionSocket);
+    connID = connectionUtils.extractConnectionClintID(connectionSocket);
     console.info("Handling connection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
     super.connectionHandler(manager, connectionSocket);
@@ -70,7 +70,7 @@ export class ConnectionServer extends ConnectionManager {
 
   disconnectionHandler(manager: ConnectionServer, connectionSocket) {
     let connID;
-    connID = connectionUtils.extractConnectionID(connectionSocket);
+    connID = connectionUtils.extractConnectionClintID(connectionSocket);
     console.info("Handling disconnection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
     super.disconnectionHandler(manager, connectionSocket);

@@ -1,6 +1,7 @@
 import { ConnectionManager } from "./connections-manager";
 import { connectionID } from "../models";
 import * as uid from "uuid";
+import { connectionUtils } from "./connectionUtils";
 
 export enum connectionClientManagerEvents {
   connectedToRemote = "connected-to-remote",
@@ -11,6 +12,7 @@ export enum connectionClientManagerEvents {
 export class ConnectionClient extends ConnectionManager {
   _serverAddr;
   _serverPort;
+  _connectionID: connectionID;
 
   connect(): connectionID {
     const serverAddr = `${this._serverAddr}:${this._serverPort}/${
@@ -29,9 +31,7 @@ export class ConnectionClient extends ConnectionManager {
       throw new Error("could not connect to server");
     }
 
-    // the connection id does not relay on the connection object. it is single for connection client (unlike connection server)
-    const connID = uid(); //connectionUtils.extractConnectionID(this._nsp);
-    this.setConnection(connID, this._nsp);
+    const connID = this.createConnection();
     return connID;
   }
 
@@ -54,8 +54,8 @@ export class ConnectionClient extends ConnectionManager {
 
   connectToServer() {
     const cid = this.connect();
-    console.log(`connection manager client. connected to server. cid: ${cid}`);
-    this.emit(connectionClientManagerEvents.connectedToRemote, cid);
+    // console.log(`connection manager client. connected to server. cid: ${cid}`);
+    // this.emit(connectionClientManagerEvents.connectedToRemote, cid);
     this.registerToListenToRemoteConnections();
   }
 
@@ -65,7 +65,7 @@ export class ConnectionClient extends ConnectionManager {
       this
     );
 
-    const bindedreconnectionHandler = this.reconnectionHandler.bind(
+    const bindedreconnectionHandler = this.reconnectionHandlerClient.bind(
       this._nsp,
       this
     );
@@ -74,7 +74,26 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   disconnectionHandlerClient(manager, Msg) {
-    console.info("Connection client: Received disconnection event.")
+    console.info("Connection client: Received disconnection event. destroinyg connection.");
+    manager.destroyConnection();
     manager.emit(connectionClientManagerEvents.remoteDisconnected);
+  }
+
+  reconnectionHandlerClient(manager) {
+    console.log("Connection client: Received disconnection event. re-creating connection.");
+    manager.createConnection();
+  }
+
+  createConnection() {
+    // the connection id does not relay on the connection object. it is single for connection client (unlike connection server)
+    const connID = uid();
+    this._connectionID = connID;
+    this.setConnection(connID, this._nsp);
+    this.emit(connectionClientManagerEvents.connectedToRemote, connID);
+    return connID;
+  }
+
+  destroyConnection() {
+    this._connectionsList.delete(this._connectionID);
   }
 }
