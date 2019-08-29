@@ -124,7 +124,6 @@ export abstract class AgentsManager implements IAgentsManager {
     this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
 
     // temp
-    const connection = this.connectionManager.getConnection(connectionID);
     Action = protocolActions.createProtocolActionResponse(
       "disconnect",
       this.disconnectAgent.bind(this, agentID),
@@ -144,6 +143,7 @@ export abstract class AgentsManager implements IAgentsManager {
     const agent = this.get(agentID);
     this.resourcesManager.detachAgent(agent);
     this.remove(agentID);
+    return true;
   }
 
   getAgentConnection(connectionID) {

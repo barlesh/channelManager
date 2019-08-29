@@ -6,6 +6,7 @@ import {
   protoActionRequest
 } from "../../../connections-manager/src/connections/protocol.actions";
 import * as uid from "uuid";
+import { agentID } from "../../../agents-manager/src/types/types";
 
 export interface IResourceManager {
   _protocolResponse: protoActionResponse[];
@@ -17,6 +18,7 @@ export interface IResourceManager {
   attachResourceToAgent(agent: Agent, resourceID: resourceID);
   detachResourceFromAgent(agent: Agent, resourceID: resourceID);
   publishEvent(resourceID: resourceID, event: string, data);
+  detachAgent(agent: Agent);
 }
 
 export class ResourceManager implements IResourceManager {
@@ -80,7 +82,6 @@ export class ResourceManager implements IResourceManager {
   }
 
   attachResourceToAgent(agent: Agent, resourceID: resourceID) {
-
     if (!this.resourcesList.get(resourceID)) {
       throw new Error("resource not exist.");
     }
@@ -102,6 +103,15 @@ export class ResourceManager implements IResourceManager {
     // register resource protocol events TODO
     this.registerProtocolEvents(agent);
     return true;
+  }
+
+  detachAgent(agent: Agent) {
+    const agentID = agent.getID();
+    console.info(`detaching agent with agentID: ${agentID} from all resources`);
+    const resourcesToDetach = this.getResourcesByAgent(agentID);
+    resourcesToDetach.forEach(rid => {
+      this.remove(rid);
+    });
   }
 
   detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
@@ -134,6 +144,16 @@ export class ResourceManager implements IResourceManager {
       console.warn("could not load protocol. error: ", err);
       return;
     }
+  }
+
+  getResourcesByAgent(agentID: agentID){
+    const resourcesToDetach = [];
+    this.resourceAgentMap.forEach((value, key, map) => {
+      if (value._id === agentID) {
+        resourcesToDetach.push(key);
+      }
+    });
+    return resourcesToDetach;
   }
 
   publishEvent(resourceID: resourceID, event: string, data) {

@@ -3,7 +3,6 @@ import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connectionUtils";
 import { protoActionResponse, protoActionRequest } from "./protocol.actions";
-import { connectionServerManagerEvents } from "./connections-server";
 
 export interface IConnectionManager {
   config(any);

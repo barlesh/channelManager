@@ -61,6 +61,7 @@ export class ConnectionServer extends ConnectionManager {
   connectionHandler(manager: ConnectionServer, connectionSocket) {
     let connID;
     connID = connectionUtils.extractConnectionID(connectionSocket);
+    console.info("Handling connection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
     super.connectionHandler(manager, connectionSocket);
     // notify other manager that new remote connection exist, and publish its ID
@@ -70,6 +71,7 @@ export class ConnectionServer extends ConnectionManager {
   disconnectionHandler(manager: ConnectionServer, connectionSocket) {
     let connID;
     connID = connectionUtils.extractConnectionID(connectionSocket);
+    console.info("Handling disconnection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
     super.disconnectionHandler(manager, connectionSocket);
     manager.emit(connectionServerManagerEvents.remoteDisconnected, connID);
