@@ -2,17 +2,17 @@ import { ConnectionManager } from "./connections-manager";
 import { connectionID } from "../models";
 import * as uid from "uuid";
 
-
 export enum connectionClientManagerEvents {
   connectedToRemote = "connected-to-remote",
-  disconnectedFromRemote = "disconnected-from-remote"
+  disconnectedFromRemote = "disconnected-from-remote",
+  remoteDisconnected = "remote-disconnected"
 }
 
 export class ConnectionClient extends ConnectionManager {
   _serverAddr;
   _serverPort;
 
-  connect() : connectionID{
+  connect(): connectionID {
     const serverAddr = `${this._serverAddr}:${this._serverPort}/${
       this._channel
     }`;
@@ -54,13 +54,13 @@ export class ConnectionClient extends ConnectionManager {
 
   connectToServer() {
     const cid = this.connect();
-    console.log(`connection manager client. connected to server. cid: ${cid}`)
+    console.log(`connection manager client. connected to server. cid: ${cid}`);
     this.emit(connectionClientManagerEvents.connectedToRemote, cid);
     this.registerToListenToRemoteConnections();
   }
 
   registerToListenToRemoteConnections() {
-    const bindeddisconnectionHandler = this.disconnectionHandler.bind(
+    const bindeddisconnectionHandler = this.disconnectionHandlerClient.bind(
       this._nsp,
       this
     );
@@ -71,5 +71,10 @@ export class ConnectionClient extends ConnectionManager {
     );
     this._nsp.on("disconnect", bindeddisconnectionHandler);
     this._nsp.on("reconnect", bindedreconnectionHandler);
+  }
+
+  disconnectionHandlerClient(manager, Msg) {
+    console.info("Connection client: Received disconnection event.")
+    manager.emit(connectionClientManagerEvents.remoteDisconnected);
   }
 }

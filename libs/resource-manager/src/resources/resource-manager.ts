@@ -112,6 +112,7 @@ export class ResourceManager implements IResourceManager {
     resourcesToDetach.forEach(rid => {
       this.resourceAgentMap.delete(rid);
     });
+    console.info(`Detached ${resourcesToDetach.length} resources.`);
   }
 
   detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
