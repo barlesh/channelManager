@@ -28,6 +28,10 @@ export class AgentsManagerClient extends AgentsManager {
       connectionClientManagerEvents.connectedToRemote,
       this.createAgent.bind(this)
     );
+    this.connectionManager.on(
+      connectionClientManagerEvents.disconnectedFromRemote,
+      this.removeAgent.bind(this)
+    );
     this.connectionManager.connectToServer();
   }
 

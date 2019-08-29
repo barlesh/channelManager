@@ -6,8 +6,15 @@ import { protoActionResponse, protoActionRequest } from "./protocol.actions";
 
 export interface IConnectionManager {
   config(any);
-  subscribeToConnectionEvent(cid: connectionID, protocolAction: protoActionResponse);
-  publishConnectionEvent(cid: connectionID, protocolAction: protoActionRequest, data);
+  subscribeToConnectionEvent(
+    cid: connectionID,
+    protocolAction: protoActionResponse
+  );
+  publishConnectionEvent(
+    cid: connectionID,
+    protocolAction: protoActionRequest,
+    data
+  );
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
   _connectionsList: Map<connectionID, any>;
@@ -63,6 +70,7 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   disconnectionHandler(manager: ConnectionManager, connectionSocket) {
+    console.log("disconnected handler. connectionSocket: ", connectionSocket);
     let connID;
     connID = connectionUtils.extractConnectionID(connectionSocket);
     if (!connID) {
@@ -74,19 +82,25 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   /* API for registering (subscribing to) connection events using connection ID */
-  subscribeToConnectionEvent(connID: connectionID, protocolAction: protoActionResponse) {
-
+  subscribeToConnectionEvent(
+    connID: connectionID,
+    protocolAction: protoActionResponse
+  ) {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
         `could not find connection with connection id: ${connID}`
-        );
-      }
+      );
+    }
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
 
   /* API for sending (publishing to) connection events using connection ID */
-  publishConnectionEvent(connID: connectionID, protocolAction: protoActionRequest, data) {
+  publishConnectionEvent(
+    connID: connectionID,
+    protocolAction: protoActionRequest,
+    data
+  ) {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
