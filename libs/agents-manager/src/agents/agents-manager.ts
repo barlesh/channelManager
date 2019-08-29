@@ -122,6 +122,28 @@ export abstract class AgentsManager implements IAgentsManager {
       undefined
     );
     this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
+
+    // temp
+    const connection = this.connectionManager.getConnection(connectionID);
+    Action = protocolActions.createProtocolActionResponse(
+      "disconnect",
+      this.disconnectAgent.bind(this, agentID),
+      undefined,
+      undefined
+    );
+    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
+  }
+
+  disconnectAgent(agentID, disconnectioMsg) {
+    console.log("disconnectAgent: agentID:", agentID);
+    console.log("disconnectAgent: disconnectioMsg:", disconnectioMsg);
+    if(!agentID){
+      console.error("received agent disconnection event without agent id. cannot disconnect agent");
+      throw new Error("failed to disconnect agent");
+    }
+    const agent = this.get(agentID);
+    this.resourcesManager.detachAgent(agent);
+    this.remove(agentID);
   }
 
   getAgentConnection(connectionID) {
@@ -149,6 +171,8 @@ export abstract class AgentsManager implements IAgentsManager {
   }
 
   remove(id: agentID) {
+    const agent = this.get(id);
+    this.resourcesManager.detachAgent(agent);
     this.agentsList.delete(id);
   }
 
