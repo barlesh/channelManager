@@ -1,4 +1,3 @@
-import { EventEmitter } from "events";
 import { connectionID } from "../models";
 import { connectionUtils } from "./connectionUtils";
 import { ConnectionManager } from "./connections-manager";

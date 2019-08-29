@@ -25,12 +25,10 @@ export abstract class ConnectionManager implements IConnectionManager {
   eve = new EventEmitter();
 
   on(eventType: string, func) {
-    console.log("connection manager: registrating event: ", eventType, ". handler: ", func)
     this.eve.on(eventType, func);
   }
 
   emit(eventType: string, data?) {
-    console.log("connection manager: emmiting event: ", eventType, ". data: ", data)
     this.eve.emit(eventType, data);
   }
 

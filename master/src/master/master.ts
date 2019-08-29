@@ -4,7 +4,6 @@ import {
 } from "./../../../libs/connections-manager/src/connections";
 import {
   IAgentsManager,
-  AgentsManager,
   AgentsManagerServer
 } from "./../../../libs/agents-manager/src/agents/";
 import {
@@ -59,7 +58,11 @@ export class Master {
     this._agentsManager.config(agentManagerConfiguration);
   }
 
-  publishEventToResource(rid: resourceID, event: string, data?){
-    this._resourceManager.publishEvent(rid, event, data)
+  addResource(resource, resourceID: resourceID) {
+    this._resourceManager.add(resource, resourceID);
+  }
+
+  publishEventToResource(rid: resourceID, event: string, data?) {
+    this._resourceManager.publishEvent(rid, event, data);
   }
 }

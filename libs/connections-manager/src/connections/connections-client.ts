@@ -1,6 +1,7 @@
-import { connectionUtils } from "./connectionUtils";
 import { ConnectionManager } from "./connections-manager";
 import { connectionID } from "../models";
+import * as uid from "uuid";
+
 
 export enum connectionClientManagerEvents {
   connectedToRemote = "connected-to-remote",
@@ -28,7 +29,8 @@ export class ConnectionClient extends ConnectionManager {
       throw new Error("could not connect to server");
     }
 
-    const connID = connectionUtils.extractConnectionID(this._nsp);
+    // the connection id does not relay on the connection object. it is single for connection client (unlike connection server)
+    const connID = uid(); //connectionUtils.extractConnectionID(this._nsp);
     this.setConnection(connID, this._nsp);
     return connID;
   }
@@ -52,7 +54,7 @@ export class ConnectionClient extends ConnectionManager {
 
   connectToServer() {
     const cid = this.connect();
-    console.log("connection manager client: emmiting: ", connectionClientManagerEvents.connectedToRemote)
+    console.log(`connection manager client. connected to server. cid: ${cid}`)
     this.emit(connectionClientManagerEvents.connectedToRemote, cid);
     this.registerToListenToRemoteConnections();
   }

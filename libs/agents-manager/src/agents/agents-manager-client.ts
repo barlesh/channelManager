@@ -33,9 +33,10 @@ export class AgentsManagerClient extends AgentsManager {
 
   createAgent(connectionID: connectionID) {
     // create agent localy
-    console.info(`creating agent: ${this.agent}`);
-    const newAgent = new Agent(this.agent, this);
-    this.add(newAgent);
+    console.info(`creating agent. agent id: ${this.agent.id}. connectionID: ${connectionID}`);
+    // const newAgent = new Agent(this.agent, this);
+    this.agent["connectionID"] = connectionID;
+    this.add(this.agent);
     // publish regarding new agent - to the remote agents manager
     const Action = {
       event: agentsProtocolEvents.agentRegister

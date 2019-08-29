@@ -2,7 +2,10 @@ import * as uid from "uuid";
 import { AgentsManager, IAgentsManager } from "./agents-manager";
 import { connectionID } from "../../../connections-manager/src/models";
 import { agentID } from "../types/types";
-import { protoActionResponse, protoActionRequest } from "./../../../connections-manager/src/connections/protocol.actions";
+import {
+  protoActionResponse,
+  protoActionRequest
+} from "./../../../connections-manager/src/connections/protocol.actions";
 
 export interface IAgent {
   _id;
@@ -20,12 +23,18 @@ export class Agent implements IAgent {
 
   constructor(agentObj, agentManager: IAgentsManager) {
     try {
-      this._id = agentObj.id || uid();
+      const received_id = agentObj["id"];
+      this._id = received_id? received_id : uid();
     } catch (err) {
-      console.warn(`did not received a propare agent oibject: ${agentObj}`);
+      console.error(`did not received a propare agent object: ${agentObj}. error: `, err);
       return;
     }
-    this._connectionID = agentObj["connectionID"];
+    const connectionID = agentObj["connectionID"];
+    if(!connectionID){
+      console.error("agent object does not hold connection ID. We will not be able to connect with it. cannot create agent.")
+      throw new Error("connection id missing.")
+    }
+    this._connectionID = connectionID;
     this._manager = agentManager;
   }
 
@@ -40,7 +49,7 @@ export class Agent implements IAgent {
     // TODO
   }
 
-  publishEvent(protocolAction: protoActionRequest, data){
+  publishEvent(protocolAction: protoActionRequest, data) {
     this._manager.publishEvent(this._connectionID, protocolAction, data);
   }
 

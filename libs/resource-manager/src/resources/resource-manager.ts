@@ -25,13 +25,16 @@ export class ResourceManager implements IResourceManager {
   _protocolResponse: protoActionResponse[];
   _protocolRequest: Map<string, protoActionRequest>;
 
-  constructor(responses: protoActionResponse[], requests: protoActionRequest[]) {
+  constructor(
+    responses: protoActionResponse[],
+    requests: protoActionRequest[]
+  ) {
     if (protocolActions.validateProtocolActionResponse(responses)) {
       this._protocolResponse = responses;
     } else {
       throw new Error("response protocol of bad type");
     }
-    this._protocolRequest= new Map();
+    this._protocolRequest = new Map();
     if (protocolActions.validateProtocolActionRequest(requests)) {
       this.loadRequestsToMap(requests);
     } else {
@@ -41,10 +44,10 @@ export class ResourceManager implements IResourceManager {
     this.resourceAgentMap = new Map();
   }
 
-  loadRequestsToMap(actionRequests: protoActionRequest[]){
-    actionRequests.forEach((action)=>{
+  loadRequestsToMap(actionRequests: protoActionRequest[]) {
+    actionRequests.forEach(action => {
       this._protocolRequest.set(action.event, action);
-    })
+    });
   }
 
   add(resource, id?): resourceID {
@@ -77,14 +80,15 @@ export class ResourceManager implements IResourceManager {
   }
 
   attachResourceToAgent(agent: Agent, resourceID: resourceID) {
+
     if (!this.resourcesList.get(resourceID)) {
       throw new Error("resource not exist.");
     }
+
     if (!agent) {
       console.error("no agent supplied");
       throw new Error("no agent supplied");
     }
-
     const agentID = agent.getID();
     if (!agentID) {
       console.error("no agent id supplied in object: ", agent);
@@ -97,6 +101,7 @@ export class ResourceManager implements IResourceManager {
 
     // register resource protocol events TODO
     this.registerProtocolEvents(agent);
+    return true;
   }
 
   detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
@@ -112,7 +117,6 @@ export class ResourceManager implements IResourceManager {
   registerProtocolEvents(agent: Agent) {
     try {
       this._protocolResponse.forEach(protocolAction => {
-        // console.log(`registering protocol action :${protocolAction} to agent: ${agent}`)
         agent.registerProtocolEvent(protocolAction);
       });
     } catch (err) {
@@ -132,12 +136,16 @@ export class ResourceManager implements IResourceManager {
     }
   }
 
-  publishEvent(resourceID: resourceID, event: string, data){
+  publishEvent(resourceID: resourceID, event: string, data) {
     const agent = this.resourceAgentMap.get(resourceID);
+    if (!agent) {
+      console.warn(
+        `could not find agent that hold resource with resource id: ${resourceID}`
+      );
+      throw new Error("can not publish event. agent not found");
+    }
     const action = this._protocolRequest.get(event);
     agent.publishEvent(action, data);
-
-
   }
 
   myResourceHandler() {}

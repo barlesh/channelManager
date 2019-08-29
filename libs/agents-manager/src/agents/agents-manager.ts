@@ -21,10 +21,7 @@ export interface IAgentsManager {
   get(id): any;
   registerResource(agentID: agentID, resouceID: resourceID);
   getAgentConnection(agentID: agentID);
-  registerConnectionEvent(
-    conID: connectionID,
-    action: protoActionResponse
-  );
+  registerConnectionEvent(conID: connectionID, action: protoActionResponse);
   publishEvent(conID: connectionID, protocolAction, data);
   config(configuration: any);
 }
@@ -32,30 +29,7 @@ export interface IAgentsManager {
 export abstract class AgentsManager implements IAgentsManager {
   agentsList: Map<agentID, Agent>;
   resourcesManager: IResourceManager;
-  connectionManager;//: IConnectionManager;
-
-  // constructor(
-  //   connectionMnager: IConnectionManager,
-  //   resourceManager: IResourceManager
-  // ) {
-  //   this.agentsList = new Map();
-  //   this.connectionManager = connectionMnager;
-  //   this.resourcesManager = resourceManager;
-
-  //   /* 
-  //     listen to a connection manager (server) events, regarding new connection
-  //     This will register a new listener to the connection, expecting for the remote conncetion to send "agent registration" event
-  //   */
-  //   this.connectionManager.on(
-  //     connectionServerManagerEvents.remoteConnected,
-  //     this.registerToAgentRegistrationEvents.bind(this)
-  //   );
-  //   /* 
-  //     listen to a connection manager (client) events, regarding new succsessfull connection attampt toward the server
-  //     Upon successfull connection, create an agent instance
-  //   */
-
-  // }
+  connectionManager; //: IConnectionManager;
 
   abstract config(conf);
 
@@ -99,7 +73,7 @@ export abstract class AgentsManager implements IAgentsManager {
       IN THIS CASE, THE AGENT-MANAGER WILL BE NEEDED TO BE BIND !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     */
     let Action: protoActionResponse;
-    const f = this.agentRegistration
+    const f = this.agentRegistration;
     const bindedagentRegistration = this.agentRegistration.bind(
       this,
       connectionID
@@ -127,11 +101,11 @@ export abstract class AgentsManager implements IAgentsManager {
 
   registerAgentToResourcesEvents(connectionID, agentID) {
     let Action: protoActionResponse;
-    const bindedregisterResource = this.registerResource.bind(
+    const bindedregisterResource = this.registerResource.bind(this, agentID);
+    const bindedunregisterResource = this.unregisterResource.bind(
       this,
       agentID
     );
-    const bindedunregisterResource = this.unregisterResource.bind(this, agentID);
 
     Action = protocolActions.createProtocolActionResponse(
       resourceProtocolEvents.resourceAttach,
@@ -158,11 +132,16 @@ export abstract class AgentsManager implements IAgentsManager {
     // validate agent - TODO
 
     // generate unique ID
-    const uidS: string = uid();
-    agentObj["agentID"] = uidS;
     const agent = new Agent(agentObj, this);
-    this.agentsList.set(uidS, agent);
-    return uidS;
+    const aid = agent._id;
+    if (this.agentsList.get(aid)) {
+      console.warn(
+        `agent with id: ${aid} already exist. replacing old agent with the new agent (temppp)`
+      );
+    }
+
+    this.agentsList.set(aid, agent);
+    return aid;
   }
 
   get(id: agentID) {
@@ -178,6 +157,9 @@ export abstract class AgentsManager implements IAgentsManager {
   }
 
   registerResource(agentID: agentID, resouceID: resourceID) {
+    console.info(
+      `registering resource with id ${resouceID} to agent with id ${agentID}`
+    );
     if (!agentID) {
       console.warn(`no agent ID found : ${agentID}`);
       return;
@@ -188,6 +170,9 @@ export abstract class AgentsManager implements IAgentsManager {
   }
 
   unregisterResource(agentID: agentID, resouceID: resourceID) {
+    console.info(
+      `un-registering resource with id ${resouceID} from agent with id ${agentID}`
+    );
     if (!agentID) {
       console.warn(`no agent found: ${agentID}.`);
       return;
@@ -197,11 +182,14 @@ export abstract class AgentsManager implements IAgentsManager {
     return true;
   }
 
-  registerConnectionEvent(conID: connectionID, protocolAction: protoActionResponse) {
+  registerConnectionEvent(
+    conID: connectionID,
+    protocolAction: protoActionResponse
+  ) {
     this.connectionManager.subscribeToConnectionEvent(conID, protocolAction);
   }
 
-  publishEvent(conID: connectionID, protocolAction: protoActionRequest, data){
+  publishEvent(conID: connectionID, protocolAction: protoActionRequest, data) {
     this.connectionManager.publishConnectionEvent(conID, protocolAction, data);
   }
 }

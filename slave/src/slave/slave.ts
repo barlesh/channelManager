@@ -21,7 +21,7 @@ export class Slave {
   _connectionManager: ConnectionClient;
   _agentsManager: AgentsManagerClient;
   _resourceManager: IResourceManager;
-  uid: string;
+  slaveID: string;
 
   constructor(
     io,
@@ -48,7 +48,7 @@ export class Slave {
       );
     }
 
-    this.uid = uniqueID;
+    this.slaveID = uniqueID;
 
     this._connectionManager = new ConnectionClient();
 
@@ -69,7 +69,7 @@ export class Slave {
     };
 
     const agentID = {
-      id: this.uid,
+      id: this.slaveID,
       name: slaveName
     };
 
@@ -83,14 +83,27 @@ export class Slave {
     this._agentsManager.config(agentManagerConfiguration);
   }
 
-  registerNewResource(rid: resourceID) {
-    const cid = this._agentsManager.get(this.uid)._connectionID;
+  registerNewResource(resource: any) {
+    const rid = resource["id"];
+    if (!rid) {
+      console.error("wrong resource format. no id supplied.");
+      throw new Error("wrong resource format. no id supplied.");
+    }
+    const agent = this._agentsManager.get(this.slaveID);
+    /* this is the slave, so the resource is registered localy without confirmation from the master - TODO - change this behaviour??? */
+    this._resourceManager.add(resource, rid);
+    const cid = agent._connectionID;
     // TODO  - add this action to the protocol actions list and use it instead of building it
     const action = {
       event: resourceProtocolEvents.resourceAttach
     };
+    console.log(
+      `publishing event '${action.event}' with connection id: ${cid}, resource id: ${rid}`
+    );
     // send resource registration event toward the master
     this._connectionManager.publishConnectionEvent(cid, action, rid);
+    // attach agent to resource - TODO - should I do it in response to a successfulll server agent-resource attachment?
+    this._resourceManager.attachResourceToAgent(agent, rid);
   }
 
   publishEventToResource(rid: resourceID, event: string, data?) {

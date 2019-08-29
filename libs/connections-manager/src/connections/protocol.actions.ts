@@ -7,7 +7,7 @@ export type protoActionResponse = {
 
 export type protoActionRequest = {
   event: string;
-}
+};
 
 export namespace protocolActions {
   const expectedProtocolActionResponseKeys = [
@@ -17,9 +17,7 @@ export namespace protocolActions {
     "response_falsly"
   ];
 
-  const expectedProtocolActionRequestKeys = [
-    "event",
-  ];
+  const expectedProtocolActionRequestKeys = ["event"];
 
   export function createProtocolActionResponse(
     event: string,
@@ -44,10 +42,10 @@ export namespace protocolActions {
     }
   }
 
-  export function createProtocolActionRequest(event: string){
+  export function createProtocolActionRequest(event: string) {
     try {
       const action: protoActionRequest = {
-        event,
+        event
       };
       return action;
     } catch (err) {
@@ -59,7 +57,9 @@ export namespace protocolActions {
     }
   }
 
-  export function validateProtocolActionResponse(protocol: protoActionResponse[]): boolean {
+  export function validateProtocolActionResponse(
+    protocol: protoActionResponse[]
+  ): boolean {
     if (!(protocol instanceof Array)) {
       throw new TypeError();
     }
@@ -81,8 +81,9 @@ export namespace protocolActions {
     return retVal;
   }
 
-  export function validateProtocolActionRequest(protocol: protoActionRequest[]): boolean {
-    console.log("protocol: ", protocol)
+  export function validateProtocolActionRequest(
+    protocol: protoActionRequest[]
+  ): boolean {
     if (!(protocol instanceof Array)) {
       throw new TypeError();
     }
@@ -107,10 +108,8 @@ export namespace protocolActions {
 
   function validateResponse(protocolAction: any): boolean {
     const keys = Object.keys(protocolAction);
-    // console.log("kyes: ", keys);
     let retVal = true;
     keys.forEach(key => {
-      // console.log(`is key: ${key} include in array?`)
       if (!expectedProtocolActionResponseKeys.includes(key)) {
         retVal = false;
         return;
@@ -123,11 +122,16 @@ export namespace protocolActions {
     if (!(typeof protocolAction["event"] === "string")) {
       return false;
     }
-    if (protocolAction["response_truthy"] && !(typeof protocolAction["response_truthy"] === "string")) {
-
+    if (
+      protocolAction["response_truthy"] &&
+      !(typeof protocolAction["response_truthy"] === "string")
+    ) {
       return false;
     }
-    if (protocolAction["response_falsly"] && !(typeof protocolAction["response_falsly"] === "string")) {
+    if (
+      protocolAction["response_falsly"] &&
+      !(typeof protocolAction["response_falsly"] === "string")
+    ) {
       return false;
     }
     if (!(typeof protocolAction["exec"] === "function")) {
@@ -137,13 +141,10 @@ export namespace protocolActions {
     return true;
   }
 
-
   function validateRequest(protocolAction: any): boolean {
     const keys = Object.keys(protocolAction);
-    // console.log("kyes: ", keys);
     let retVal = true;
     keys.forEach(key => {
-      // console.log(`is key: ${key} include in array?`)
       if (!expectedProtocolActionRequestKeys.includes(key)) {
         retVal = false;
         return;
