@@ -1,0 +1,25 @@
+{
+  "name": "protocol-tools",
+  "version": "1.0.0",
+  "description": "This repo contains tools for implementing protocol between master & slave",
+  "main": "index.js",
+  "scripts": {
+    "test": "lerna run test",
+    "publish": "npm run build && lerna publish",
+    "build": "lerna bootstrap && lerna run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Radiflow/protocol-tools.git"
+  },
+  "keywords": [],
+  "author": "BarLesh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Radiflow/protocol-tools/issues"
+  },
+  "homepage": "https://github.com/Radiflow/protocol-tools#readme",
+  "dependencies": {
+    "lerna": "^3.16.4"
+  }
+}

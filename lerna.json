@@ -1,0 +1,4 @@
+{
+  "packages": ["libs/*", "mnaster", "slave"],
+  "version": "1.0.0"
+}
