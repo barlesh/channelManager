@@ -20,5 +20,9 @@ master_old/lib
 master_old/node_modules
 
 tmp
+playground/client/dist
+playground/client/node_modules
 
-playground
+playground/server/dist
+playground/server/node_modules
+
