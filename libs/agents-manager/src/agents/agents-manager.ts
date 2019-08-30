@@ -1,7 +1,6 @@
 import { agentID } from "../types/types";
 import { EventEmitter } from "events";
 import { Agent } from "./agent";
-import { resourceID } from "../../../resource-manager/src/types/types";
 import { connectionID } from "../../../connections-manager/src/models";
 import {
   protocolActions,

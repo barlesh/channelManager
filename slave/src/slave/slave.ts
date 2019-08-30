@@ -13,9 +13,9 @@ import {
 import {
   protoActionRequest,
   protoActionResponse
-} from "../../../libs/connections-manager/src/connections/protocol.actions";
+} from "../../../libs/protocol/src/actions";
 import { resourceID } from "../../../libs/resource-manager/src/types/types";
-import { resourceProtocolEvents } from "../../../libs/agents-manager/src/protocol/resource.protocol";
+import { resourceProtocolEvents } from "../../../libs/resource-manager/src/protocol/resource.protocol";
 
 export class Slave {
   _connectionManager: ConnectionClient;
@@ -89,7 +89,8 @@ export class Slave {
       console.error("wrong resource format. no id supplied.");
       throw new Error("wrong resource format. no id supplied.");
     }
-    const agent = this._agentsManager.get(this.slaveID);
+    const agentID = this.slaveID;
+    const agent = this._agentsManager.get(agentID);
     /* this is the slave, so the resource is registered localy without confirmation from the master - TODO - change this behaviour??? */
     this._resourceManager.add(resource, rid);
     const cid = agent._connectionID;
@@ -103,7 +104,7 @@ export class Slave {
     // send resource registration event toward the master
     this._connectionManager.publishConnectionEvent(cid, action, rid);
     // attach agent to resource - TODO - should I do it in response to a successfulll server agent-resource attachment?
-    this._resourceManager.attachResourceToAgent(agent, rid);
+    this._resourceManager.attachResourceToAgent(agentID, rid);
   }
 
   publishEventToResource(rid: resourceID, event: string, data?) {

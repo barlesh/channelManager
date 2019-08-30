@@ -8,7 +8,7 @@ import {
 import * as uid from "uuid";
 import { agentID } from "../../../agents-manager/src/types/types";
 import { AgentsManagerEvents } from "./../../../agents-manager/src/agents";
-import { resourceProtocolEvents } from "../../../agents-manager/src/protocol/resource.protocol";
+import { resourceProtocolEvents } from "./../protocol/resource.protocol";
 
 export interface IResourceManager {
   _protocolResponse: protoActionResponse[];

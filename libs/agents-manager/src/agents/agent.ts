@@ -1,12 +1,11 @@
 import * as uid from "uuid";
-import { AgentsManager, IAgentsManager } from "./agents-manager";
+import { AgentsManager } from "./agents-manager";
 import { connectionID } from "../../../connections-manager/src/models";
 import { agentID } from "../types/types";
 import {
   protoActionResponse,
   protoActionRequest
 } from "./../../../protocol/src/actions";
-import { resourceID } from "../../../resource-manager/src/types/types";
 
 export interface IAgent {
   _id;
@@ -20,9 +19,9 @@ export interface IAgent {
 export class Agent implements IAgent {
   _id;
   _connectionID: connectionID;
-  _manager: IAgentsManager;
+  _manager: AgentsManager;
 
-  constructor(agentObj, agentManager: IAgentsManager) {
+  constructor(agentObj, agentManager: AgentsManager) {
     try {
       const received_id = agentObj["id"];
       this._id = received_id ? received_id : uid();
