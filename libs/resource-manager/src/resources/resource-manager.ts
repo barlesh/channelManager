@@ -1,21 +1,24 @@
 import { resourceID } from "../types/types";
-import { Agent } from "../../../agents-manager/src/agents";
+import { Agent, AgentsManager } from "../../../agents-manager/src/agents";
 import {
   protocolActions,
   protoActionResponse,
   protoActionRequest
-} from "../../../connections-manager/src/connections/protocol.actions";
+} from "../../../protocol/src/actions";
 import * as uid from "uuid";
 import { agentID } from "../../../agents-manager/src/types/types";
+import { AgentsManagerEvents } from "./../../../agents-manager/src/agents";
+import { resourceProtocolEvents } from "../../../agents-manager/src/protocol/resource.protocol";
 
 export interface IResourceManager {
   _protocolResponse: protoActionResponse[];
   _protocolRequest: Map<string, protoActionRequest>;
-  resourceAgentMap: Map<resourceID, Agent>;
+  _resourceAgentMap: Map<resourceID, Agent>;
+  _agentsManager: AgentsManager;
   add(data, id?): resourceID;
   get(id): any;
   size(): number;
-  attachResourceToAgent(agent: Agent, resourceID: resourceID);
+  attachResourceToAgent(agentID: agentID, resourceID: resourceID);
   detachResourceFromAgent(agent: Agent, resourceID: resourceID);
   publishEvent(resourceID: resourceID, event: string, data);
   detachAgent(agent: Agent);
@@ -23,9 +26,10 @@ export interface IResourceManager {
 
 export class ResourceManager implements IResourceManager {
   resourcesList: Map<resourceID, any>;
-  resourceAgentMap: Map<resourceID, Agent>;
+  _resourceAgentMap: Map<resourceID, Agent>;
   _protocolResponse: protoActionResponse[];
   _protocolRequest: Map<string, protoActionRequest>;
+  _agentsManager: AgentsManager;
 
   constructor(
     responses: protoActionResponse[],
@@ -43,7 +47,41 @@ export class ResourceManager implements IResourceManager {
       throw new Error("request protocol of bad type");
     }
     this.resourcesList = new Map();
-    this.resourceAgentMap = new Map();
+    this._resourceAgentMap = new Map();
+
+    // listen to an agent registration event
+    this._agentsManager.on(
+      AgentsManagerEvents.agentRegistered,
+      this.registerResourceListeners.bind(this)
+    );
+
+    this._agentsManager.on(
+      AgentsManagerEvents.agentUnRegistered,
+      this.unregisterResourceListeners.bind(this)
+    );
+  }
+
+  registerResourceListeners(agentID: agentID) {
+    const agent = this._agentsManager.get(agentID);
+    const resourceAttachAction = protocolActions.createProtocolActionResponse(
+      resourceProtocolEvents.resourceAttach,
+      this.attachResourceToAgent.bind(this, agentID),
+      undefined,
+      undefined
+    );
+
+    const resourceDetachAction = protocolActions.createProtocolActionResponse(
+      resourceProtocolEvents.resouceDetach,
+      this.detachResourceFromAgent.bind(this, agentID),
+      undefined,
+      undefined
+    );
+    agent.registerProtocolEvent(resourceAttachAction);
+    agent.registerProtocolEvent(resourceDetachAction);
+  }
+
+  unregisterResourceListeners(agentID: agentID) {
+    console.warn("currently not supported");
   }
 
   loadRequestsToMap(actionRequests: protoActionRequest[]) {
@@ -81,24 +119,26 @@ export class ResourceManager implements IResourceManager {
     return this.resourcesList;
   }
 
-  attachResourceToAgent(agent: Agent, resourceID: resourceID) {
+  attachResourceToAgent(agentID: agentID, resourceID: resourceID) {
     if (!this.resourcesList.get(resourceID)) {
       throw new Error("resource not exist.");
     }
 
-    if (!agent) {
-      console.error("no agent supplied");
-      throw new Error("no agent supplied");
-    }
-    const agentID = agent.getID();
     if (!agentID) {
-      console.error("no agent id supplied in object: ", agent);
-      throw new Error("no agent id supplied in agent object");
+      console.error("no agent id supplied");
+      throw new Error("no agent id supplied");
+    }
+
+    const agent = this._agentsManager.get(agentID);
+
+    if (!agent) {
+      console.error("no agent found with agent id: ", agentID);
+      throw new Error(`no agent found with agent id:  ${agentID}`);
     }
     console.info(
       `attaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
     );
-    this.resourceAgentMap.set(resourceID, agent);
+    this._resourceAgentMap.set(resourceID, agent);
 
     // register resource protocol events TODO
     this.registerProtocolEvents(agent);
@@ -110,7 +150,7 @@ export class ResourceManager implements IResourceManager {
     console.info(`detaching agent with agentID: ${agentID} from all resources`);
     const resourcesToDetach = this.getResourcesByAgent(agentID);
     resourcesToDetach.forEach(rid => {
-      this.resourceAgentMap.delete(rid);
+      this._resourceAgentMap.delete(rid);
     });
     console.info(`Detached ${resourcesToDetach.length} resources.`);
   }
@@ -120,7 +160,7 @@ export class ResourceManager implements IResourceManager {
     console.info(
       `detaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
     );
-    this.resourceAgentMap.delete(resourceID);
+    this._resourceAgentMap.delete(resourceID);
 
     this.unregisterProtocolEvents(agent);
   }
@@ -147,9 +187,9 @@ export class ResourceManager implements IResourceManager {
     }
   }
 
-  getResourcesByAgent(agentID: agentID){
+  getResourcesByAgent(agentID: agentID) {
     const resourcesToDetach = [];
-    this.resourceAgentMap.forEach((value, key, map) => {
+    this._resourceAgentMap.forEach((value, key, map) => {
       if (value._id === agentID) {
         resourcesToDetach.push(key);
       }
@@ -158,7 +198,7 @@ export class ResourceManager implements IResourceManager {
   }
 
   publishEvent(resourceID: resourceID, event: string, data) {
-    const agent = this.resourceAgentMap.get(resourceID);
+    const agent = this._resourceAgentMap.get(resourceID);
     if (!agent) {
       console.warn(
         `could not find agent that hold resource with resource id: ${resourceID}`

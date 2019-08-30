@@ -39,41 +39,41 @@ export class ConnectionServer extends ConnectionManager {
 
   registerToListenToRemoteConnections() {
     // register handler for the connection event
-    const bindedconnectionHandler = this.connectionHandler.bind(
-      this._nsp,
-      this
+    const bindedconnectionHandler = this.connectionHandlerServer.bind(
+      this,
+      this._nsp
     );
 
-    const bindeddisconnectionHandler = this.disconnectionHandler.bind(
-      this._nsp,
-      this
+    const bindeddisconnectionHandler = this.disconnectionHandlerServer.bind(
+      this,
+      this._nsp
     );
 
-    const bindedreconnectionHandler = this.reconnectionHandler.bind(
-      this._nsp,
-      this
-    );
+    // const bindedreconnectionHandler = this.reconnectionHandler.bind(
+    //   this,
+    //   this._nsp
+    // );
     this._nsp.on("connection", bindedconnectionHandler);
     this._nsp.on("disconnect", bindeddisconnectionHandler);
-    this._nsp.on("reconnect", bindedreconnectionHandler);
+    // this._nsp.on("reconnect", bindedreconnectionHandler);
   }
 
-  connectionHandler(manager: ConnectionServer, connectionSocket) {
+  connectionHandlerServer(connectionSocket) {
     let connID;
     connID = connectionUtils.extractConnectionClintID(connectionSocket);
-    console.info("Handling connection event. connection id: ", connID);
+    console.info("Handling server connection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
-    super.connectionHandler(manager, connectionSocket);
+    super.connectionHandler(this, connectionSocket);
     // notify other manager that new remote connection exist, and publish its ID
-    manager.emit(connectionServerManagerEvents.remoteConnected, connID);
+    this.emit(connectionServerManagerEvents.remoteConnected, connID);
   }
 
-  disconnectionHandler(manager: ConnectionServer, connectionSocket) {
+  disconnectionHandlerServer(connectionSocket) {
     let connID;
     connID = connectionUtils.extractConnectionClintID(connectionSocket);
     console.info("Handling disconnection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
-    super.disconnectionHandler(manager, connectionSocket);
-    manager.emit(connectionServerManagerEvents.remoteDisconnected, connID);
+    super.disconnectionHandler(this, connectionSocket);
+    this.emit(connectionServerManagerEvents.remoteDisconnected, connID);
   }
 }

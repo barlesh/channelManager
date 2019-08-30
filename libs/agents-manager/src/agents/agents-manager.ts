@@ -1,25 +1,22 @@
 import { agentID } from "../types/types";
-import * as uid from "uuid";
-import { Agent, IAgent } from "./agent";
-import { agentsProtocolEvents } from "./../../../connections-manager/src/protocol";
-import {
-  IConnectionManager,
-  connectionServerManagerEvents
-} from "./../../../connections-manager/src/connections";
-import { resourceProtocolEvents } from "../protocol/resource.protocol";
+import { EventEmitter } from "events";
+import { Agent } from "./agent";
 import { resourceID } from "../../../resource-manager/src/types/types";
-import { IResourceManager } from "./../../../resource-manager/src/resources";
 import { connectionID } from "../../../connections-manager/src/models";
 import {
   protocolActions,
   protoActionResponse,
   protoActionRequest
-} from "../../../connections-manager/src/connections/protocol.actions";
+} from "../../../protocol/src/actions";
+
+export enum AgentsManagerEvents {
+  agentRegistered = "agent-registered",
+  agentUnRegistered = "agent-un-registered"
+}
 
 export interface IAgentsManager {
   add(data): agentID;
   get(id): any;
-  registerResource(agentID: agentID, resouceID: resourceID);
   getAgentConnection(agentID: agentID);
   registerConnectionEvent(conID: connectionID, action: protoActionResponse);
   publishEvent(conID: connectionID, protocolAction, data);
@@ -28,121 +25,74 @@ export interface IAgentsManager {
 
 export abstract class AgentsManager implements IAgentsManager {
   agentsList: Map<agentID, Agent>;
-  resourcesManager: IResourceManager;
   connectionManager; //: IConnectionManager;
+  eve = new EventEmitter();
 
+  on(eventType: string, func) {
+    this.eve.on(eventType, func);
+  }
+
+  emit(eventType: string, data?) {
+    this.eve.emit(eventType, data);
+  }
   abstract config(conf);
+
+  /* events handlers */
 
   agentRegistration(connectionID, agentData) {
     // validate agent data
     // TODO
     //attach connection id to the validated agent data
+    // // create new agent
+    const agentID = this.createAgent(agentData, connectionID);
+    // register the agents events to the connection object
+    this.registerAgentsEvents(connectionID, agentID);
+    this.emit(AgentsManagerEvents.agentRegistered, agentID);
+    return true;
+  }
+
+  registerAgentsEvents(connectionID, agentID) {
+    const Action = protocolActions.createProtocolActionResponse(
+      "disconnect",
+      this.agentDisconnection.bind(this, agentID),
+      undefined,
+      undefined
+    );
+    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
+  }
+
+  agentUnRegistration(connstionID: connectionID) {
+    // remove the agent with the attached connection ID - TODO
+    console.warn("currently not supported");
+    return false;
+  }
+
+  agentDisconnection(agentID: agentID, _disconnectionMsg) {
+    return this.removeAgent(agentID);
+  }
+
+  /* Class methods */
+  createAgent(agentData, connectionID: connectionID) {
+    console.info(
+      `creating agent. agent id: ${agentData.id}. connectionID: ${connectionID}`
+    );
     agentData["connectionID"] = connectionID;
     // create new agent
-    const agentID = this.add(agentData);
-    // register the agents events to the connection object
-    this.registerAgentToResourcesEvents(connectionID, agentID);
-    return true;
+    return this.add(agentData);
   }
 
-  agentUnRegistration(data) {
-    try {
-      const { connectionID } = data;
-    } catch (err) {
-      console.log("could not extract agent data and/or connection ID");
-      return false;
-    }
-    return true;
-
-    // remove the agent with the attached connection ID
-  }
-
-  registerToAgentRegistrationEvents(connectionID) {
-    if (!connectionID) {
-      console.warn(
-        "cannot regiaster to agent registration event without remote connection. abort"
+  removeAgent(agentID) {
+    console.info(
+      `removing agent wth agent id: ${agentID} because of disconnection event.`
+    );
+    if (!agentID) {
+      console.error(
+        "received agent disconnection event without agent id. cannot disconnect agent"
       );
-      return;
-    }
-
-    /* 
-      register events to the remote connection.
-      The interesting events are agent registration (agentsProtocolEvents.agentRegister) and agent un registration.
-      Bind the connectionID to the event handler, so the registered agent will have access to the connection object
-      !!!!!!!!! CHECK IF CONNECTION OBJECT DOES NOT OVERIDE THE this OBJECT, AND THE AGENT-MANAGER WILL NOT BE ACCASSIABLE
-      IN THIS CASE, THE AGENT-MANAGER WILL BE NEEDED TO BE BIND !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    */
-    let Action: protoActionResponse;
-    const f = this.agentRegistration;
-    const bindedagentRegistration = this.agentRegistration.bind(
-      this,
-      connectionID
-    );
-    Action = protocolActions.createProtocolActionResponse(
-      agentsProtocolEvents.agentRegister,
-      bindedagentRegistration,
-      undefined,
-      undefined
-    );
-    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
-
-    const bindedagentUnRegistration = this.agentUnRegistration.bind(
-      this,
-      connectionID
-    );
-    Action = protocolActions.createProtocolActionResponse(
-      agentsProtocolEvents.agentUnRegister,
-      bindedagentUnRegistration,
-      undefined,
-      undefined
-    );
-    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
-  }
-
-  registerAgentToResourcesEvents(connectionID, agentID) {
-    let Action: protoActionResponse;
-    const bindedregisterResource = this.registerResource.bind(this, agentID);
-    const bindedunregisterResource = this.unregisterResource.bind(
-      this,
-      agentID
-    );
-
-    Action = protocolActions.createProtocolActionResponse(
-      resourceProtocolEvents.resourceAttach,
-      bindedregisterResource,
-      undefined,
-      undefined
-    );
-    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
-
-    Action = protocolActions.createProtocolActionResponse(
-      resourceProtocolEvents.resouceDetach,
-      bindedunregisterResource,
-      undefined,
-      undefined
-    );
-    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
-
-    // temp
-    Action = protocolActions.createProtocolActionResponse(
-      "disconnect",
-      this.removeAgent.bind(this, agentID),
-      undefined,
-      undefined
-    );
-    this.connectionManager.subscribeToConnectionEvent(connectionID, Action);
-  }
-
-  removeAgent(agentID, disconnectioMsg) {
-    console.info(`removing agent wth agent id: ${agentID} because of disconnection event.`)
-    if(!agentID){
-      console.error("received agent disconnection event without agent id. cannot disconnect agent");
       throw new Error("failed to disconnect agent");
     }
-    const agent = this.get(agentID);
-
-    this.resourcesManager.detachAgent(agent);
     this.remove(agentID);
+    this.emit(AgentsManagerEvents.agentUnRegistered, agentID);
     return true;
   }
 
@@ -178,31 +128,7 @@ export abstract class AgentsManager implements IAgentsManager {
     return this.agentsList;
   }
 
-  registerResource(agentID: agentID, resouceID: resourceID) {
-    console.info(
-      `registering resource with id ${resouceID} to agent with id ${agentID}`
-    );
-    if (!agentID) {
-      console.warn(`no agent ID found : ${agentID}`);
-      return;
-    }
-    const agent = this.agentsList.get(agentID);
-    this.resourcesManager.attachResourceToAgent(agent, resouceID);
-    return true;
-  }
-
-  unregisterResource(agentID: agentID, resouceID: resourceID) {
-    console.info(
-      `un-registering resource with id ${resouceID} from agent with id ${agentID}`
-    );
-    if (!agentID) {
-      console.warn(`no agent found: ${agentID}.`);
-      return;
-    }
-    const agent = this.agentsList.get(agentID);
-    this.resourcesManager.detachResourceFromAgent(agent, resouceID);
-    return true;
-  }
+  /* events */
 
   registerConnectionEvent(
     conID: connectionID,

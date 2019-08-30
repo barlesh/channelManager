@@ -5,7 +5,8 @@ import { agentID } from "../types/types";
 import {
   protoActionResponse,
   protoActionRequest
-} from "./../../../connections-manager/src/connections/protocol.actions";
+} from "./../../../protocol/src/actions";
+import { resourceID } from "../../../resource-manager/src/types/types";
 
 export interface IAgent {
   _id;
@@ -24,15 +25,20 @@ export class Agent implements IAgent {
   constructor(agentObj, agentManager: IAgentsManager) {
     try {
       const received_id = agentObj["id"];
-      this._id = received_id? received_id : uid();
+      this._id = received_id ? received_id : uid();
     } catch (err) {
-      console.error(`did not received a propare agent object: ${agentObj}. error: `, err);
+      console.error(
+        `did not received a propare agent object: ${agentObj}. error: `,
+        err
+      );
       return;
     }
     const connectionID = agentObj["connectionID"];
-    if(!connectionID){
-      console.error("agent object does not hold connection ID. We will not be able to connect with it. cannot create agent.")
-      throw new Error("connection id missing.")
+    if (!connectionID) {
+      console.error(
+        "agent object does not hold connection ID. We will not be able to connect with it. cannot create agent."
+      );
+      throw new Error("connection id missing.");
     }
     this._connectionID = connectionID;
     this._manager = agentManager;

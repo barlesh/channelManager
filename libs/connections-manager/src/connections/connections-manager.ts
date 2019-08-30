@@ -2,22 +2,19 @@ import { EventEmitter } from "events";
 import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connectionUtils";
-import { protoActionResponse, protoActionRequest } from "./protocol.actions";
+import {
+  protoActionResponse,
+  protoActionRequest
+} from "./../../../protocol/src/actions";
 
 export interface IConnectionManager {
+  _connectionsList: Map<connectionID, any>;
   config(any);
-  subscribeToConnectionEvent(
-    cid: connectionID,
-    protocolAction: protoActionResponse
-  );
-  publishConnectionEvent(
-    cid: connectionID,
-    protocolAction: protoActionRequest,
-    data
-  );
+  subscribeToConnectionEvent(cid: connectionID, action: protoActionResponse);
+  unsubscribeToConnectionEvent(cid: connectionID, action: protoActionResponse);
+  publishConnectionEvent(cid: connectionID, action: protoActionRequest, data);
   getConnection(cid: connectionID);
   setConnection(cid: connectionID, connection /*: IConnection*/);
-  _connectionsList: Map<connectionID, any>;
   on(eventType: string, func: Function);
   emit(eventType: string, data?);
 }
@@ -54,7 +51,9 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   reconnectionHandler(connectionSocket) {
-    console.log("reconnectionHandler: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    console.log(
+      "reconnectionHandler: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    );
     //TODO
     //   this._connectionsList.delete()
   }
@@ -94,6 +93,13 @@ export abstract class ConnectionManager implements IConnectionManager {
       );
     }
     connectionEvents.registerConnectionEvent(connection, protocolAction);
+  }
+
+  unsubscribeToConnectionEvent(
+    connID: connectionID,
+    protocolAction: protoActionResponse
+  ) {
+    console.warn("currently not supported");
   }
 
   /* API for sending (publishing to) connection events using connection ID */
