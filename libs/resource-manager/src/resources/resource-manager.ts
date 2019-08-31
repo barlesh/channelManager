@@ -21,7 +21,7 @@ export interface IResourceManager {
   attachResourceToAgent(agentID: agentID, resourceID: resourceID);
   detachResourceFromAgent(agent: Agent, resourceID: resourceID);
   publishEvent(resourceID: resourceID, event: string, data);
-  detachAgent(agent: Agent);
+  detachAgent(agentID: agentID);
 }
 
 export class ResourceManager implements IResourceManager {
@@ -33,7 +33,8 @@ export class ResourceManager implements IResourceManager {
 
   constructor(
     responses: protoActionResponse[],
-    requests: protoActionRequest[]
+    requests: protoActionRequest[],
+    agentsManager
   ) {
     if (protocolActions.validateProtocolActionResponse(responses)) {
       this._protocolResponse = responses;
@@ -46,19 +47,33 @@ export class ResourceManager implements IResourceManager {
     } else {
       throw new Error("request protocol of bad type");
     }
+
+    if (!agentsManager) {
+      throw new Error("a valid agent manager was not supplied");
+    }
+    this._agentsManager = agentsManager;
     this.resourcesList = new Map();
     this._resourceAgentMap = new Map();
 
     // listen to an agent registration event
     this._agentsManager.on(
       AgentsManagerEvents.agentRegistered,
-      this.registerResourceListeners.bind(this)
+      this.HandleAgentRegistration.bind(this)
     );
 
     this._agentsManager.on(
       AgentsManagerEvents.agentUnRegistered,
-      this.unregisterResourceListeners.bind(this)
+      this.HandleAgentUnRegistration.bind(this)
     );
+  }
+
+  HandleAgentRegistration(agentID) {
+    this.registerResourceListeners(agentID);
+  }
+
+  HandleAgentUnRegistration(agentID: agentID) {
+    this.detachAgent(agentID);
+    this.unregisterResourceListeners(agentID);
   }
 
   registerResourceListeners(agentID: agentID) {
@@ -80,8 +95,17 @@ export class ResourceManager implements IResourceManager {
     agent.registerProtocolEvent(resourceDetachAction);
   }
 
+  detachAgent(agentID) {
+    console.info(`detaching agent with agentID: ${agentID} from all resources`);
+    const resourcesToDetach = this.getResourcesByAgent(agentID);
+    resourcesToDetach.forEach(rid => {
+      this._resourceAgentMap.delete(rid);
+    });
+    console.info(`Detached ${resourcesToDetach.length} resources.`);
+  }
+
   unregisterResourceListeners(agentID: agentID) {
-    console.warn("currently not supported");
+    console.warn("unregisterResourceListeners: currently not supported");
   }
 
   loadRequestsToMap(actionRequests: protoActionRequest[]) {
@@ -145,15 +169,15 @@ export class ResourceManager implements IResourceManager {
     return true;
   }
 
-  detachAgent(agent: Agent) {
-    const agentID = agent.getID();
-    console.info(`detaching agent with agentID: ${agentID} from all resources`);
-    const resourcesToDetach = this.getResourcesByAgent(agentID);
-    resourcesToDetach.forEach(rid => {
-      this._resourceAgentMap.delete(rid);
-    });
-    console.info(`Detached ${resourcesToDetach.length} resources.`);
-  }
+  // detachAgent(agent: Agent) {
+  //   const agentID = agent.getID();
+  //   console.info(`detaching agent with agentID: ${agentID} from all resources`);
+  //   const resourcesToDetach = this.getResourcesByAgent(agentID);
+  //   resourcesToDetach.forEach(rid => {
+  //     this._resourceAgentMap.delete(rid);
+  //   });
+  //   console.info(`Detached ${resourcesToDetach.length} resources.`);
+  // }
 
   detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
     const agentID = agent.getID();

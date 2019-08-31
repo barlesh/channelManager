@@ -52,13 +52,14 @@ export class Slave {
 
     this._connectionManager = new ConnectionClient();
 
+    this._agentsManager = new AgentsManagerClient();
     // init the master's resource manager
     this._resourceManager = new ResourceManager(
       protocolResponses,
-      protocolRequests
+      protocolRequests,
+      this._agentsManager
     );
 
-    this._agentsManager = new AgentsManagerClient();
 
     // init agents manager, with the connection & resource managers
     const connectionServerConfiguration = {
@@ -68,15 +69,14 @@ export class Slave {
       port: masterPort
     };
 
-    const agentID = {
+    const agent = {
       id: this.slaveID,
       name: slaveName
     };
 
     const agentManagerConfiguration = {
       connectionManager: this._connectionManager,
-      resourceManager: this._resourceManager,
-      agent: agentID
+      agent: agent
     };
 
     this._connectionManager.config(connectionServerConfiguration);

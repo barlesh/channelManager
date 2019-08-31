@@ -13,7 +13,7 @@ import {
 import {
   protoActionRequest,
   protoActionResponse
-} from "../../../libs/connections-manager/src/connections/protocol.actions";
+} from "../../../libs/protocol/src/actions";
 import { resourceID } from "../../../libs/resource-manager/src/types/types";
 
 export class Master {
@@ -36,13 +36,13 @@ export class Master {
 
     this._connectionManager = new ConnectionServer();
 
+    this._agentsManager = new AgentsManagerServer();
     // init the master's resource manager
     this._resourceManager = new ResourceManager(
       protocolResponses,
-      protocolRequests
+      protocolRequests,
+      this._agentsManager
     );
-
-    this._agentsManager = new AgentsManagerServer();
 
     // init agents manager, with the connection & resource managers
     const connectionServerConfiguration = {
@@ -50,8 +50,7 @@ export class Master {
       channel
     };
     const agentManagerConfiguration = {
-      connectionManager: this._connectionManager,
-      resourceManager: this._resourceManager
+      connectionManager: this._connectionManager
     };
 
     this._connectionManager.config(connectionServerConfiguration);

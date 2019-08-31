@@ -58,12 +58,15 @@ export class ConnectionServer extends ConnectionManager {
     // this._nsp.on("reconnect", bindedreconnectionHandler);
   }
 
-  connectionHandlerServer(connectionSocket) {
+  connectionHandlerServer(connectionSocket, connection) {
+    // console.log("connection hNDLER  server: conecctionSocket: ", connectionSocket);
+    // console.log("connection hNDLER  server: conecction: ", connection);
+
     let connID;
-    connID = connectionUtils.extractConnectionClintID(connectionSocket);
+    connID = connectionUtils.extractConnectionClintID(connection);
     console.info("Handling server connection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
-    super.connectionHandler(this, connectionSocket);
+    super.connectionHandler(this, connection);
     // notify other manager that new remote connection exist, and publish its ID
     this.emit(connectionServerManagerEvents.remoteConnected, connID);
   }

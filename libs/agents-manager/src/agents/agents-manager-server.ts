@@ -10,8 +10,7 @@ export class AgentsManagerServer extends AgentsManager {
   /* Server Class configuration */
   config(conf) {
     const connectionManager = conf["connectionManager"];
-    const resourceManager = conf["resourceManager"];
-    if (!connectionManager || !resourceManager) {
+    if (!connectionManager) {
       console.error("not all parameres supplied.");
       throw new Error("not all parameres supplied");
     }

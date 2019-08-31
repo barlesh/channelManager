@@ -43,6 +43,7 @@ export abstract class AgentsManager implements IAgentsManager {
     // TODO
     //attach connection id to the validated agent data
     // // create new agent
+    console.log("agentRegistration: connctionID: ", connectionID, ", agentData: ", agentData)
     const agentID = this.createAgent(agentData, connectionID);
     // register the agents events to the connection object
     this.registerAgentsEvents(connectionID, agentID);
@@ -73,8 +74,9 @@ export abstract class AgentsManager implements IAgentsManager {
   /* Class methods */
   createAgent(agentData, connectionID: connectionID) {
     console.info(
-      `creating agent. agent id: ${agentData.id}. connectionID: ${connectionID}`
+      `creating agent. agentData: ${agentData}, agent id: ${agentData.id}. connectionID: ${connectionID}`
     );
+    console.log("agentData: ", agentData, ", connectionID: ", connectionID);
     agentData["connectionID"] = connectionID;
     // create new agent
     return this.add(agentData);
