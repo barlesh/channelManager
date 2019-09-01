@@ -114,6 +114,6 @@ export abstract class ConnectionManager implements IConnectionManager {
         `could not find connection with connection id: ${connID}`
       );
     }
-    connectionEvents.sendConnectionEvent(connection, protocolAction, data);
+    connectionEvents.publishConnectionEvent(connection, protocolAction, data);
   }
 }

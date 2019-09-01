@@ -26,3 +26,5 @@ playground/client/node_modules
 playground/server/dist
 playground/server/node_modules
 
+node_modules
+

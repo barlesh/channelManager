@@ -1,6 +1,6 @@
 {
-  "name": "@channels/resource_manager",
-  "scope": "@channels",
+  "name": "@resource-controller/resources",
+  "scope": "@resource-controller",
   "version": "1.0.0",
   "description": "Library for implementing channel between a master and multiple agents, and determmining protocols between",
   "main": "lib/index.js",
@@ -8,6 +8,9 @@
     "build": "rm -rf lib && tsc",
     "dev": "webpack --watch --config webpack.dev.js",
     "test": "jest"
+  },
+  "publishConfig": {
+    "registry": "http://172.18.212.249:8081/repository/rf-npm-hosted/"
   },
   "author": "Bar Leshem",
   "license": "ISC",
@@ -17,7 +20,8 @@
   },
   "dependencies": {
     "uuid": "^3.3.2",
-    "uuid-validate": "0.0.3"
+    "uuid-validate": "0.0.3",
+    "@resource-controller/agents": "1.0.0"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.36",

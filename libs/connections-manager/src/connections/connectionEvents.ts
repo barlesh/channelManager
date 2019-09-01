@@ -1,4 +1,9 @@
-import { protoActionRequest, protoActionResponse } from "./../../../protocol/src/actions";
+import {
+  protoActionRequest,
+  protoActionResponse
+} from "./../../../protocol/src/actions";
+import { resolve } from "url";
+const timeLimit = require("time-limit-promise");
 
 export namespace connectionEvents {
   export function registerConnectionEvent(
@@ -11,19 +16,14 @@ export namespace connectionEvents {
     const retFalse = protocolAction.response_falsly;
 
     const cb = async data => {
-      let ans = false;
-      try {
-        console.info(`execute event: ${event} with data: ${data}.`);
-        ans = await exec(data);
-      } catch (err) {
-        console.error("execution of event ", event, " caused error: ", err);
-        ans = false;
-      }
-      if (ans) {
+      let ans;
+      console.info(`execute event: ${event} with data: ${data}.`);
+      ans = await runExec(event, exec, data);
+      if (ans.status) {
         console.info(`execution for event: ${event} succedded.`);
         if (retTrue) {
           console.info(`emmiting answer: ${retTrue} `);
-          if (retTrue) connection.emit(retTrue);
+          if (retTrue) connection.emit(retTrue, ans.data);
         }
       } else {
         console.info(`execution for event: ${event} failed.`);
@@ -37,7 +37,28 @@ export namespace connectionEvents {
     connection.on(event, cb);
   }
 
-  export function sendConnectionEvent(
+  async function runExec(event: string, exec: Function, data?) {
+    const res = {
+      status: false,
+      data: undefined
+    };
+    try {
+      const ans = await exec(data);
+      if (!ans) {
+        console.log(`execution of event ${event} returned false answer.`);
+        return res;
+      }
+      console.log(`execution of event ${event} executed successfully.`);
+      res.status = true;
+      res.data = ans;
+    } catch (err) {
+      console.log(`execution of event ${event} throwd error.`);
+      console.error(err);
+      return res;
+    }
+  }
+
+  export async function publishConnectionEvent(
     connection,
     protocolAction: protoActionRequest,
     data
@@ -46,7 +67,51 @@ export namespace connectionEvents {
       console.warn("no connection supplied. cannot send event");
     }
 
-    const event = protocolAction.event;
+    const expectResponse = protocolAction.expectResponse;
+    if (expectResponse) {
+      const res = await publishConnectionEventAndListenToResponse(
+        connection,
+        protocolAction,
+        data
+      );
+      return res;
+    } else {
+      publishConnectionEventNoResponse(connection, data);
+    }
+  }
+
+  async function publishConnectionEventNoResponse(connection, data) {
     connection.emit(event, data);
+  }
+
+  async function publishConnectionEventAndListenToResponse(
+    connection,
+    request: protoActionRequest,
+    data
+  ) {
+    const response = request.response;
+    const requestEvent = request.event;
+    const responseEvent = response.event;
+    const runNwait = (connection, requestEvent, data, responseEvent) => {
+      return new Promise((resolve, reject) => {
+        connection.emit(requestEvent.data);
+        connection.on(responseEvent, data => {
+          resolve(data);
+        });
+      });
+    };
+    timeLimit(runNwait, 50, { rejectWith: new Error("timeout") })
+      .then(res => {
+        console.log(`request '${requestEvent}' recived response:  `);
+        console.log(res);
+        return res;
+      })
+      .catch(err => {
+        // Same as above, but on timeout it will
+        // be rejected with the provided error.
+        console.error(
+          `request '${requestEvent}' expected response but timeout expired.`
+        );
+      });
   }
 }

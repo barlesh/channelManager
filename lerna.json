@@ -1,4 +1,4 @@
 {
-  "packages": ["libs/*", "mnaster", "slave"],
+  "packages": ["libs/*", "master", "slave"],
   "version": "1.0.0"
 }

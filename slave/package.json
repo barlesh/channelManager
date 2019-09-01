@@ -9,6 +9,9 @@
     "dev": "webpack --watch --config webpack.dev.js",
     "test": "jest"
   },
+  "publishConfig": {
+    "registry": "http://172.18.212.249:8081/repository/rf-npm-hosted/"
+  },
   "author": "Bar Leshem",
   "license": "ISC",
   "peerDependencies": {
@@ -16,6 +19,9 @@
     "ajv": "^5.5.2"
   },
   "dependencies": {
+    "@resource-control/connections": "1.0.0",
+    "@resource-control/agents": "1.0.0",
+    "@resource-control/resources": "1.0.0",
     "socket.io-client": "^2.2.0",
     "socket.io": "^2.2.0"
   },
