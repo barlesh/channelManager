@@ -1,22 +1,22 @@
 import {
   IConnectionManager,
   ConnectionClient
-} from "./../../../connections-manager/src/connections";
+} from "@resource-control/connection";
 import {
   IAgentsManager,
   AgentsManagerClient
-} from "./../../../agents-manager/src/agents";
+} from "@resource-control/agent";
 import {
   IResourceManager,
   ResourceManager
-} from "./../../../resource-manager/src/resources";
+} from "@resource-control/resource";
 import {
   protoActionRequest,
   protoActionResponse,
   protocolActions
-} from "./../../../protocol/src/actions";
-import { resourceID } from "./../../../resource-manager/src/types/types";
-import { resourceProtocolEvents } from "./../../../resource-manager/src/protocol/resource.protocol";
+} from "@resource-control/protocol";
+import { resourceID } from "@resource-control/resource";
+import { resourceProtocolEvents } from "@resource-control/resource";
 
 export class Slave {
   _connectionManager: ConnectionClient;

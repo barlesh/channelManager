@@ -1,8 +1,8 @@
-import { IConnectionManager } from "./../../../libs/connections-manager/src/connections";
-import { IAgentsManager } from "./../../../libs/agents-manager/src/agents/";
-import { IResourceManager } from "./../../../libs/resource-manager/src/resources";
-import { protoActionRequest, protoActionResponse } from "../../../libs/protocol/src/actions";
-import { resourceID } from "../../../libs/resource-manager/src/types/types";
+import { IConnectionManager } from "./../../../connections-manager/src/connections";
+import { IAgentsManager } from "./../../../agents-manager/src/agents/";
+import { IResourceManager } from "./../../../resource-manager/src/resources";
+import { protoActionRequest, protoActionResponse } from "./../../../protocol/src/actions";
+import { resourceID } from "./../../../resource-manager/src/types/types";
 export declare class Master {
     _connectionManager: IConnectionManager;
     _agentsManager: IAgentsManager;

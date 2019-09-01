@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const connections_1 = require("./../../../libs/connections-manager/src/connections");
-const agents_1 = require("./../../../libs/agents-manager/src/agents/");
-const resources_1 = require("./../../../libs/resource-manager/src/resources");
+const connections_1 = require("./../../../connections-manager/src/connections");
+const agents_1 = require("./../../../agents-manager/src/agents/");
+const resources_1 = require("./../../../resource-manager/src/resources");
 class Master {
     constructor(io, channel, protocolRequests, protocolResponses) {
         if (!io || !channel || !protocolRequests || !protocolResponses) {

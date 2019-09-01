@@ -20,7 +20,11 @@
   },
   "dependencies": {
     "socket.io-client": "^2.2.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "@resource-control/connection": "1.0.0", 
+    "@resource-control/agent": "1.0.0", 
+    "@resource-control/resource": "1.0.0",
+    "@resource-control/protocol": "1.0.0"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.36",

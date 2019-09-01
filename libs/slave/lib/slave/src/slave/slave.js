@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const connections_1 = require("../../../libs/connections-manager/src/connections");
-const agents_1 = require("../../../libs/agents-manager/src/agents");
-const resources_1 = require("../../../libs/resource-manager/src/resources");
-const actions_1 = require("../../../libs/protocol/src/actions");
-const resource_protocol_1 = require("../../../libs/resource-manager/src/protocol/resource.protocol");
+const connections_1 = require("./../../../connections-manager/src/connections");
+const agents_1 = require("./../../../agents-manager/src/agents");
+const resources_1 = require("./../../../resource-manager/src/resources");
+const actions_1 = require("./../../../protocol/src/actions");
+const resource_protocol_1 = require("./../../../resource-manager/src/protocol/resource.protocol");
 class Slave {
     constructor(io, channel, masterAddr, masterPort, protocolRequests, protocolResponses, uniqueID, slaveName) {
         if (!io ||
