@@ -1,7 +1,7 @@
 import { AgentsManager, AgentsManagerEvents } from "./agents-manager";
-import { connectionClientManagerEvents } from "@resource-control/connections";
-import { agentsProtocolEvents } from "@resource-control/connections";
-import { connectionID } from "@resource-control/connections";
+import { connectionClientManagerEvents } from "@resource-control/connection";
+import { agentsProtocolEvents } from "@resource-control/connection";
+import { connectionID } from "@resource-control/connection";
 
 export class AgentsManagerClient extends AgentsManager {
   agent;

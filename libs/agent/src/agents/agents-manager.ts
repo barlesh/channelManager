@@ -1,4 +1,4 @@
-import { connectionID } from "@resource-control/connections";
+import { connectionID } from "@resource-control/connection";
 import {
   protocolActions,
   protoActionResponse,

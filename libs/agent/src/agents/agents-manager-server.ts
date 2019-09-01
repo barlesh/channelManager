@@ -1,5 +1,5 @@
-import { connectionServerManagerEvents } from "@resource-control/connections";
-import { agentsProtocolEvents } from "@resource-control/connections";
+import { connectionServerManagerEvents } from "@resource-control/connection";
+import { agentsProtocolEvents } from "@resource-control/connection";
 import { AgentsManager } from "./agents-manager";
 import {
   protocolActions,

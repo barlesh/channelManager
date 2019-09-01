@@ -1,6 +1,6 @@
 import * as uid from "uuid";
 import { AgentsManager } from "./agents-manager";
-import { connectionID } from "@resource-control/connections";
+import { connectionID } from "@resource-control/connection";
 import { agentID } from "../types/types";
 import {
   protoActionResponse,
