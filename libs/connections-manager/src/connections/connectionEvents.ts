@@ -1,4 +1,4 @@
-import { protoActionRequest, protoActionResponse } from "./protocol.actions";
+import { protoActionRequest, protoActionResponse } from "../../../protocol/src/protocol.actions";
 
 export namespace connectionEvents {
   export function registerConnectionEvent(

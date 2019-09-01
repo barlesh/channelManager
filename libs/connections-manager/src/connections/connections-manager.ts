@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import { connectionID } from "./../models";
 import { connectionEvents } from "./connectionEvents";
 import { connectionUtils } from "./connectionUtils";
-import { protoActionResponse, protoActionRequest } from "./protocol.actions";
+import { protoActionResponse, protoActionRequest } from "../../../protocol/src/protocol.actions";
 
 export interface IConnectionManager {
   config(any);

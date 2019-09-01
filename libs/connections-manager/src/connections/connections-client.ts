@@ -1,7 +1,6 @@
 import { ConnectionManager } from "./connections-manager";
 import { connectionID } from "../models";
 import * as uid from "uuid";
-import { connectionUtils } from "./connectionUtils";
 
 export enum connectionClientManagerEvents {
   connectedToRemote = "connected-to-remote",

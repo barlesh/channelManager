@@ -1,11 +1,6 @@
 import { agentID } from "../types/types";
-import * as uid from "uuid";
-import { Agent, IAgent } from "./agent";
+import { Agent } from "./agent";
 import { agentsProtocolEvents } from "./../../../connections-manager/src/protocol";
-import {
-  IConnectionManager,
-  connectionServerManagerEvents
-} from "./../../../connections-manager/src/connections";
 import { resourceProtocolEvents } from "../protocol/resource.protocol";
 import { resourceID } from "../../../resource-manager/src/types/types";
 import { IResourceManager } from "./../../../resource-manager/src/resources";
@@ -14,7 +9,7 @@ import {
   protocolActions,
   protoActionResponse,
   protoActionRequest
-} from "../../../connections-manager/src/connections/protocol.actions";
+} from "../../../protocol/src/protocol.actions";
 
 export interface IAgentsManager {
   add(data): agentID;

@@ -1,11 +1,11 @@
 import * as uid from "uuid";
-import { AgentsManager, IAgentsManager } from "./agents-manager";
+import { IAgentsManager } from "./agents-manager";
 import { connectionID } from "../../../connections-manager/src/models";
 import { agentID } from "../types/types";
 import {
   protoActionResponse,
   protoActionRequest
-} from "./../../../connections-manager/src/connections/protocol.actions";
+} from "../../../protocol/src/protocol.actions";
 
 export interface IAgent {
   _id;

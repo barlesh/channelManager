@@ -1,12 +1,12 @@
 import { resourceID } from "../types/types";
 import { Agent } from "../../../agents-manager/src/agents";
+import { agentID } from "../../../agents-manager/src/types/types";
 import {
   protocolActions,
   protoActionResponse,
   protoActionRequest
-} from "../../../connections-manager/src/connections/protocol.actions";
+} from "../../../protocol/src/protocol.actions";
 import * as uid from "uuid";
-import { agentID } from "../../../agents-manager/src/types/types";
 
 export interface IResourceManager {
   _protocolResponse: protoActionResponse[];
