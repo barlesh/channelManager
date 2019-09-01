@@ -2,8 +2,8 @@ import {
   protoActionRequest,
   protoActionResponse
 } from "./../../../protocol/src/actions";
-import { resolve } from "url";
-const timeLimit = require("time-limit-promise");
+// const timeLimit = require("time-limit-promise");
+import timeLimit  from "time-limit-promise";
 
 export namespace connectionEvents {
   export function registerConnectionEvent(

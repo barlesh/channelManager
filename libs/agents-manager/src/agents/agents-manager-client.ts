@@ -53,7 +53,9 @@ export class AgentsManagerClient extends AgentsManager {
     const agentID = this.createAgent(agentData, connectionID);
     // publish to relaying modules
     const Action = {
-      event: agentsProtocolEvents.agentRegister
+      event: agentsProtocolEvents.agentRegister,
+      expectResponse: false,
+      response: undefined
     };
     this.publishEvent(connectionID, Action, this.agent);
     this.emit(AgentsManagerEvents.agentRegistered, agentID);
