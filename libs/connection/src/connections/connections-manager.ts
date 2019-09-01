@@ -5,7 +5,7 @@ import { connectionUtils } from "./connectionUtils";
 import {
   protoActionResponse,
   protoActionRequest
-} from "./../../../protocol/src/actions";
+} from "@resource-control/protocol"
 
 export interface IConnectionManager {
   _connectionsList: Map<connectionID, any>;

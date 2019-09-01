@@ -1,12 +1,12 @@
 .vscode
-libs/agents-manager/lib
-libs/agents-manager/node_modules
+libs/agent/lib
+libs/agent/node_modules
 
-libs/connections-manager/lib
-libs/connections-manager/node_modules
+libs/connection/lib
+libs/connection/node_modules
 
-libs/resource-manager/lib
-libs/resource-manager/node_modules
+libs/resource/lib
+libs/resource/node_modules
 
 libs/master/lib
 libs/master/node_modules

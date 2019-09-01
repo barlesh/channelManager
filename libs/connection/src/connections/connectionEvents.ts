@@ -1,10 +1,7 @@
 import {
   protoActionRequest,
   protoActionResponse
-} from "./../../../protocol/src/actions";
-// const timeLimit = require("time-limit-promise");
-import * as tml from "time-limit-promise";
-import { rejects } from "assert";
+} from "@resource-control/protocol";
 
 export namespace connectionEvents {
   export function registerConnectionEvent(
