@@ -1,7 +1,7 @@
 {
   "name": "@resource-control/protocol",
   "scope": "@resource-control",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library for implementing channel between a master and multiple agents, and determmining protocols between",
   "main": "lib/index.js",
   "scripts": {
@@ -15,12 +15,12 @@
   "author": "Bar Leshem",
   "license": "ISC",
   "peerDependencies": {
-    "axios": "^0.18.0",
-    "ajv": "^5.5.2"
+    "ajv": "^5.5.2",
+    "axios": "^0.18.0"
   },
   "dependencies": {
-    "socket.io-client": "^2.2.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.36",
