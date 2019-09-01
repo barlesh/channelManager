@@ -1,4 +1,8 @@
 .vscode
+
+libs/protocol/lib
+libs/protocol/node_modules
+
 libs/agent/lib
 libs/agent/node_modules
 
