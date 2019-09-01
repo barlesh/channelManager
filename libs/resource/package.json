@@ -17,8 +17,8 @@
   "peerDependencies": {
   },
   "dependencies": {
-    "@resource-control/agent": "1.0.0", 
     "@resource-control/protocol": "1.0.0",
+    "@resource-control/agent": "1.0.0", 
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3"
   },

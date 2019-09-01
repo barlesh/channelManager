@@ -4,7 +4,7 @@ import { AgentsManager } from "./agents-manager";
 import {
   protocolActions,
   protoActionResponse
-} from "../../../protocol/src/actions";
+} from "@resource-control/protocol";
 
 export class AgentsManagerServer extends AgentsManager {
   /* Server Class configuration */

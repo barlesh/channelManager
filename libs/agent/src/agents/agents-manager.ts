@@ -5,8 +5,8 @@ import {
   protoActionRequest
 } from "@resource-control/protocol";
 import { agentID } from "../types/types";
-import { EventEmitter } from "events";
 import { Agent } from "./agent";
+import { EventEmitter } from "events";
 
 export enum AgentsManagerEvents {
   agentRegistered = "agent-registered",
