@@ -8,13 +8,13 @@ libs/connections-manager/node_modules
 libs/resource-manager/lib
 libs/resource-manager/node_modules
 
-master/lib
-master/node_modules
-master/test/lib
-master/test/
+libs/master/lib
+libs/master/node_modules
+libs/master/test/lib
+libs/master/test/
 
-slave/lib
-slave/node_modules
+libs/slave/lib
+libs/slave/node_modules
 
 master_old/lib
 master_old/node_modules
