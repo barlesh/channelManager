@@ -3,7 +3,8 @@ import {
   protoActionResponse
 } from "./../../../protocol/src/actions";
 // const timeLimit = require("time-limit-promise");
-import timeLimit  from "time-limit-promise";
+import * as tml from "time-limit-promise";
+import { rejects } from "assert";
 
 export namespace connectionEvents {
   export function registerConnectionEvent(
@@ -92,26 +93,64 @@ export namespace connectionEvents {
     const response = request.response;
     const requestEvent = request.event;
     const responseEvent = response.event;
-    const runNwait = (connection, requestEvent, data, responseEvent) => {
-      return new Promise((resolve, reject) => {
-        connection.emit(requestEvent.data);
-        connection.on(responseEvent, data => {
-          resolve(data);
+    const TIMEOUT = 50;
+    const actionId = Date.now();
+
+    return new Promise((resolve, reject) => {
+      const timeoutID = setTimeout(() => {
+        removeListener();
+        
+        return reject({
+          msg: "Timeout Error, Failed to get details from the agent"
         });
+      }, TIMEOUT);
+
+      connection.emit(requestEvent, {
+        id: actionId,
+        data
       });
-    };
-    timeLimit(runNwait, 50, { rejectWith: new Error("timeout") })
-      .then(res => {
-        console.log(`request '${requestEvent}' recived response:  `);
-        console.log(res);
-        return res;
-      })
-      .catch(err => {
-        // Same as above, but on timeout it will
-        // be rejected with the provided error.
-        console.error(
-          `request '${requestEvent}' expected response but timeout expired.`
-        );
-      });
+      connection.on(responseEvent, onDetailsReturned);
+      function removeListener() {
+        connection.removeListener(responseEvent, onDetailsReturned);
+
+      }
+      function onDetailsReturned({ id, err, data }) {
+
+        removeListener();
+        if (id == actionId) {
+          clearTimeout(timeoutID);
+          if (err) {
+            return reject({ err, msg: "Failed to get details from the agent" });
+          }
+          resolve(data);
+        }
+      }
+    });
+
+    // let runNwait = (connection, requestEvent, data, responseEvent) => {
+    //   return new Promise((resolve, reject) => {
+    //     connection.emit(requestEvent.data);
+    //     connection.on(responseEvent, data => {
+    //       resolve(data);
+    //     });
+    //   });
+    // };
+
+    // console.warn("run tmlllllllllllllllllllll");
+    // tml(async ()=> { return true; }, 50).then(console.log("wooooow")).catch(err=> console.error(err));
+    //   tml(runNwait, 50, { rejectWith: new Error("timeout") })
+    //     .then(res => {
+    //       console.log(`request '${requestEvent}' recived response:  `);
+    //       console.log(res);
+    //       return res;
+    //     })
+    //     .catch(err => {
+    //       // Same as above, but on timeout it will
+    //       // be rejected with the provided error.
+    //       console.error(
+    //         `request '${requestEvent}' expected response but timeout expired.`
+    //       );
+    //       rejects(err);
+    //     });
   }
 }

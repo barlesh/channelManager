@@ -12,7 +12,8 @@ import {
 } from "../../../libs/resource-manager/src/resources";
 import {
   protoActionRequest,
-  protoActionResponse
+  protoActionResponse,
+  protocolActions
 } from "../../../libs/protocol/src/actions";
 import { resourceID } from "../../../libs/resource-manager/src/types/types";
 import { resourceProtocolEvents } from "../../../libs/resource-manager/src/protocol/resource.protocol";
@@ -95,9 +96,11 @@ export class Slave {
     this._resourceManager.add(resource, rid);
     const cid = agent._connectionID;
     // TODO  - add this action to the protocol actions list and use it instead of building it
-    const action = {
-      event: resourceProtocolEvents.resourceAttach
-    };
+    // let action = {
+    //   event: resourceProtocolEvents.resourceAttach,
+
+    // };
+    let action = protocolActions.createProtocolActionRequest(resourceProtocolEvents.resourceAttach, false, undefined);
     console.log(
       `publishing event '${action.event}' with connection id: ${cid}, resource id: ${rid}`
     );

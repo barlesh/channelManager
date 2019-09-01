@@ -19,7 +19,11 @@ export namespace protocolActions {
     "response_falsly"
   ];
 
-  const expectedProtocolActionRequestKeys = ["event"];
+  const expectedProtocolActionRequestKeys = [
+    "event",
+    "expectResponse",
+    "response"
+  ];
 
   export function createProtocolActionResponse(
     event: string,
@@ -152,6 +156,7 @@ export namespace protocolActions {
   function validateRequest(protocolAction: any): boolean {
     const keys = Object.keys(protocolAction);
     let retVal = true;
+    console.log("validating requests: keys: ", keys);
     keys.forEach(key => {
       if (!expectedProtocolActionRequestKeys.includes(key)) {
         retVal = false;

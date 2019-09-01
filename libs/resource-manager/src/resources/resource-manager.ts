@@ -24,8 +24,8 @@ export interface IResourceManager {
   detachAgent(agentID: agentID);
 }
 
-export class ResourceManager implements IResourceManager {
-  resourcesList: Map<resourceID, any>;
+export class ResourceManager<T = any> implements IResourceManager {
+  resourcesList: Map<resourceID, T>;
   _resourceAgentMap: Map<resourceID, Agent>;
   _protocolResponse: protoActionResponse[];
   _protocolRequest: Map<string, protoActionRequest>;
@@ -36,17 +36,22 @@ export class ResourceManager implements IResourceManager {
     requests: protoActionRequest[],
     agentsManager
   ) {
+    console.log("validating protocol")
     if (protocolActions.validateProtocolActionResponse(responses)) {
       this._protocolResponse = responses;
     } else {
       throw new Error("response protocol of bad type");
     }
+    console.log("validating REQUEST protocol. REQUEST: ", requests)
+
     this._protocolRequest = new Map();
     if (protocolActions.validateProtocolActionRequest(requests)) {
       this.loadRequestsToMap(requests);
     } else {
       throw new Error("request protocol of bad type");
     }
+    console.log("DONE validating protocol")
+
 
     if (!agentsManager) {
       throw new Error("a valid agent manager was not supplied");

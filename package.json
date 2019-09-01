@@ -1,5 +1,5 @@
 {
-  "name": "protocol-tools",
+  "name": "resource-control",
   "version": "1.0.0",
   "description": "This repo contains tools for implementing protocol between master & slave",
   "main": "index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Radiflow/protocol-tools.git"
+    "url": "git+https://github.com/Radiflow/resource-control.git"
   },
   "keywords": [],
   "author": "BarLesh",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Radiflow/protocol-tools/issues"
+    "url": "https://github.com/Radiflow/resource-control/issues"
   },
-  "homepage": "https://github.com/Radiflow/protocol-tools#readme",
+  "homepage": "https://github.com/Radiflow/resource-control#readme",
   "dependencies": {
     "lerna": "^3.16.4"
   }

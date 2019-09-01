@@ -19,9 +19,9 @@
     "ajv": "^5.5.2"
   },
   "dependencies": {
+    "@resource-control/connections": "1.0.0", 
     "uuid": "^3.3.2",
-    "uuid-validate": "0.0.3",
-    "@resource-control/connections": "1.0.0"
+    "uuid-validate": "0.0.3"
   },
   "devDependencies": {
     "@types/argparse": "^1.0.36",
