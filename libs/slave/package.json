@@ -1,7 +1,7 @@
 {
   "name": "@resource-control/slave",
   "scope": "@resource-control",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Library for implementing channel between a master and multiple agents, and determmining protocols between",
   "main": "lib/index.js",
   "scripts": {
@@ -19,10 +19,10 @@
     "axios": "^0.18.0"
   },
   "dependencies": {
-    "@resource-control/agent": "^0.0.1",
-    "@resource-control/connection": "^0.0.1",
-    "@resource-control/protocol": "^0.0.1",
-    "@resource-control/resource": "^0.0.1",
+    "@resource-control/agent": "^0.0.2",
+    "@resource-control/connection": "^0.0.2",
+    "@resource-control/protocol": "^0.0.2",
+    "@resource-control/resource": "^0.0.2",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0"
   },
