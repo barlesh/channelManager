@@ -15,8 +15,8 @@
   "author": "Bar Leshem",
   "license": "ISC",
   "dependencies": {
-    "@resource-control/agent": "^0.0.5",
-    "@resource-control/protocol": "^0.0.5",
+    "@resource-control/agent": "^0.0.4",
+    "@resource-control/protocol": "^0.0.4",
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3"
   },
