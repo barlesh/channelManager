@@ -103,17 +103,17 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   /* API for sending (publishing to) connection events using connection ID */
-  publishConnectionEvent(
+  async publishConnectionEvent(
     connID: connectionID,
     protocolAction: protoActionRequest,
     data
-  ) {
+  ): Promise<any> {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
         `could not find connection with connection id: ${connID}`
       );
     }
-    connectionEvents.publishConnectionEvent(connection, protocolAction, data);
+    return await connectionEvents.publishConnectionEvent(connection, protocolAction, data);
   }
 }

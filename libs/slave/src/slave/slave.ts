@@ -83,7 +83,7 @@ export class Slave {
     this._agentsManager.config(agentManagerConfiguration);
   }
 
-  registerNewResource(resource: any) {
+  async registerNewResource(resource: any): Promise<any> {
     const rid = resource["id"];
     if (!rid) {
       console.error("wrong resource format. no id supplied.");
@@ -108,9 +108,11 @@ export class Slave {
       `publishing event '${action.event}' with connection id: ${cid}, resource id: ${rid}`
     );
     // send resource registration event toward the master
-    this._connectionManager.publishConnectionEvent(cid, action, rid);
+    const returnValue = await this._connectionManager.publishConnectionEvent(cid, action, rid);
     // attach agent to resource - TODO - should I do it in response to a successfulll server agent-resource attachment?
     this._resourceManager.attachResourceToAgent(agentID, rid);
+
+    return returnValue;
   }
 
   publishEventToResource(rid: resourceID, event: string, data?) {

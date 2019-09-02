@@ -60,7 +60,7 @@ export namespace connectionEvents {
     connection,
     protocolAction: protoActionRequest,
     data
-  ) {
+  ): Promise<any> {
     if (!connection) {
       console.warn("no connection supplied. cannot send event");
     }
