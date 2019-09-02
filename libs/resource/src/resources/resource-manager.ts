@@ -36,13 +36,11 @@ export class ResourceManager<T = any> implements IResourceManager {
     requests: protoActionRequest[],
     agentsManager
   ) {
-    console.log("validating protocol")
     if (protocolActions.validateProtocolActionResponse(responses)) {
       this._protocolResponse = responses;
     } else {
       throw new Error("response protocol of bad type");
     }
-    console.log("validating REQUEST protocol. REQUEST: ", requests)
 
     this._protocolRequest = new Map();
     if (protocolActions.validateProtocolActionRequest(requests)) {
@@ -50,7 +48,6 @@ export class ResourceManager<T = any> implements IResourceManager {
     } else {
       throw new Error("request protocol of bad type");
     }
-    console.log("DONE validating protocol")
 
 
     if (!agentsManager) {

@@ -27,7 +27,6 @@ export namespace connectionEvents {
         console.info(`execution for event: ${event} failed.`);
         if (retFalse) {
           console.info(`emmiting answer: ${retFalse} `);
-          // console.log(`connection.emit: ${connection.emit} `);
           if (retFalse) connection.emit(retFalse);
         }
       }

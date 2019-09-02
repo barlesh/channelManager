@@ -59,7 +59,6 @@ export class Master {
   }
 
   addResource(resource, resourceID: resourceID) {
-    console.log("Addying new resource with resource id: ", resourceID);
     this._resourceManager.add(resource, resourceID);
   }
 

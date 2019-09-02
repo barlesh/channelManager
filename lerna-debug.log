@@ -1,0 +1,12 @@
+0 silly argv { _: [ 'bootstrap' ], lernaVersion: '3.16.4', '$0': 'lerna' }
+1 notice cli v3.16.4
+2 verbose rootPath /home/barlesh/node-ws/protocol-tools
+3 error Error: Invalid tag name "^1.0.1.alpha.0": Tags may not have any characters that encodeURIComponent encodes.
+3 error     at invalidTagName (/usr/local/lib/node_modules/lerna/node_modules/npm-package-arg/npa.js:91:15)
+3 error     at fromRegistry (/usr/local/lib/node_modules/lerna/node_modules/npm-package-arg/npa.js:296:13)
+3 error     at Function.resolve (/usr/local/lib/node_modules/lerna/node_modules/npm-package-arg/npa.js:81:12)
+3 error     at Object.keys.forEach.depName (/usr/local/lib/node_modules/lerna/node_modules/@lerna/package-graph/index.js:235:30)
+3 error     at Array.forEach (<anonymous>)
+3 error     at PackageGraph.forEach (/usr/local/lib/node_modules/lerna/node_modules/@lerna/package-graph/index.js:229:38)
+3 error     at Map.forEach (<anonymous>)
+3 error     at new PackageGraph (/usr/local/lib/node_modules/lerna/node_modules/@lerna/package-graph/index.js:218:10)

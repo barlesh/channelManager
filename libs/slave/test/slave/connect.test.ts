@@ -44,7 +44,6 @@ describe("Demo", () => {
   });
 
   test("connect to Master > test 1", () => {
-    console.log(`connection to socket in dest: ${serverAddr}`);
     client_socket = io.connect(serverAddr, {
       "reconnection delay": 0,
       "reopen delay": 0,

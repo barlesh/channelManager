@@ -22,10 +22,6 @@ export class AgentsManagerClient extends AgentsManager {
     listen to a connection manager (client) events, regarding new succsessfull connection attampt toward the server
     Upon successfull connection, create an agent instance
     */
-    console.log(
-      "agent manager client: binding agent object to createAgentClient: ",
-      this.agent
-    );
     this.connectionManager.on(
       connectionClientManagerEvents.connectedToRemote,
       this.createAgentClient.bind(this, this.agent)
@@ -44,12 +40,6 @@ export class AgentsManagerClient extends AgentsManager {
 
   createAgentClient(agentData, connectionID: connectionID) {
     // create agent localy
-    console.log(
-      "createAgentClient: connectionID: ",
-      connectionID,
-      ", agentData: ",
-      agentData
-    );
     const agentID = this.createAgent(agentData, connectionID);
     // publish to relaying modules
     const Action = {

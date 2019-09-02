@@ -59,9 +59,6 @@ export class ConnectionServer extends ConnectionManager {
   }
 
   connectionHandlerServer(connectionSocket, connection) {
-    // console.log("connection hNDLER  server: conecctionSocket: ", connectionSocket);
-    // console.log("connection hNDLER  server: conecction: ", connection);
-
     let connID;
     connID = connectionUtils.extractConnectionClintID(connection);
     console.info("Handling server connection event. connection id: ", connID);

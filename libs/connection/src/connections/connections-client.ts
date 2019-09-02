@@ -54,8 +54,6 @@ export class ConnectionClient extends ConnectionManager {
 
   connectToServer() {
     const cid = this.connect();
-    // console.log(`connection manager client. connected to server. cid: ${cid}`);
-    // this.emit(connectionClientManagerEvents.connectedToRemote, cid);
     this.registerToListenToRemoteConnections();
   }
 
@@ -80,7 +78,6 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   reconnectionHandlerClient(manager) {
-    console.log("Connection client: Received disconnection event. re-creating connection.");
     manager.createConnection();
   }
 
