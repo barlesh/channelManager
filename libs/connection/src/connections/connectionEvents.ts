@@ -48,6 +48,7 @@ export namespace connectionEvents {
       console.log(`execution of event ${event} executed successfully.`);
       res.status = true;
       res.data = ans;
+      return res;
     } catch (err) {
       console.log(`execution of event ${event} throwd error.`);
       console.error(err);
@@ -73,12 +74,12 @@ export namespace connectionEvents {
       );
       return res;
     } else {
-      publishConnectionEventNoResponse(connection, data);
+      publishConnectionEventNoResponse(connection, protocolAction, data);
     }
   }
 
-  async function publishConnectionEventNoResponse(connection, data) {
-    connection.emit(event, data);
+  async function publishConnectionEventNoResponse(connection, protocolAction: protoActionRequest, data) {
+    connection.emit(protocolAction.event, data);
   }
 
   async function publishConnectionEventAndListenToResponse(
@@ -95,7 +96,7 @@ export namespace connectionEvents {
     return new Promise((resolve, reject) => {
       const timeoutID = setTimeout(() => {
         removeListener();
-        
+
         return reject({
           msg: "Timeout Error, Failed to get details from the agent"
         });
@@ -106,12 +107,12 @@ export namespace connectionEvents {
         data
       });
       connection.on(responseEvent, onDetailsReturned);
+
       function removeListener() {
         connection.removeListener(responseEvent, onDetailsReturned);
-
       }
-      function onDetailsReturned({ id, err, data }) {
 
+      function onDetailsReturned({ id, err, data }) {
         removeListener();
         if (id == actionId) {
           clearTimeout(timeoutID);

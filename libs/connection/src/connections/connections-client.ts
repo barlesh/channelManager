@@ -14,22 +14,30 @@ export class ConnectionClient extends ConnectionManager {
   _serverPort;
   _connectionID: connectionID;
 
-  connect(): connectionID {
-    const serverAddr = `${this._serverAddr}:${this._serverPort}/${
-      this._channel
-    }`;
+  async connectAndWaitForConnection(addr): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      let tid;
+      this._nsp = this._socketServer.connect(addr);
+      this._nsp.on("connect", () => {
+        clearTimeout(tid);
+        resolve(true);
+      });
+
+      tid = setTimeout(() => {
+        return resolve(false);
+      }, 50);
+    });
+  }
+
+  async connect(): Promise<connectionID> {
+    const serverAddr = `${this._serverAddr}:${this._serverPort}/${this._channel}`;
     console.info(`Connection to server in : ${serverAddr}`);
 
-    this._nsp = this._socketServer.connect(serverAddr, {
-      "reconnection delay": 0,
-      "reopen delay": 0,
-      "force new connection": true
-      // transports: ["websocket"]
-    });
+    const ans = await this.connectAndWaitForConnection(serverAddr);
 
-    if (!this._nsp || !this._nsp.connected) {
+    if (!ans || !this._nsp || !this._nsp.connected) {
       throw new Error("could not connect to server");
-    }
+  }
 
     const connID = this.createConnection();
     return connID;
@@ -52,8 +60,8 @@ export class ConnectionClient extends ConnectionManager {
     this._serverPort = serverPort;
   }
 
-  connectToServer() {
-    const cid = this.connect();
+  async connectToServer() {
+    const cid = await this.connect();
     this.registerToListenToRemoteConnections();
   }
 
@@ -72,7 +80,9 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   disconnectionHandlerClient(manager, Msg) {
-    console.info("Connection client: Received disconnection event. destroinyg connection.");
+    console.info(
+      "Connection client: Received disconnection event. destroinyg connection."
+    );
     manager.destroyConnection();
     manager.emit(connectionClientManagerEvents.remoteDisconnected);
   }

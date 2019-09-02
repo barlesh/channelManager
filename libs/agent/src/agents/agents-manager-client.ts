@@ -7,7 +7,7 @@ export class AgentsManagerClient extends AgentsManager {
   agent;
 
   /* Client Class configuration */
-  config(conf) {
+  async config(conf) {
     const connectionManager = conf["connectionManager"];
     this.agent = conf["agent"];
 
@@ -35,7 +35,7 @@ export class AgentsManagerClient extends AgentsManager {
       connectionClientManagerEvents.remoteDisconnected,
       this.agentDisconnection.bind(this, this.agent["id"])
     );
-    this.connectionManager.connectToServer();
+    await this.connectionManager.connectToServer();
   }
 
   createAgentClient(agentData, connectionID: connectionID) {
