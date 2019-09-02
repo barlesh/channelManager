@@ -27,7 +27,7 @@ export class ConnectionClient extends ConnectionManager {
       // transports: ["websocket"]
     });
 
-    if (!this._nsp) {
+    if (!this._nsp || !this._nsp.connected) {
       throw new Error("could not connect to server");
     }
 

@@ -12,8 +12,6 @@
   "author": "Bar Leshem",
   "license": "ISC",
   "peerDependencies": {
-    "axios": "^0.18.0",
-    "ajv": "^5.5.2"
   },
   "dependencies": {
     "socket.io-client": "^2.2.0",
