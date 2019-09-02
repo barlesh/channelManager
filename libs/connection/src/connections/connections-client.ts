@@ -25,7 +25,7 @@ export class ConnectionClient extends ConnectionManager {
 
       tid = setTimeout(() => {
         return resolve(false);
-      }, 50);
+      }, 1000);
     });
   }
 
