@@ -19,7 +19,7 @@ export interface IResourceManager {
   get(id): any;
   size(): number;
   attachResourceToAgent(agentID: agentID, resourceID: resourceID);
-  detachResourceFromAgent(agent: Agent, resourceID: resourceID);
+  detachResourceFromAgent(agentID: agentID, resourceID: resourceID);
   publishEvent(resourceID: resourceID, event: string, data);
   detachAgent(agentID: agentID);
   publishResourceDetach(resourceID: resourceID);
