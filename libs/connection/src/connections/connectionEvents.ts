@@ -34,12 +34,13 @@ export namespace connectionEvents {
     connection.on(event, cb);
   }
 
-  async function runExec(event: string, exec: Function, data?) {
+  async function runExec(event: string, exec: Function, receivedData?) {
     const res = {
       status: false,
       data: undefined
     };
     try {
+      const  { actionID, data } = receivedData;
       const ans = await exec(data);
       if (!ans) {
         console.log(`execution of event ${event} returned false answer.`);
@@ -83,7 +84,11 @@ export namespace connectionEvents {
     protocolAction: protoActionRequest,
     data
   ) {
-    connection.emit(protocolAction.event, data);
+    const sentData = {
+      actionID: 1,
+      data
+    }
+    connection.emit(protocolAction.event, sentData);
   }
 
   async function publishConnectionEventAndListenToResponse(
@@ -94,8 +99,8 @@ export namespace connectionEvents {
     const response = request.response;
     const requestEvent = request.event;
     const responseEvent = response.event;
-    const TIMEOUT = 50;
-    const actionId = Date.now();
+    const TIMEOUT = 1000;
+    const actionID = Date.now();
 
     return new Promise((resolve, reject) => {
       const timeoutID = setTimeout(() => {
@@ -106,7 +111,11 @@ export namespace connectionEvents {
         });
       }, TIMEOUT);
 
-      connection.emit(requestEvent, data);
+      const sentData = {
+        actionID,
+        data
+      }
+      connection.emit(requestEvent, sentData);
       connection.on(responseEvent, onDetailsReturned);
 
       function removeListener() {
@@ -115,7 +124,7 @@ export namespace connectionEvents {
 
       function onDetailsReturned({ id, err, data }) {
         removeListener();
-        if (id == actionId) {
+        if (id == actionID) {
           clearTimeout(timeoutID);
           if (err) {
             return reject({ err, msg: "Failed to get details from the agent" });
