@@ -2,14 +2,8 @@ import {
   IConnectionManager,
   ConnectionClient
 } from "@resource-control/connection";
-import {
-  IAgentsManager,
-  AgentsManagerClient
-} from "@resource-control/agent";
-import {
-  IResourceManager,
-  ResourceManager
-} from "@resource-control/resource";
+import { IAgentsManager, AgentsManagerClient } from "@resource-control/agent";
+import { IResourceManager, ResourceManager } from "@resource-control/resource";
 import {
   protoActionRequest,
   protoActionResponse,
@@ -91,8 +85,8 @@ export class Slave {
     }
     const agentID = this.slaveID;
     const agent = this._agentsManager.get(agentID);
-    if(!agent){
-      console.error("could not get slave's agent detailes.")
+    if (!agent) {
+      console.error("could not get slave's agent detailes.");
       throw new Error("agent not connected");
     }
     /* this is the slave, so the resource is registered localy without confirmation from the master - TODO - change this behaviour??? */
@@ -108,7 +102,7 @@ export class Slave {
       undefined,
       undefined,
       undefined
-    )
+    );
     let action = protocolActions.createProtocolActionRequest(
       resourceProtocolEvents.resourceAttach,
       true,
@@ -118,11 +112,21 @@ export class Slave {
       `publishing event '${action.event}' with connection id: ${cid}, resource id: ${rid}`
     );
     // send resource registration event toward the master
-    const returnValue = await this._connectionManager.publishConnectionEvent(cid, action, rid);
+    const returnValue = await this._connectionManager.publishConnectionEvent(
+      cid,
+      action,
+      rid
+    );
     // attach agent to resource - TODO - should I do it in response to a successfulll server agent-resource attachment?
     this._resourceManager.attachResourceToAgent(agentID, rid);
 
     return returnValue;
+  }
+
+  unregisterNewResource(resourceID: resourceID) {
+    console.info("unregistering resource with resource id: ", resourceID);
+    this._resourceManager.publishResourceDetach(resourceID);
+    // this._resourceManager.detachResourceFromAgent();
   }
 
   publishEventToResource(rid: resourceID, event: string, data?) {

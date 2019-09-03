@@ -22,8 +22,24 @@ export interface IResourceManager {
   detachResourceFromAgent(agent: Agent, resourceID: resourceID);
   publishEvent(resourceID: resourceID, event: string, data);
   detachAgent(agentID: agentID);
+  publishResourceDetach(resourceID: resourceID);
 }
 
+const defaultActionRequests = [
+  protocolActions.createProtocolActionRequest(
+    resourceProtocolEvents.resourceAttach,
+    false,
+    undefined
+  ),
+  protocolActions.createProtocolActionRequest(
+    resourceProtocolEvents.resouceDetach,
+    false,
+    undefined
+  )
+];
+
+// [resourceProtocolEvents.resouceDetach]: {},
+// resourceProtocolEvents.resourceAttach: {}
 export class ResourceManager<T = any> implements IResourceManager {
   resourcesList: Map<resourceID, T>;
   _resourceAgentMap: Map<resourceID, Agent>;
@@ -49,6 +65,7 @@ export class ResourceManager<T = any> implements IResourceManager {
       throw new Error("request protocol of bad type");
     }
 
+    this.loadRequestsToMap(defaultActionRequests);
 
     if (!agentsManager) {
       throw new Error("a valid agent manager was not supplied");
@@ -181,6 +198,13 @@ export class ResourceManager<T = any> implements IResourceManager {
   //   });
   //   console.info(`Detached ${resourcesToDetach.length} resources.`);
   // }
+
+  publishResourceDetach(rid: resourceID) {
+    console.info(
+      `sending detach resource event for resource ${rid} to the remote resource manager`
+    );
+    this.publishEvent(rid, resourceProtocolEvents.resouceDetach, undefined);
+  }
 
   detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
     const agentID = agent.getID();
