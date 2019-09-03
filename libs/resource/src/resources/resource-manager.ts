@@ -189,16 +189,6 @@ export class ResourceManager<T = any> implements IResourceManager {
     return resource;
   }
 
-  // detachAgent(agent: Agent) {
-  //   const agentID = agent.getID();
-  //   console.info(`detaching agent with agentID: ${agentID} from all resources`);
-  //   const resourcesToDetach = this.getResourcesByAgent(agentID);
-  //   resourcesToDetach.forEach(rid => {
-  //     this._resourceAgentMap.delete(rid);
-  //   });
-  //   console.info(`Detached ${resourcesToDetach.length} resources.`);
-  // }
-
   async publishResourceDetach(rid: resourceID) {
     console.info(
       `sending detach resource event for resource ${rid} to the remote resource manager`
