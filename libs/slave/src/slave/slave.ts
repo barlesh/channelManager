@@ -104,7 +104,7 @@ export class Slave {
 
     // };
     const response = protocolActions.createProtocolActionResponse(
-      "attached-resource-details",
+      "attached-resource-success",
       undefined,
       undefined,
       undefined
