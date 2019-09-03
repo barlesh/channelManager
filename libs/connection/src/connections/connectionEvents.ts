@@ -19,14 +19,15 @@ export namespace connectionEvents {
         id: undefined,
         err: undefined,
         data: undefined
-      }
-      console.info(`execute event: ${event} with data: ${data}.`);
+      };
+      console.info(`execute event: ${event}.`);
+      console.info("data: ", data);
       ans = await runExec(event, exec, data);
       if (ans.status) {
         console.info(`execution for event: ${event} succedded.`);
         if (retTrue) {
           console.info(`emmiting answer: ${retTrue} `);
-          retData.id = ans.actionID
+          retData.id = ans.actionID;
           retData.data = ans.data;
           connection.emit(retTrue, retData);
         }
@@ -34,7 +35,7 @@ export namespace connectionEvents {
         console.info(`execution for event: ${event} failed.`);
         if (retFalse) {
           console.info(`emmiting answer: ${retFalse} `);
-          retData.id = ans.actionID
+          retData.id = ans.actionID;
           retData.err = ans.err;
           connection.emit(retFalse, retData);
         }
@@ -51,7 +52,7 @@ export namespace connectionEvents {
       actionID: undefined
     };
     try {
-      const  { actionID, data } = receivedData;
+      const { actionID, data } = receivedData;
       res.actionID = actionID;
       const ans = await exec(data);
       if (!ans) {
@@ -100,7 +101,7 @@ export namespace connectionEvents {
     const sentData = {
       actionID: undefined,
       data
-    }
+    };
     connection.emit(protocolAction.event, sentData);
   }
 
@@ -127,7 +128,7 @@ export namespace connectionEvents {
       const sentData = {
         actionID,
         data
-      }
+      };
       connection.emit(requestEvent, sentData);
       connection.on(responseEvent, onDetailsReturned);
 
