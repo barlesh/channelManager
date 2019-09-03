@@ -2,23 +2,32 @@
 
 libs/protocol/lib
 libs/protocol/node_modules
+libs/protocol/package-lock.json
 
 libs/agent/lib
 libs/agent/node_modules
+libs/agent/package-lock.json
+
 
 libs/connection/lib
 libs/connection/node_modules
+libs/connection/package-lock.json
+
 
 libs/resource/lib
 libs/resource/node_modules
+libs/resource/package-lock.json
+
 
 libs/master/lib
 libs/master/node_modules
+libs/master/package-lock.json
 libs/master/test/lib
 libs/master/test/
 
 libs/slave/lib
 libs/slave/node_modules
+libs/slave/package-lock.json
 
 master_old/lib
 master_old/node_modules
