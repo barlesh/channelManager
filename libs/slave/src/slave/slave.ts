@@ -91,6 +91,10 @@ export class Slave {
     }
     const agentID = this.slaveID;
     const agent = this._agentsManager.get(agentID);
+    if(!agent){
+      console.error("could not get slave's agent detailes.")
+      throw new Error("agent not connected");
+    }
     /* this is the slave, so the resource is registered localy without confirmation from the master - TODO - change this behaviour??? */
     this._resourceManager.add(resource, rid);
     const cid = agent._connectionID;
@@ -99,10 +103,16 @@ export class Slave {
     //   event: resourceProtocolEvents.resourceAttach,
 
     // };
+    const response = protocolActions.createProtocolActionResponse(
+      "attached-resource-details",
+      undefined,
+      undefined,
+      undefined
+    )
     let action = protocolActions.createProtocolActionRequest(
       resourceProtocolEvents.resourceAttach,
-      false,
-      undefined
+      true,
+      response
     );
     console.log(
       `publishing event '${action.event}' with connection id: ${cid}, resource id: ${rid}`
