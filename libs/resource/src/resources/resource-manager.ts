@@ -199,11 +199,11 @@ export class ResourceManager<T = any> implements IResourceManager {
   //   console.info(`Detached ${resourcesToDetach.length} resources.`);
   // }
 
-  publishResourceDetach(rid: resourceID) {
+  async publishResourceDetach(rid: resourceID) {
     console.info(
       `sending detach resource event for resource ${rid} to the remote resource manager`
     );
-    this.publishEvent(rid, resourceProtocolEvents.resouceDetach, undefined);
+    await this.publishEvent(rid, resourceProtocolEvents.resouceDetach, undefined);
   }
 
   detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
@@ -251,7 +251,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     return resourcesToDetach;
   }
 
-  publishEvent(resourceID: resourceID, event: string, data) {
+  async publishEvent(resourceID: resourceID, event: string, data) {
     const agent = this._resourceAgentMap.get(resourceID);
     if (!agent) {
       console.warn(
@@ -260,7 +260,7 @@ export class ResourceManager<T = any> implements IResourceManager {
       throw new Error("can not publish event. agent not found");
     }
     const action = this._protocolRequest.get(event);
-    agent.publishEvent(action, data);
+    await agent.publishEvent(action, data);
   }
 
   myResourceHandler() {}

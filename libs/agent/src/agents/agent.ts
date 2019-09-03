@@ -54,8 +54,8 @@ export class Agent implements IAgent {
     // TODO
   }
 
-  publishEvent(protocolAction: protoActionRequest, data) {
-    this._manager.publishEvent(this._connectionID, protocolAction, data);
+  async publishEvent(protocolAction: protoActionRequest, data) {
+    await this._manager.publishEvent(this._connectionID, protocolAction, data);
   }
 
   getID() {

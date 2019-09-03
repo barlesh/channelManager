@@ -136,7 +136,7 @@ export abstract class AgentsManager implements IAgentsManager {
     this.connectionManager.subscribeToConnectionEvent(conID, protocolAction);
   }
 
-  publishEvent(conID: connectionID, protocolAction: protoActionRequest, data) {
-    this.connectionManager.publishConnectionEvent(conID, protocolAction, data);
+  async publishEvent(conID: connectionID, protocolAction: protoActionRequest, data) {
+    await this.connectionManager.publishConnectionEvent(conID, protocolAction, data);
   }
 }

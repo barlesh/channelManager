@@ -123,9 +123,9 @@ export class Slave {
     return returnValue;
   }
 
-  unregisterResource(resourceID: resourceID) {
+  async unregisterResource(resourceID: resourceID) {
     console.info("unregistering resource with resource id: ", resourceID);
-    this._resourceManager.publishResourceDetach(resourceID);
+    await this._resourceManager.publishResourceDetach(resourceID);
     this._resourceManager.detachResourceFromAgent(undefined, resourceID);
   }
 
