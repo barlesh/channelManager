@@ -18,7 +18,7 @@
     "@resource-control/agent": "^0.0.19",
     "@resource-control/connection": "^0.0.19",
     "@resource-control/protocol": "^0.0.19",
-    "@resource-control/resource": "^0.0.4",
+    "@resource-control/resource": "^0.0.19",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0"
   },
