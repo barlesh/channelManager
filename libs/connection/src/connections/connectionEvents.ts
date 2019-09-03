@@ -15,19 +15,28 @@ export namespace connectionEvents {
 
     const cb = async data => {
       let ans;
+      let retData = {
+        id: undefined,
+        err: undefined,
+        data: undefined
+      }
       console.info(`execute event: ${event} with data: ${data}.`);
       ans = await runExec(event, exec, data);
       if (ans.status) {
         console.info(`execution for event: ${event} succedded.`);
         if (retTrue) {
           console.info(`emmiting answer: ${retTrue} `);
-          if (retTrue) connection.emit(retTrue, ans.data);
+          retData.id = 1//TODO
+          retData.data = ans.data;
+          connection.emit(retTrue, ans.data);
         }
       } else {
         console.info(`execution for event: ${event} failed.`);
         if (retFalse) {
           console.info(`emmiting answer: ${retFalse} `);
-          if (retFalse) connection.emit(retFalse);
+          retData.id = 1//TODO
+          retData.err = ans.err;
+          connection.emit(retFalse);
         }
       }
     };
@@ -37,10 +46,13 @@ export namespace connectionEvents {
   async function runExec(event: string, exec: Function, receivedData?) {
     const res = {
       status: false,
-      data: undefined
+      data: undefined,
+      err: undefined,
+      actionID: undefined
     };
     try {
       const  { actionID, data } = receivedData;
+      res.actionID = actionID;
       const ans = await exec(data);
       if (!ans) {
         console.log(`execution of event ${event} returned false answer.`);
@@ -53,6 +65,7 @@ export namespace connectionEvents {
     } catch (err) {
       console.log(`execution of event ${event} throwd error.`);
       console.error(err);
+      res.err = err;
       return res;
     }
   }
@@ -85,7 +98,7 @@ export namespace connectionEvents {
     data
   ) {
     const sentData = {
-      actionID: 1,
+      actionID: undefined,
       data
     }
     connection.emit(protocolAction.event, sentData);
