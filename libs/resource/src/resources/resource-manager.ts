@@ -83,8 +83,8 @@ export class ResourceManager<T = any> implements IResourceManager {
     const resourceAttachAction = protocolActions.createProtocolActionResponse(
       resourceProtocolEvents.resourceAttach,
       this.attachResourceToAgent.bind(this, agentID),
-      undefined,
-      undefined
+      "attached-resource-success",
+      "attached-resource-failure"
     );
 
     const resourceDetachAction = protocolActions.createProtocolActionResponse(
@@ -146,7 +146,8 @@ export class ResourceManager<T = any> implements IResourceManager {
   }
 
   attachResourceToAgent(agentID: agentID, resourceID: resourceID) {
-    if (!this.resourcesList.get(resourceID)) {
+    const resource = this.resourcesList.get(resourceID);
+    if (!resource) {
       throw new Error("resource not exist.");
     }
 
@@ -168,7 +169,7 @@ export class ResourceManager<T = any> implements IResourceManager {
 
     // register resource protocol events TODO
     this.registerProtocolEvents(agent);
-    return true;
+    return resource;
   }
 
   // detachAgent(agent: Agent) {
