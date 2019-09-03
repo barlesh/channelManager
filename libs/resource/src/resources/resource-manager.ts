@@ -207,6 +207,9 @@ export class ResourceManager<T = any> implements IResourceManager {
   }
 
   detachResourceFromAgent(agent: Agent, resourceID: resourceID) {
+    if(!agent){
+      agent = this._resourceAgentMap.get(resourceID);
+    }
     const agentID = agent.getID();
     console.info(
       `detaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`

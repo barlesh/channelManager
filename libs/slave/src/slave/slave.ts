@@ -126,7 +126,7 @@ export class Slave {
   unregisterResource(resourceID: resourceID) {
     console.info("unregistering resource with resource id: ", resourceID);
     this._resourceManager.publishResourceDetach(resourceID);
-    // this._resourceManager.detachResourceFromAgent();
+    this._resourceManager.detachResourceFromAgent(undefined, resourceID);
   }
 
   publishEventToResource(rid: resourceID, event: string, data?) {
