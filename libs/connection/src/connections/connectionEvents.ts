@@ -78,7 +78,11 @@ export namespace connectionEvents {
     }
   }
 
-  async function publishConnectionEventNoResponse(connection, protocolAction: protoActionRequest, data) {
+  async function publishConnectionEventNoResponse(
+    connection,
+    protocolAction: protoActionRequest,
+    data
+  ) {
     connection.emit(protocolAction.event, data);
   }
 
@@ -102,10 +106,7 @@ export namespace connectionEvents {
         });
       }, TIMEOUT);
 
-      connection.emit(requestEvent, {
-        id: actionId,
-        data
-      });
+      connection.emit(requestEvent, data);
       connection.on(responseEvent, onDetailsReturned);
 
       function removeListener() {
