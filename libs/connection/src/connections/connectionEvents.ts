@@ -28,7 +28,7 @@ export namespace connectionEvents {
           console.info(`emmiting answer: ${retTrue} `);
           retData.id = 1//TODO
           retData.data = ans.data;
-          connection.emit(retTrue, ans.data);
+          connection.emit(retTrue, retData);
         }
       } else {
         console.info(`execution for event: ${event} failed.`);
@@ -36,7 +36,7 @@ export namespace connectionEvents {
           console.info(`emmiting answer: ${retFalse} `);
           retData.id = 1//TODO
           retData.err = ans.err;
-          connection.emit(retFalse);
+          connection.emit(retFalse, retData);
         }
       }
     };
