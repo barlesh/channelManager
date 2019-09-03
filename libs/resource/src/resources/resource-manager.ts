@@ -193,7 +193,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     console.info(
       `sending detach resource event for resource ${rid} to the remote resource manager`
     );
-    await this.publishEvent(rid, resourceProtocolEvents.resouceDetach, undefined);
+    await this.publishEvent(rid, resourceProtocolEvents.resouceDetach, rid);
   }
 
   detachResourceFromAgent(agentID: agentID, resourceID: resourceID) {
