@@ -204,6 +204,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     this._resourceAgentMap.delete(resourceID);
 
     this.unregisterProtocolEvents(agent);
+    return true;
   }
 
   registerProtocolEvents(agent: Agent) {
@@ -247,6 +248,13 @@ export class ResourceManager<T = any> implements IResourceManager {
       throw new Error("can not publish event. agent not found");
     }
     const action = this._protocolRequest.get(event);
+    if(!action){
+      console.warn(
+        `could not find action that its event is: ${event}`
+      );
+      throw new Error("can not publish event. action not found");
+    }
+    console.log("resource-manager: publish event: ", event, " using action: ", action, " with data: ", data)
     await agent.publishEvent(action, data);
   }
 
