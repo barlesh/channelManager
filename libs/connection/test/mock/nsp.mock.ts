@@ -2,23 +2,46 @@ import { mockConnection } from "./connection.mock";
 
 const eventsMap = new Map();
 
-export const mockNSP = {
-  eventsMap,
-  on: (event, handler) => {
-    eventsMap.set(event, handler);
-  },
-  emit: (event, data?) => {
-    return true;
-  },
+// export const mockNSP = {
+//   eventsMap,
+//   on: (event, handler) => {
+//     eventsMap.set(event, handler);
+//   },
+//   emit: (event, data?) => {
+//     return true;
+//   },
 
-  generateEvent: async event => {
+//   generateEvent: async event => {
+//     const h = eventsMap.get(event);
+//     if (h) {
+//       const ans = await h(mockConnection);
+//     }
+//   },
+
+//   listeners: () => {
+//     return Array.from(eventsMap.keys());
+//   }
+// };
+
+export class mockNSP {
+  eventsMap = new Map();
+ 
+  on(event, handler) {
+    eventsMap.set(event, handler);
+  }
+  
+  emit(event, data?) {
+    return true;
+  }
+
+  async generateEvent(event) {
     const h = eventsMap.get(event);
     if (h) {
       const ans = await h(mockConnection);
     }
-  },
+  }
 
-  listeners: () => {
+  listeners() {
     return Array.from(eventsMap.keys());
   }
-};
+}
