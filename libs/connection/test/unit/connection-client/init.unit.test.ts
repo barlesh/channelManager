@@ -29,21 +29,25 @@ describe("Demo", () => {
   });
 
 
-  test("config connection manager server > test 2", () => {
+  test("config connection manager server > test 2", async () => {
     const channel = channelSockets.testSocketPath;
     const myConnectionMnager = new ConnectionClient();
     const spy = jest.spyOn(ioClient, "connect");
     const spynsp = jest.spyOn(nspClient, "on");
     myConnectionMnager.config({ io: ioClient, channel, address, port });
     myConnectionMnager.connectToServer();
+    nspClient.connected = true;
+    await nspClient.generateEvent("connect");
+
     expect(myConnectionMnager._nsp).toBeDefined();
     
     expect(spy).toBeCalled();
     expect(spy).toBeCalledWith(`${address}:${port}/${channel}`);
-
     expect(spynsp).toBeCalled();
 
-    // expect(myConnectionMnager._connectionsList.size).toEqual(1);
+    const receivedMapLength = myConnectionMnager._connectionsList.size;
+    // expect(receivedMapLength).toEqual(1);
+
 
   });
 

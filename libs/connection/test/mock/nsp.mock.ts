@@ -24,6 +24,7 @@ const eventsMap = new Map();
 // };
 
 export class mockNSP {
+  connected: false;
   eventsMap = new Map();
  
   on(event, handler) {

@@ -24,6 +24,7 @@ export class ConnectionClient extends ConnectionManager {
       });
 
       tid = setTimeout(() => {
+        console.info("TImeout expired after connection attampt");
         return resolve(false);
       }, 1000);
     });
@@ -34,10 +35,10 @@ export class ConnectionClient extends ConnectionManager {
     console.info(`Connection to server in : ${serverAddr}`);
 
     const ans = await this.connectAndWaitForConnection(serverAddr);
-
     if (!ans || !this._nsp || !this._nsp.connected) {
+      console.error("could not connect to server");
       throw new Error("could not connect to server");
-  }
+    }
 
     const connID = this.createConnection();
     return connID;
