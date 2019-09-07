@@ -3,7 +3,7 @@ import { ConnectionManager } from "../../../src/connections";
 const http = require("http");
 import * as socketIo from "socket.io";
 import { channelSockets } from "../../../src/models/sockets";
-import { ioMock } from "../../mock/io.mock";
+import { ioMock } from "../../mock/io-manager-server.mock";
 import { ConnectionServer } from "../../../src/connections/connections-server";
 import { connectionEvents } from "../../../src/connections/connectionEvents";
 import { protocolActions } from "../../../../protocol/src/actions";
@@ -18,7 +18,7 @@ describe("Demo", () => {
 
   beforeEach(() => {});
 
-  test("config connection manager > test 1", () => {
+  test("config connection manager server > test 1", () => {
     const channel = channelSockets.testSocketPath;
     const myConnectionMnager = new ConnectionServer();
     const spy = jest.spyOn(io, "of");
