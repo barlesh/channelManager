@@ -41,6 +41,7 @@ const defaultActionRequests = [
 // [resourceProtocolEvents.resouceDetach]: {},
 // resourceProtocolEvents.resourceAttach: {}
 export class ResourceManager<T = any> implements IResourceManager {
+  detachResourceHandler: Function;
   resourcesList: Map<resourceID, T>;
   _resourceAgentMap: Map<resourceID, Agent>;
   _protocolResponse: protoActionResponse[];
@@ -48,6 +49,7 @@ export class ResourceManager<T = any> implements IResourceManager {
   _agentsManager: AgentsManager;
 
   constructor(
+    detachResourceHandler: Function,
     responses: protoActionResponse[],
     requests: protoActionRequest[],
     agentsManager
@@ -203,6 +205,8 @@ export class ResourceManager<T = any> implements IResourceManager {
     );
     this._resourceAgentMap.delete(resourceID);
 
+    // execute users cutome detach resource handler
+    this.detachResourceHandler(resourceID);
     this.unregisterProtocolEvents(agent);
     return true;
   }
