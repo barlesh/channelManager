@@ -54,6 +54,11 @@ export class ResourceManager<T = any> implements IResourceManager {
     requests: protoActionRequest[],
     agentsManager
   ) {
+    if(!detachResourceHandler){
+      throw new Error("no resource detach handler supplied");
+    }
+    this.detachResourceHandler = detachResourceHandler;
+    
     if (protocolActions.validateProtocolActionResponse(responses)) {
       this._protocolResponse = responses;
     } else {
@@ -120,7 +125,8 @@ export class ResourceManager<T = any> implements IResourceManager {
     console.info(`detaching agent with agentID: ${agentID} from all resources`);
     const resourcesToDetach = this.getResourcesByAgent(agentID);
     resourcesToDetach.forEach(rid => {
-      this._resourceAgentMap.delete(rid);
+      this.detachResourceFromAgent(agentID, rid);
+      // this._resourceAgentMap.delete(rid);
     });
     console.info(`Detached ${resourcesToDetach.length} resources.`);
   }
