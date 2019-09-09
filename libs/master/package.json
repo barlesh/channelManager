@@ -1,7 +1,7 @@
 {
   "name": "@resource-control/master",
   "scope": "@resource-control",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Library for implementing channel between a master and multiple agents, and determmining protocols between",
   "main": "lib/index.js",
   "scripts": {
@@ -15,10 +15,10 @@
   "author": "Bar Leshem",
   "license": "ISC",
   "dependencies": {
-    "@resource-control/agent": "^0.0.23",
-    "@resource-control/connection": "^0.0.23",
-    "@resource-control/protocol": "^0.0.23",
-    "@resource-control/resource": "^0.0.23",
+    "@resource-control/agent": "^0.0.24",
+    "@resource-control/connection": "^0.0.24",
+    "@resource-control/protocol": "^0.0.24",
+    "@resource-control/resource": "^0.0.24",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0"
   },
