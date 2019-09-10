@@ -2,6 +2,7 @@ import { ConnectionManager } from "./connections-manager";
 import { connectionID } from "../models";
 import * as uid from "uuid";
 import { connectionUtils } from "./connectionUtils";
+import { connectionEvents } from "./connectionEvents";
 
 export enum connectionClientManagerEvents {
   connectedToRemote = "connected-to-remote",
@@ -18,10 +19,14 @@ export class ConnectionClient extends ConnectionManager {
     return new Promise((resolve, reject) => {
       let tid;
       this._nsp = this._socketServer.connect(addr);
-      this._nsp.on("connect", () => {
+      connectionEvents.registerEventNoDup(this._nsp, "connect", () => {
         clearTimeout(tid);
         resolve(true);
       });
+      // this._nsp.on("connect", () => {
+      //   clearTimeout(tid);
+      //   resolve(true);
+      // });
 
       tid = setTimeout(() => {
         console.info("TImeout expired after connection attampt");
@@ -76,8 +81,10 @@ export class ConnectionClient extends ConnectionManager {
       this._nsp,
       this
     );
-    this._nsp.on("disconnect", bindeddisconnectionHandler);
-    this._nsp.on("reconnect", bindedreconnectionHandler);
+    // this._nsp.on("disconnect", bindeddisconnectionHandler);
+    connectionEvents.registerEventNoDup(this._nsp, "disconnect", bindeddisconnectionHandler);
+    // this._nsp.on("reconnect", bindedreconnectionHandler);
+    connectionEvents.registerEventNoDup(this._nsp, "reconnect", bindedreconnectionHandler);
   }
 
   disconnectionHandlerClient(manager, Msg) {

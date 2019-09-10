@@ -1,6 +1,7 @@
 import { connectionID } from "../models";
 import { connectionUtils } from "./connectionUtils";
 import { ConnectionManager } from "./connections-manager";
+import { connectionEvents } from "./connectionEvents";
 
 export enum connectionServerManagerEvents {
   remoteConnected = "remote-connected",
@@ -53,8 +54,10 @@ export class ConnectionServer extends ConnectionManager {
     //   this,
     //   this._nsp
     // );
-    this._nsp.on("connection", bindedconnectionHandler);
-    this._nsp.on("disconnect", bindeddisconnectionHandler);
+    // this._nsp.on("connection", bindedconnectionHandler);
+    connectionEvents.registerEventNoDup(this._nsp, "connection", bindedconnectionHandler);
+    // this._nsp.on("disconnect", bindeddisconnectionHandler);
+    connectionEvents.registerEventNoDup(this._nsp, "disconnect", bindeddisconnectionHandler);
     // this._nsp.on("reconnect", bindedreconnectionHandler);
   }
 

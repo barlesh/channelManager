@@ -41,7 +41,8 @@ export namespace connectionEvents {
         }
       }
     };
-    connection.on(event, cb);
+
+    registerEventNoDup(connection, event, cb);
   }
 
   async function runExec(event: string, exec: Function, receivedData?) {
@@ -130,7 +131,7 @@ export namespace connectionEvents {
         data
       };
       connection.emit(requestEvent, sentData);
-      connection.on(responseEvent, onDetailsReturned);
+      registerEventNoDup(connection, responseEvent, onDetailsReturned);
 
       function removeListener() {
         connection.removeListener(responseEvent, onDetailsReturned);
@@ -147,31 +148,18 @@ export namespace connectionEvents {
         }
       }
     });
+  }
 
-    // let runNwait = (connection, requestEvent, data, responseEvent) => {
-    //   return new Promise((resolve, reject) => {
-    //     connection.emit(requestEvent.data);
-    //     connection.on(responseEvent, data => {
-    //       resolve(data);
-    //     });
-    //   });
-    // };
+  export function registerEventNoDup(connection, event: string, cb: Function) {
+    unregisterEvent(connection, event);
+    registerEvent(connection, event, cb);
+  }
 
-    // console.warn("run tmlllllllllllllllllllll");
-    // tml(async ()=> { return true; }, 50).then(console.log("wooooow")).catch(err=> console.error(err));
-    //   tml(runNwait, 50, { rejectWith: new Error("timeout") })
-    //     .then(res => {
-    //       console.log(`request '${requestEvent}' recived response:  `);
-    //       console.log(res);
-    //       return res;
-    //     })
-    //     .catch(err => {
-    //       // Same as above, but on timeout it will
-    //       // be rejected with the provided error.
-    //       console.error(
-    //         `request '${requestEvent}' expected response but timeout expired.`
-    //       );
-    //       rejects(err);
-    //     });
+  function registerEvent(connection, event: string, cb: Function) {
+    connection.on(event, cb);
+  }
+
+  function unregisterEvent(connection, event: string) {
+    connection.removeAllListeners(event);
   }
 }
