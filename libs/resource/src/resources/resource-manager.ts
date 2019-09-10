@@ -54,11 +54,11 @@ export class ResourceManager<T = any> implements IResourceManager {
     requests: protoActionRequest[],
     agentsManager
   ) {
-    if(!detachResourceHandler){
+    if (!detachResourceHandler) {
       throw new Error("no resource detach handler supplied");
     }
     this.detachResourceHandler = detachResourceHandler;
-    
+
     if (protocolActions.validateProtocolActionResponse(responses)) {
       this._protocolResponse = responses;
     } else {
@@ -126,7 +126,6 @@ export class ResourceManager<T = any> implements IResourceManager {
     const resourcesToDetach = this.getResourcesByAgent(agentID);
     resourcesToDetach.forEach(rid => {
       this.detachResourceFromAgent(agentID, rid);
-      // this._resourceAgentMap.delete(rid);
     });
     console.info(`Detached ${resourcesToDetach.length} resources.`);
   }
@@ -204,7 +203,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     await this.publishEvent(rid, resourceProtocolEvents.resouceDetach, rid);
   }
 
-  detachResourceFromAgent(agentID: agentID, resourceID: resourceID) {
+ async detachResourceFromAgent(agentID: agentID, resourceID: resourceID) {
     const agent = this._agentsManager.get(agentID);
     console.info(
       `detaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
@@ -212,7 +211,14 @@ export class ResourceManager<T = any> implements IResourceManager {
     this._resourceAgentMap.delete(resourceID);
 
     // execute users cutome detach resource handler
-    this.detachResourceHandler(resourceID);
+    try {
+      await this.detachResourceHandler(resourceID);
+    } catch (err) {
+      console.warn(
+        `handler of resource with id: ${resourceID} detach throwed error. this may happen because a previuos custome protocol action already deleted resource`
+      );
+      console.log("resource is only detached in the resource manager context!");
+    }
     this.unregisterProtocolEvents(agent);
     return true;
   }
@@ -255,16 +261,23 @@ export class ResourceManager<T = any> implements IResourceManager {
       console.warn(
         `could not find agent that hold resource with resource id: ${resourceID}`
       );
-      throw new Error("can not publish event. agent not found");
+      throw new Error(
+        `can not publish event ${event}. agent  that is attached to resource ${resourceID} was not found`
+      );
     }
     const action = this._protocolRequest.get(event);
-    if(!action){
-      console.warn(
-        `could not find action that its event is: ${event}`
-      );
+    if (!action) {
+      console.warn(`could not find action that its event is: ${event}`);
       throw new Error("can not publish event. action not found");
     }
-    console.log("resource-manager: publish event: ", event, " using action: ", action, " with data: ", data)
+    console.log(
+      "resource-manager: publish event: ",
+      event,
+      " using action: ",
+      action,
+      " with data: ",
+      data
+    );
     await agent.publishEvent(action, data);
   }
 
