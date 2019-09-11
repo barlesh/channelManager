@@ -1,7 +1,7 @@
 {
   "name": "@resource-control/resource",
   "scope": "@resource-control",
-  "version": "0.0.26-alpha.0",
+  "version": "0.0.26",
   "description": "Library for implementing channel between a master and multiple agents, and determmining protocols between",
   "main": "lib/index.js",
   "scripts": {
@@ -15,8 +15,8 @@
   "author": "Bar Leshem",
   "license": "ISC",
   "dependencies": {
-    "@resource-control/agent": "^0.0.25",
-    "@resource-control/protocol": "^0.0.25",
+    "@resource-control/agent": "^0.0.26",
+    "@resource-control/protocol": "^0.0.26",
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3"
   },
