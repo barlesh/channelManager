@@ -56,6 +56,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     requests: protoActionRequest[],
     agentsManager
   ) {
+    console.log("constructing resource manager");
     if (!attachResourceHandler) {
       throw new Error("no resource detach handler supplied");
     }
@@ -128,7 +129,7 @@ export class ResourceManager<T = any> implements IResourceManager {
   }
 
   detachAgent(agentID) {
-    console.info(`detaching agent with agentID: ${agentID} from all resources`);
+    console.log(`detaching agent with agentID: ${agentID} from all resources`);
     const resourcesToDetach = this.getResourcesByAgent(agentID);
     resourcesToDetach.forEach(rid => {
       this.detachResourceFromAgent(agentID, rid);
@@ -162,6 +163,16 @@ export class ResourceManager<T = any> implements IResourceManager {
 
   get(id: resourceID) {
     return this.resourcesList.get(id);
+  }
+
+  getResourcesByAgent(agentID: agentID) {
+    const resourcesToDetach = [];
+    this._resourceAgentMap.forEach((value, key, map) => {
+      if (value._id === agentID) {
+        resourcesToDetach.push(key);
+      }
+    });
+    return resourcesToDetach;
   }
 
   size(): number {
@@ -253,16 +264,6 @@ export class ResourceManager<T = any> implements IResourceManager {
       console.warn("could not load protocol. error: ", err);
       return;
     }
-  }
-
-  getResourcesByAgent(agentID: agentID) {
-    const resourcesToDetach = [];
-    this._resourceAgentMap.forEach((value, key, map) => {
-      if (value._id === agentID) {
-        resourcesToDetach.push(key);
-      }
-    });
-    return resourcesToDetach;
   }
 
   async publishEvent(resourceID: resourceID, event: string, data) {
