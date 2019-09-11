@@ -37,7 +37,6 @@ export abstract class AgentsManager implements IAgentsManager {
   abstract config(conf);
 
   /* events handlers */
-
   agentRegistration(connectionID, agentData) {
     // validate agent data
     // TODO
@@ -72,7 +71,7 @@ export abstract class AgentsManager implements IAgentsManager {
 
   /* Class methods */
   createAgent(agentData, connectionID: connectionID) {
-    console.info(
+    console.log(
       `creating agent. agentData: ${agentData}, agent id: ${agentData.id}. connectionID: ${connectionID}`
     );
     agentData["connectionID"] = connectionID;
@@ -81,8 +80,8 @@ export abstract class AgentsManager implements IAgentsManager {
   }
 
   removeAgent(agentID) {
-    console.info(
-      `removing agent wth agent id: ${agentID} because of disconnection event.`
+    console.log(
+      `removing agent wth agent id: ${agentID}.`
     );
     if (!agentID) {
       console.error(
@@ -136,7 +135,15 @@ export abstract class AgentsManager implements IAgentsManager {
     this.connectionManager.subscribeToConnectionEvent(conID, protocolAction);
   }
 
-  async publishEvent(conID: connectionID, protocolAction: protoActionRequest, data) {
-    await this.connectionManager.publishConnectionEvent(conID, protocolAction, data);
+  async publishEvent(
+    conID: connectionID,
+    protocolAction: protoActionRequest,
+    data
+  ) {
+    await this.connectionManager.publishConnectionEvent(
+      conID,
+      protocolAction,
+      data
+    );
   }
 }

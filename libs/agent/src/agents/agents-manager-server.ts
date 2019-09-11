@@ -9,6 +9,13 @@ import {
 export class AgentsManagerServer extends AgentsManager {
   /* Server Class configuration */
   config(conf) {
+    if (!conf) {
+      console.error(
+        "no configuration object supplied. cannot configure agent manager server"
+      );
+      throw new Error("can not configure agent manager server");
+    }
+    console.debug("configuring agent manager server. configuration: ", conf);
     const connectionManager = conf["connectionManager"];
     if (!connectionManager) {
       console.error("not all parameres supplied.");

@@ -40,8 +40,6 @@ const defaultActionRequests = [
   )
 ];
 
-// [resourceProtocolEvents.resouceDetach]: {},
-// resourceProtocolEvents.resourceAttach: {}
 export class ResourceManager<T = any> implements IResourceManager {
   attachResourceHandler: Function;
   detachResourceHandler: Function;
@@ -89,7 +87,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     this.resourcesList = new Map();
     this._resourceAgentMap = new Map();
 
-    // listen to an agent registration event
+    // listen to an agent registration event, coming from agemt manager
     this._agentsManager.on(
       AgentsManagerEvents.agentRegistered,
       this.HandleAgentRegistration.bind(this)
@@ -143,6 +141,7 @@ export class ResourceManager<T = any> implements IResourceManager {
   }
 
   loadRequestsToMap(actionRequests: protoActionRequest[]) {
+    console.debug("loading request actions. actions: ", actionRequests);
     actionRequests.forEach(action => {
       this._protocolRequest.set(action.event, action);
     });
@@ -214,7 +213,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     await this.publishEvent(rid, resourceProtocolEvents.resouceDetach, rid);
   }
 
- async detachResourceFromAgent(agentID: agentID, resourceID: resourceID) {
+  async detachResourceFromAgent(agentID: agentID, resourceID: resourceID) {
     const agent = this._agentsManager.get(agentID);
     console.info(
       `detaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`

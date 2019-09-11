@@ -34,6 +34,7 @@ export class ConnectionServer extends ConnectionManager {
       );
       throw new Error("can not configure connection server");
     }
+    console.debug("configuring connection server. configuration: ", conf);
     const io = conf["io"];
     const channelName = conf["channel"];
     if (!io || !channelName) {
