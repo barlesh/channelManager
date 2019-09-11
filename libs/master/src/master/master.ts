@@ -2,15 +2,9 @@ import {
   IConnectionManager,
   ConnectionServer
 } from "@resource-control/connection";
-import {
-  IAgentsManager,
-  AgentsManagerServer
-} from "@resource-control/agent";
-import {
-  IResourceManager,
-  ResourceManager
-} from "@resource-control/resource";
-        
+import { IAgentsManager, AgentsManagerServer } from "@resource-control/agent";
+import { IResourceManager, ResourceManager } from "@resource-control/resource";
+
 import {
   protoActionRequest,
   protoActionResponse
@@ -30,10 +24,11 @@ export class Master {
     protocolRequests: protoActionRequest[],
     protocolResponses: protoActionResponse[]
   ) {
+    console.log("constructing Master.");
     // receice the connection manager
     if (!io || !channel || !protocolRequests || !protocolResponses) {
       throw new Error(
-        "no connection manager supplied. cannot connect to outside world"
+        "wrong costructing paramaters supplied. can not construct Master"
       );
     }
 
@@ -63,6 +58,7 @@ export class Master {
   }
 
   addResource(resource, resourceID: resourceID) {
+    console.debug("Master: addying resource with resource id: ", resourceID);
     this._resourceManager.add(resource, resourceID);
   }
 

@@ -1,8 +1,7 @@
 import {
-  IConnectionManager,
   ConnectionClient
 } from "@resource-control/connection";
-import { IAgentsManager, AgentsManagerClient } from "@resource-control/agent";
+import { AgentsManagerClient } from "@resource-control/agent";
 import { IResourceManager, ResourceManager } from "@resource-control/resource";
 import {
   protoActionRequest,
@@ -82,6 +81,7 @@ export class Slave {
   }
 
   async registerNewResource(resource: any): Promise<any> {
+    console.log("Server: registering new resource: ", resource);
     const rid = resource["id"];
     if (!rid) {
       console.error("wrong resource format. no id supplied.");
@@ -96,11 +96,6 @@ export class Slave {
     /* this is the slave, so the resource is registered localy without confirmation from the master - TODO - change this behaviour??? */
     this._resourceManager.add(resource, rid);
     const cid = agent._connectionID;
-    // TODO  - add this action to the protocol actions list and use it instead of building it
-    // let action = {
-    //   event: resourceProtocolEvents.resourceAttach,
-
-    // };
     const response = protocolActions.createProtocolActionResponse(
       "attached-resource-success",
       undefined,
@@ -121,6 +116,7 @@ export class Slave {
       action,
       rid
     );
+    console.debug("received response to publish: ", returnValue);
     // attach agent to resource - TODO - should I do it in response to a successfulll server agent-resource attachment?
     this._resourceManager.attachResourceToAgent(agentID, rid);
 
@@ -128,9 +124,8 @@ export class Slave {
   }
 
   async unregisterResource(resourceID: resourceID) {
-    console.info("unregistering resource with resource id: ", resourceID);
+    console.log("unregistering resource with resource id: ", resourceID);
     await this._resourceManager.publishResourceDetach(resourceID);
-    console.log("localy detaching resource");
     this._resourceManager.detachResourceFromAgent(undefined, resourceID);
   }
 
