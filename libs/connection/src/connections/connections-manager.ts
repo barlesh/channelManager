@@ -5,7 +5,7 @@ import { connectionUtils } from "./connectionUtils";
 import {
   protoActionResponse,
   protoActionRequest
-} from "@resource-control/protocol"
+} from "@resource-control/protocol";
 
 export interface IConnectionManager {
   _connectionsList: Map<connectionID, any>;
@@ -51,9 +51,6 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   reconnectionHandler(connectionSocket) {
-    console.log(
-      "reconnectionHandler: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    );
     //TODO
     //   this._connectionsList.delete()
   }
@@ -70,7 +67,6 @@ export abstract class ConnectionManager implements IConnectionManager {
   }
 
   disconnectionHandler(manager: ConnectionManager, connectionSocket) {
-    console.log("disconnected handler. connectionSocket: ", connectionSocket);
     let connID;
     connID = connectionUtils.extractConnectionClintID(connectionSocket);
     if (!connID) {
@@ -89,9 +85,13 @@ export abstract class ConnectionManager implements IConnectionManager {
     const connection = this.getConnection(connID);
     if (!connection) {
       throw new Error(
-        `could not find connection with connection id: ${connID}`
+        `subscribing to event: could not find connection with connection id: ${connID}`
       );
     }
+    console.log(
+      `subscribing to event: connection id: ${connID}, action: `,
+      protocolAction
+    );
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
 
@@ -99,7 +99,7 @@ export abstract class ConnectionManager implements IConnectionManager {
     connID: connectionID,
     protocolAction: protoActionResponse
   ) {
-    console.warn("currently not supported");
+    console.warn("unsubscribeToConnectionEvent: currently not supported");
   }
 
   /* API for sending (publishing to) connection events using connection ID */
@@ -114,6 +114,14 @@ export abstract class ConnectionManager implements IConnectionManager {
         `could not find connection with connection id: ${connID}`
       );
     }
-    return await connectionEvents.publishConnectionEvent(connection, protocolAction, data);
+    console.log(
+      `publishing event: connection id: ${connID}, action: `,
+      protocolAction
+    );
+    return await connectionEvents.publishConnectionEvent(
+      connection,
+      protocolAction,
+      data
+    );
   }
 }

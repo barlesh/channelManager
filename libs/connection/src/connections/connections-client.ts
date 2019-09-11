@@ -18,18 +18,16 @@ export class ConnectionClient extends ConnectionManager {
   async connectAndWaitForConnection(addr): Promise<boolean> {
     return new Promise((resolve, reject) => {
       let tid;
+      console.log(`connecting to server: ${addr}`);
       this._nsp = this._socketServer.connect(addr);
       connectionEvents.registerEventNoDup(this._nsp, "connect", () => {
+        console.log(`connected succesfully.`);
         clearTimeout(tid);
         resolve(true);
       });
-      // this._nsp.on("connect", () => {
-      //   clearTimeout(tid);
-      //   resolve(true);
-      // });
 
       tid = setTimeout(() => {
-        console.info("TImeout expired after connection attampt");
+        console.warn("Timeout expired after connection attampt");
         return resolve(false);
       }, 1000);
     });
@@ -50,6 +48,13 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   config(conf) {
+    if (!conf) {
+      console.error(
+        "no configuration object supplied. cannot configure connection client"
+      );
+      throw new Error("can not configure connection client");
+    }
+    console.log("configuring connection client. configuration: ", conf);
     const io = conf["io"];
     const channelName = conf["channel"];
     const serverAddr = conf["address"];
@@ -72,6 +77,7 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   registerToListenToRemoteConnections() {
+    console.log("registering disconnection & reconnect handlers.");
     const bindeddisconnectionHandler = this.disconnectionHandlerClient.bind(
       this._nsp,
       this
@@ -81,21 +87,26 @@ export class ConnectionClient extends ConnectionManager {
       this._nsp,
       this
     );
-    // this._nsp.on("disconnect", bindeddisconnectionHandler);
-    connectionEvents.registerEventNoDup(this._nsp, "disconnect", bindeddisconnectionHandler);
-    // this._nsp.on("reconnect", bindedreconnectionHandler);
-    connectionEvents.registerEventNoDup(this._nsp, "reconnect", bindedreconnectionHandler);
+    connectionEvents.registerEventNoDup(
+      this._nsp,
+      "disconnect",
+      bindeddisconnectionHandler
+    );
+    connectionEvents.registerEventNoDup(
+      this._nsp,
+      "reconnect",
+      bindedreconnectionHandler
+    );
   }
 
   disconnectionHandlerClient(manager, Msg) {
-    console.info(
-      "Connection client: Received disconnection event. destroinyg connection."
-    );
+    console.info("Received disconnection event. destroinyg connection.");
     manager.destroyConnection();
     manager.emit(connectionClientManagerEvents.remoteDisconnected);
   }
 
   reconnectionHandlerClient(manager) {
+    console.info("Received re-connection event. re-creating connection.");
     manager.createConnection();
   }
 

@@ -119,8 +119,10 @@ export namespace connectionEvents {
 
     return new Promise((resolve, reject) => {
       const timeoutID = setTimeout(() => {
+        console.warn(
+          `Timeout expired while waiting for response to event ${requestEvent}.`
+        );
         removeListener();
-
         return reject({
           msg: "Timeout Error, Failed to get details from the agent"
         });
@@ -144,6 +146,9 @@ export namespace connectionEvents {
           if (err) {
             return reject({ err, msg: "Failed to get details from the agent" });
           }
+          console.debug(
+            `recieved response event ${responseEvent} to the request event ${requestEvent}`
+          );
           resolve(data);
         }
       }
@@ -151,6 +156,7 @@ export namespace connectionEvents {
   }
 
   export function registerEventNoDup(connection, event: string, cb: Function) {
+    console.debug(`registering event ${event} to connection`);
     unregisterEvent(connection, event);
     registerEvent(connection, event, cb);
   }

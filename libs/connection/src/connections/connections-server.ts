@@ -19,11 +19,21 @@ export class ConnectionServer extends ConnectionManager {
     console.info(`Connection manager listening on nsp: ${nsp}`);
     this._nsp = this._socketServer.of(nsp);
     if (!this._nsp) {
-      throw new Error("could not set namespace");
+      console.error(
+        `failed to create namespace ${nsp} on connection: `,
+        this._socketServer
+      );
+      throw new Error(`could not listen to channel: ${nsp}`);
     }
   }
 
   config(conf) {
+    if (!conf) {
+      console.error(
+        "no configuration object supplied. cannot configure connection server"
+      );
+      throw new Error("can not configure connection server");
+    }
     const io = conf["io"];
     const channelName = conf["channel"];
     if (!io || !channelName) {
@@ -39,6 +49,7 @@ export class ConnectionServer extends ConnectionManager {
   }
 
   registerToListenToRemoteConnections() {
+    console.log("registering connection & disconnection handlers.");
     // register handler for the connection event
     const bindedconnectionHandler = this.connectionHandlerServer.bind(
       this,
@@ -50,15 +61,16 @@ export class ConnectionServer extends ConnectionManager {
       this._nsp
     );
 
-    // const bindedreconnectionHandler = this.reconnectionHandler.bind(
-    //   this,
-    //   this._nsp
-    // );
-    // this._nsp.on("connection", bindedconnectionHandler);
-    connectionEvents.registerEventNoDup(this._nsp, "connection", bindedconnectionHandler);
-    // this._nsp.on("disconnect", bindeddisconnectionHandler);
-    connectionEvents.registerEventNoDup(this._nsp, "disconnect", bindeddisconnectionHandler);
-    // this._nsp.on("reconnect", bindedreconnectionHandler);
+    connectionEvents.registerEventNoDup(
+      this._nsp,
+      "connection",
+      bindedconnectionHandler
+    );
+    connectionEvents.registerEventNoDup(
+      this._nsp,
+      "disconnect",
+      bindeddisconnectionHandler
+    );
   }
 
   connectionHandlerServer(connectionSocket, connection) {
