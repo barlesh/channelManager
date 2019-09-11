@@ -23,6 +23,7 @@ export class Slave {
     channel: string,
     masterAddr,
     masterPort,
+    attachResourceHandler: Function,
     detachResourceHandler: Function,
     protocolRequests: protoActionRequest[],
     protocolResponses: protoActionResponse[],
@@ -51,6 +52,7 @@ export class Slave {
     this._agentsManager = new AgentsManagerClient();
     // init the master's resource manager
     this._resourceManager = new ResourceManager(
+      attachResourceHandler,
       detachResourceHandler,
       protocolResponses,
       protocolRequests,

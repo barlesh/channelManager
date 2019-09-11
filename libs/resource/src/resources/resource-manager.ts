@@ -11,6 +11,8 @@ import { resourceProtocolEvents } from "./../protocol/resource.protocol";
 import * as uid from "uuid";
 
 export interface IResourceManager {
+  attachResourceHandler: Function;
+  detachResourceHandler: Function;
   _protocolResponse: protoActionResponse[];
   _protocolRequest: Map<string, protoActionRequest>;
   _resourceAgentMap: Map<resourceID, Agent>;
@@ -41,6 +43,7 @@ const defaultActionRequests = [
 // [resourceProtocolEvents.resouceDetach]: {},
 // resourceProtocolEvents.resourceAttach: {}
 export class ResourceManager<T = any> implements IResourceManager {
+  attachResourceHandler: Function;
   detachResourceHandler: Function;
   resourcesList: Map<resourceID, T>;
   _resourceAgentMap: Map<resourceID, Agent>;
@@ -49,14 +52,19 @@ export class ResourceManager<T = any> implements IResourceManager {
   _agentsManager: AgentsManager;
 
   constructor(
+    attachResourceHandler: Function,
     detachResourceHandler: Function,
     responses: protoActionResponse[],
     requests: protoActionRequest[],
     agentsManager
   ) {
+    if (!attachResourceHandler) {
+      throw new Error("no resource detach handler supplied");
+    }
     if (!detachResourceHandler) {
       throw new Error("no resource detach handler supplied");
     }
+    this.attachResourceHandler = attachResourceHandler;
     this.detachResourceHandler = detachResourceHandler;
 
     if (protocolActions.validateProtocolActionResponse(responses)) {
@@ -169,7 +177,7 @@ export class ResourceManager<T = any> implements IResourceManager {
     return this.resourcesList;
   }
 
-  attachResourceToAgent(agentID: agentID, resourceID: resourceID) {
+  async attachResourceToAgent(agentID: agentID, resourceID: resourceID) {
     const resource = this.resourcesList.get(resourceID);
     if (!resource) {
       throw new Error("resource not exist.");
@@ -190,6 +198,9 @@ export class ResourceManager<T = any> implements IResourceManager {
       `attaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
     );
     this._resourceAgentMap.set(resourceID, agent);
+
+    // execute users cutome attach resource handler
+    await this.attachResourceHandler(resourceID);
 
     // register resource protocol events TODO
     this.registerProtocolEvents(agent);

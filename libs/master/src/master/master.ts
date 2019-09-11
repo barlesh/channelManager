@@ -25,6 +25,7 @@ export class Master {
   constructor(
     io,
     channel: string,
+    attachResourceHandler: Function,
     detachResourceHandler: Function,
     protocolRequests: protoActionRequest[],
     protocolResponses: protoActionResponse[]
@@ -41,6 +42,7 @@ export class Master {
     this._agentsManager = new AgentsManagerServer();
     // init the master's resource manager
     this._resourceManager = new ResourceManager(
+      attachResourceHandler,
       detachResourceHandler,
       protocolResponses,
       protocolRequests,
