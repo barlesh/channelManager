@@ -25,7 +25,6 @@ export class Master {
     protocolResponses: protoActionResponse[]
   ) {
     console.log("constructing Master.");
-    // receice the connection manager
     if (!io || !channel || !protocolRequests || !protocolResponses) {
       throw new Error(
         "wrong costructing paramaters supplied. can not construct Master"
