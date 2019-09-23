@@ -38,6 +38,7 @@ describe("Demo", () => {
   //   expect(myConnectionMnager._channel).toEqual(channel);
   //   expect(myConnectionMnager._nsp).toBeDefined();
   // });
+  
   // test("config connection manager > test 1", async () => {
   //   const channel = channelSockets.testSocketPath;
   //   const myConnectionMnager = new ConnectionServer();

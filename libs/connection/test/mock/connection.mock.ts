@@ -13,6 +13,10 @@ export const mockConnection = {
     return true;
   },
 
+  removeAllListeners: (event) => {
+    eventsMap.delete(event);
+  },
+
   generateEvent: async (event, data?) => {
     const h = eventsMap.get(event);
     if (h) {

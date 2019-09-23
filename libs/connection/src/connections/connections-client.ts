@@ -54,7 +54,7 @@ export class ConnectionClient extends ConnectionManager {
       );
       throw new Error("can not configure connection client");
     }
-    console.debug("configuring connection client. configuration: ", conf);
+    // console.debug("configuring connection client. configuration: ", conf);
     const io = conf["io"];
     const channelName = conf["channel"];
     const serverAddr = conf["address"];

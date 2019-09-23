@@ -35,6 +35,10 @@ export class mockNSP {
     return true;
   }
 
+  removeAllListeners (event) {
+    eventsMap.delete(event);
+  }
+
   async generateEvent(event) {
     const h = eventsMap.get(event);
     if (h) {
