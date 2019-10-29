@@ -2,7 +2,7 @@ import {
   ConnectionClient
 } from "@resource-control/connection";
 import { AgentsManagerClient } from "@resource-control/agent";
-import { IResourceManager, ResourceManager } from "@resource-control/resource";
+import { IResourceManager, ResourceClient } from "@resource-control/resource";
 import {
   protoActionRequest,
   protoActionResponse,
@@ -50,7 +50,7 @@ export class Slave {
 
     this._agentsManager = new AgentsManagerClient();
     // init the master's resource manager
-    this._resourceManager = new ResourceManager(
+    this._resourceManager = new ResourceClient(
       attachResourceHandler,
       detachResourceHandler,
       protocolResponses,

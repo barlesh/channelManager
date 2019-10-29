@@ -18,6 +18,7 @@ export interface IResourceManager {
   _resourceAgentMap: Map<resourceID, Agent>;
   _agentsManager: AgentsManager;
   add(data, id?): resourceID;
+  remove(id);
   get(id): any;
   size(): number;
   attachResourceToAgent(agentID: agentID, resourceID: resourceID);
@@ -40,7 +41,7 @@ const defaultActionRequests = [
   )
 ];
 
-export class ResourceManager<T = any> implements IResourceManager {
+export abstract class ResourceManager<T = any> implements IResourceManager {
   attachResourceHandler: Function;
   detachResourceHandler: Function;
   resourcesList: Map<resourceID, T>;
@@ -128,14 +129,13 @@ export class ResourceManager<T = any> implements IResourceManager {
     agent.registerProtocolEvent(resourceDetachAction);
   }
 
-  detachAgent(agentID) {
-    console.log(`detaching agent with agentID: ${agentID} from all resources`);
-    const resourcesToDetach = this.getResourcesByAgent(agentID);
-    resourcesToDetach.forEach(rid => {
-      this.detachResourceFromAgent(agentID, rid);
-    });
-    console.info(`Detached ${resourcesToDetach.length} resources.`);
-  }
+  /* 
+  Currently, this is the only different behaviour between server & client. 
+  In server, dataching agent (clinet) from resource does not remove the resource from resource list.
+  In client, the fact that the resource was detached from the agent (client), 
+  makes it unrelevant and it must be re-attached, so it must be removed first.  
+  */
+  abstract detachAgent(agentID);
 
   unregisterResourceListeners(agentID: agentID) {
     console.warn("unregisterResourceListeners: currently not supported");

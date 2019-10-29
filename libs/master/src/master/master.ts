@@ -3,7 +3,7 @@ import {
   ConnectionServer
 } from "@resource-control/connection";
 import { IAgentsManager, AgentsManagerServer } from "@resource-control/agent";
-import { IResourceManager, ResourceManager } from "@resource-control/resource";
+import { IResourceManager, ResourceServer } from "@resource-control/resource";
 
 import {
   protoActionRequest,
@@ -35,7 +35,7 @@ export class Master {
 
     this._agentsManager = new AgentsManagerServer();
     // init the master's resource manager
-    this._resourceManager = new ResourceManager(
+    this._resourceManager = new ResourceServer(
       attachResourceHandler,
       detachResourceHandler,
       protocolResponses,
@@ -60,6 +60,11 @@ export class Master {
     console.debug("Master: addying resource with resource id: ", resourceID);
     this._resourceManager.add(resource, resourceID);
   }
+
+  removeResource(resourceID) {
+    console.debug("Master: removing resource with resource id: ", resourceID);
+    this._resourceManager.remove(resourceID);
+}
 
   publishEventToResource(rid: resourceID, event: string, data?) {
     this._resourceManager.publishEvent(rid, event, data);
