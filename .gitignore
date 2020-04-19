@@ -29,6 +29,8 @@ libs/slave/lib
 libs/slave/node_modules
 libs/slave/package-lock.json
 
+libs/protocol/lib
+
 master_old/lib
 master_old/node_modules
 

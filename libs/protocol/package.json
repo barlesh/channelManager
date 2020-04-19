@@ -15,18 +15,20 @@
   "author": "Bar Leshem",
   "license": "ISC",
   "dependencies": {
-    "socket.io": "^2.2.0",
-    "socket.io-client": "^2.2.0"
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
-    "@types/argparse": "^1.0.36",
-    "@types/jest": "^23.3.14",
-    "@types/node": "^10.12.18",
+    "@types/argparse": "^1.0.38",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^13.13.0",
+    "@types/socket.io": "^2.1.4",
+    "compression-webpack-plugin": "^3.1.0",
     "jest": "^23.6.0",
-    "node": "^10.15.3",
-    "ts-jest": "^23.10.5",
-    "ts-loader": "^5.3.3",
-    "typescript": "^3.4.2"
+    "node": "^13.13.0",
+    "ts-jest": "^25.4.0",
+    "ts-loader": "^7.0.0",
+    "typescript": "^3.8.3"
   },
   "jest": {
     "transform": {
