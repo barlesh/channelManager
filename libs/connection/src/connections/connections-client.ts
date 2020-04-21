@@ -36,15 +36,19 @@ export class ConnectionClient extends ConnectionManager {
   async connect(): Promise<connectionID> {
     const serverAddr = `${this._serverAddr}:${this._serverPort}/${this._channel}`;
     console.info(`Connection to server in : ${serverAddr}`);
+    const ATTAMPTS = 10;
+    // try to connect for ATTAMPS times
+    for(let i = 0; i<ATTAMPTS; i++){
 
-    const ans = await this.connectAndWaitForConnection(serverAddr);
-    if (!ans || !this._nsp || !this._nsp.connected) {
-      console.error("could not connect to server");
-      throw new Error("could not connect to server");
+      const ans = await this.connectAndWaitForConnection(serverAddr);
+      if (ans || this._nsp || this._nsp.connected) {
+        const connID = this.createConnection();
+        return connID;
+      } 
     }
 
-    const connID = this.createConnection();
-    return connID;
+    console.error("could not connect to server");
+    throw new Error("could not connect to server");
   }
 
   config(conf) {
