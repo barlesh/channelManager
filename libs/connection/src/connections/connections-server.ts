@@ -16,25 +16,25 @@ export class ConnectionServer extends ConnectionManager {
 
   listen() {
     const nsp = `/${this._channel}`;
-    console.info(`Connection manager listening on nsp: ${nsp}`);
+    // console.info(`Connection manager listening on nsp: ${nsp}`);
     this._nsp = this._socketServer.of(nsp);
     if (!this._nsp) {
-      console.error(
-        `failed to create namespace ${nsp} on connection: `,
-        this._socketServer
-      );
+      // console.error(
+      //   `failed to create namespace ${nsp} on connection: `,
+      //   this._socketServer
+      // );
       throw new Error(`could not listen to channel: ${nsp}`);
     }
   }
 
   config(conf) {
     if (!conf) {
-      console.error(
-        "no configuration object supplied. cannot configure connection server"
-      );
+      // console.error(
+      //   "no configuration object supplied. cannot configure connection server"
+      // );
       throw new Error("can not configure connection server");
     }
-    // console.debug("configuring connection server. configuration: ", conf);
+    // // console.debug("configuring connection server. configuration: ", conf);
     const io = conf["io"];
     const channelName = conf["channel"];
     if (!io || !channelName) {
@@ -50,7 +50,7 @@ export class ConnectionServer extends ConnectionManager {
   }
 
   registerToListenToRemoteConnections() {
-    console.log("registering connection & disconnection handlers.");
+    // console.log("registering connection & disconnection handlers.");
     // register handler for the connection event
     const bindedconnectionHandler = this.connectionHandlerServer.bind(
       this,
@@ -77,7 +77,7 @@ export class ConnectionServer extends ConnectionManager {
   connectionHandlerServer(connectionSocket, connection) {
     let connID;
     connID = connectionUtils.extractConnectionClintID(connection);
-    console.info("Handling server connection event. connection id: ", connID);
+    // console.info("Handling server connection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
     super.connectionHandler(this, connection);
     // notify other manager that new remote connection exist, and publish its ID
@@ -87,7 +87,7 @@ export class ConnectionServer extends ConnectionManager {
   disconnectionHandlerServer(connectionSocket) {
     let connID;
     connID = connectionUtils.extractConnectionClintID(connectionSocket);
-    console.info("Handling disconnection event. connection id: ", connID);
+    // console.info("Handling disconnection event. connection id: ", connID);
     // TODO change super's mathode to get ID //TODO
     super.disconnectionHandler(this, connectionSocket);
     this.emit(connectionServerManagerEvents.remoteDisconnected, connID);

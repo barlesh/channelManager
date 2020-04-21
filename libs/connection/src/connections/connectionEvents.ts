@@ -20,21 +20,21 @@ export namespace connectionEvents {
         err: undefined,
         data: undefined
       };
-      console.info(`execute event: ${event}.`);
-      console.info("data: ", data);
+      // console.debug(`execute event: ${event}.`);
+      // // console.info("data: ", data);
       ans = await runExec(event, exec, data);
       if (ans.status) {
-        console.info(`execution for event: ${event} succedded.`);
+        // console.debug(`execution for event: ${event} succedded.`);
         if (retTrue) {
-          console.info(`emmiting answer: ${retTrue} `);
+          // console.debug(`emmiting answer: ${retTrue} `);
           retData.id = ans.actionID;
           retData.data = ans.data;
           connection.emit(retTrue, retData);
         }
       } else {
-        console.info(`execution for event: ${event} failed.`);
+        // console.debug(`execution for event: ${event} failed.`);
         if (retFalse) {
-          console.info(`emmiting answer: ${retFalse} `);
+          // console.debug(`emmiting answer: ${retFalse} `);
           retData.id = ans.actionID;
           retData.err = ans.err;
           connection.emit(retFalse, retData);
@@ -57,16 +57,16 @@ export namespace connectionEvents {
       res.actionID = actionID;
       const ans = await exec(data);
       if (!ans) {
-        console.log(`execution of event ${event} returned false answer.`);
+        // console.debug(`execution of event ${event} returned false answer.`);
         return res;
       }
-      console.log(`execution of event ${event} executed successfully.`);
+      // console.debug(`execution of event ${event} executed successfully.`);
       res.status = true;
       res.data = ans;
       return res;
     } catch (err) {
-      console.log(`execution of event ${event} throwd error.`);
-      console.error(err);
+      // console.debug(`execution of event ${event} throwd error.`);
+      // console.debug(err);
       res.err = err;
       return res;
     }
@@ -78,7 +78,7 @@ export namespace connectionEvents {
     data
   ): Promise<any> {
     if (!connection) {
-      console.warn("no connection supplied. cannot send event");
+      // console.debug("no connection supplied. cannot send event");
     }
 
     const expectResponse = protocolAction.expectResponse;
@@ -119,9 +119,9 @@ export namespace connectionEvents {
 
     return new Promise((resolve, reject) => {
       const timeoutID = setTimeout(() => {
-        console.warn(
-          `Timeout expired while waiting for response to event ${requestEvent}.`
-        );
+        // console.warn(
+        //   `Timeout expired while waiting for response to event ${requestEvent}.`
+        // );
         removeListener();
         return reject({
           msg: "Timeout Error, Failed to get details from the agent"
@@ -146,9 +146,9 @@ export namespace connectionEvents {
           if (err) {
             return reject({ err, msg: "Failed to get details from the agent" });
           }
-          console.debug(
-            `recieved response event ${responseEvent} to the request event ${requestEvent}`
-          );
+          // console.debug(
+          //   `recieved response event ${responseEvent} to the request event ${requestEvent}`
+          // );
           resolve(data);
         }
       }
@@ -156,7 +156,7 @@ export namespace connectionEvents {
   }
 
   export function registerEventNoDup(connection, event: string, cb: Function) {
-    console.debug(`registering event ${event} to connection`);
+    // console.debug(`registering event ${event} to connection`);
     unregisterEvent(connection, event);
     registerEvent(connection, event, cb);
   }

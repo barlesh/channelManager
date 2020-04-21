@@ -40,10 +40,10 @@ export namespace protocolActions {
       };
       return action;
     } catch (err) {
-      console.error(
-        `failed to create protocol action for args: event: ${event}, exec: ${exec}, retTrue: ${retTrue}, retFalse: ${retFalse}`
-      );
-      console.error(err);
+      // console.error(
+      //   `failed to create protocol action for args: event: ${event}, exec: ${exec}, retTrue: ${retTrue}, retFalse: ${retFalse}`
+      // );
+      // console.error(err);
       return undefined;
     }
   }
@@ -61,10 +61,10 @@ export namespace protocolActions {
       };
       return action;
     } catch (err) {
-      console.error(
-        `failed to create protocol action for args: event: ${event}`
-      );
-      console.error(err);
+      // console.error(
+      //   `failed to create protocol action for args: event: ${event}`
+      // );
+      // console.error(err);
       return undefined;
     }
   }
@@ -82,7 +82,7 @@ export namespace protocolActions {
     let retVal = true;
     protocol.forEach(protocolAction => {
       if (!validateResponse(protocolAction)) {
-        // console.error(
+        // // console.error(
         //   "protocol object failed because of protocol action: ",
         //   protocolAction
         // );
@@ -107,7 +107,7 @@ export namespace protocolActions {
     let retVal = true;
     protocol.forEach(protocolAction => {
       if (!validateRequest(protocolAction)) {
-        // console.error(
+        // // console.error(
         //   "protocol object failed because of protocol action: ",
         //   protocolAction
         // );

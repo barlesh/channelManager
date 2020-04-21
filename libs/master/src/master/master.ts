@@ -24,7 +24,7 @@ export class Master {
     protocolRequests: protoActionRequest[],
     protocolResponses: protoActionResponse[]
   ) {
-    console.log("constructing Master.");
+    // console.log("constructing Master.");
     if (!io || !channel || !protocolRequests || !protocolResponses) {
       throw new Error(
         "wrong costructing paramaters supplied. can not construct Master"
@@ -57,12 +57,12 @@ export class Master {
   }
 
   addResource(resource, resourceID: resourceID) {
-    console.debug("Master: addying resource with resource id: ", resourceID);
+    // console.debug("Master: addying resource with resource id: ", resourceID);
     this._resourceManager.add(resource, resourceID);
   }
 
   removeResource(resourceID) {
-    console.debug("Master: removing resource with resource id: ", resourceID);
+    // console.debug("Master: removing resource with resource id: ", resourceID);
     this._resourceManager.remove(resourceID);
 }
 

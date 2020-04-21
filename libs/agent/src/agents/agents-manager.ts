@@ -61,7 +61,7 @@ export abstract class AgentsManager implements IAgentsManager {
 
   agentUnRegistration(connstionID: connectionID) {
     // remove the agent with the attached connection ID - TODO
-    console.warn("currently not supported");
+    // console.warn("currently not supported");
     return false;
   }
 
@@ -71,22 +71,22 @@ export abstract class AgentsManager implements IAgentsManager {
 
   /* Class methods */
   createAgent(agentData, connectionID: connectionID) {
-    console.log(
-      `creating agent. agentData: ${agentData}, agent id: ${agentData.id}. connectionID: ${connectionID}`
-    );
+    // console.log(
+    //   `creating agent. agentData: ${agentData}, agent id: ${agentData.id}. connectionID: ${connectionID}`
+    // );
     agentData["connectionID"] = connectionID;
     // create new agent
     return this.add(agentData);
   }
 
   removeAgent(agentID) {
-    console.log(
-      `removing agent wth agent id: ${agentID}.`
-    );
+    // console.log(
+    //   `removing agent wth agent id: ${agentID}.`
+    // );
     if (!agentID) {
-      console.error(
-        "received agent disconnection event without agent id. cannot disconnect agent"
-      );
+      // console.error(
+      //   "received agent disconnection event without agent id. cannot disconnect agent"
+      // );
       throw new Error("failed to disconnect agent");
     }
     this.remove(agentID);
@@ -105,9 +105,9 @@ export abstract class AgentsManager implements IAgentsManager {
     const agent = new Agent(agentObj, this);
     const aid = agent._id;
     if (this.agentsList.get(aid)) {
-      console.warn(
-        `agent with id: ${aid} already exist. replacing old agent with the new agent (temppp)`
-      );
+      // console.warn(
+      //   `agent with id: ${aid} already exist. replacing old agent with the new agent (temppp)`
+      // );
     }
 
     this.agentsList.set(aid, agent);

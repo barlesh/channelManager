@@ -9,17 +9,17 @@ export class AgentsManagerClient extends AgentsManager {
   /* Client Class configuration */
   async config(conf) {
     if (!conf) {
-      console.error(
-        "no configuration object supplied. cannot configure agent manager client"
-      );
+      // console.error(
+      //   "no configuration object supplied. cannot configure agent manager client"
+      // );
       throw new Error("can not configure agent manager client");
     }
-    console.debug("configuring agent manager client. configuration: ", conf);
+    // console.debug("configuring agent manager client. configuration: ", conf);
     const connectionManager = conf["connectionManager"];
     this.agent = conf["agent"];
 
     if (!connectionManager || !this.agent) {
-      console.error("not all parameres supplied.");
+      // console.error("not all parameres supplied.");
       throw new Error("not all parameres supplied");
     }
     this.agentsList = new Map();
@@ -42,12 +42,12 @@ export class AgentsManagerClient extends AgentsManager {
       connectionClientManagerEvents.remoteDisconnected,
       this.agentDisconnection.bind(this, this.agent["id"])
     );
-    console.debug("agent manager client - connection to server");
+    // console.debug("agent manager client - connection to server");
     await this.connectionManager.connectToServer();
   }
 
   createAgentClient(agentData, connectionID: connectionID) {
-    console.debug("creating agent client");
+    // console.debug("creating agent client");
     // create agent localy
     const agentID = this.createAgent(agentData, connectionID);
     // publish to relaying modules
