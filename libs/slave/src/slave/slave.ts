@@ -40,7 +40,7 @@ export class Slave {
       !uniqueID
     ) {
       throw new Error(
-        "no connection manager supplied. cannot connect to outside world"
+        "Slave initiated without propare arguments"
       );
     }
 
@@ -81,16 +81,16 @@ export class Slave {
   }
 
   async registerNewResource(resource: any): Promise<any> {
-    console.log("Server: registering new resource: ", resource);
+    // console.log("Server: registering new resource: ", resource);
     const rid = resource["id"];
     if (!rid) {
-      console.error("wrong resource format. no id supplied.");
+      // console.error("wrong resource format. no id supplied.");
       throw new Error("wrong resource format. no id supplied.");
     }
     const agentID = this.slaveID;
     const agent = this._agentsManager.get(agentID);
     if (!agent) {
-      console.error("could not get slave's agent detailes.");
+      // console.error("could not get slave's agent detailes.");
       throw new Error("agent not connected");
     }
     /* this is the slave, so the resource is registered localy without confirmation from the master - TODO - change this behaviour??? */
@@ -107,16 +107,16 @@ export class Slave {
       true,
       response
     );
-    console.log(
-      `publishing event '${action.event}' with connection id: ${cid}, resource id: ${rid}`
-    );
+    // console.log(
+    //   `publishing event '${action.event}' with connection id: ${cid}, resource id: ${rid}`
+    // );
     // send resource registration event toward the master
     const returnValue = await this._connectionManager.publishConnectionEvent(
       cid,
       action,
       rid
     );
-    console.debug("received response to publish: ", returnValue);
+    // console.debug("received response to publish: ", returnValue);
     // attach agent to resource - TODO - should I do it in response to a successfulll server agent-resource attachment?
     this._resourceManager.attachResourceToAgent(agentID, rid);
 
@@ -124,7 +124,7 @@ export class Slave {
   }
 
   async unregisterResource(resourceID: resourceID) {
-    console.log("unregistering resource with resource id: ", resourceID);
+    // console.log("unregistering resource with resource id: ", resourceID);
     await this._resourceManager.publishResourceDetach(resourceID);
     this._resourceManager.detachResourceFromAgent(undefined, resourceID);
   }

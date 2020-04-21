@@ -59,10 +59,10 @@ export abstract class ConnectionManager implements IConnectionManager {
     let connID;
     connID = connectionUtils.extractConnectionClintID(connectionSocket);
     if (!connID) {
-      console.warn("received connection without unique connection ID.");
+      // console.warn("received connection without unique connection ID.");
       return;
     }
-    console.info(`Received incoming connection. connection ID: ${connID}`);
+    // console.info(`Received incoming connection. connection ID: ${connID}`);
     manager.setConnection(connID, connectionSocket);
   }
 
@@ -70,10 +70,10 @@ export abstract class ConnectionManager implements IConnectionManager {
     let connID;
     connID = connectionUtils.extractConnectionClintID(connectionSocket);
     if (!connID) {
-      console.warn("received connection without unique connection ID.");
+      // console.warn("received connection without unique connection ID.");
       return;
     }
-    console.info(`Received incoming disconnection. connection ID: ${connID}`);
+    // console.info(`Received incoming disconnection. connection ID: ${connID}`);
     manager.destroyConnection(connID);
   }
 
@@ -88,10 +88,10 @@ export abstract class ConnectionManager implements IConnectionManager {
         `subscribing to event: could not find connection with connection id: ${connID}`
       );
     }
-    console.log(
-      `subscribing to event: connection id: ${connID}, action: `,
-      protocolAction
-    );
+    // console.log(
+    //   `subscribing to event: connection id: ${connID}, action: `,
+    //   protocolAction
+    // );
     connectionEvents.registerConnectionEvent(connection, protocolAction);
   }
 
@@ -99,7 +99,7 @@ export abstract class ConnectionManager implements IConnectionManager {
     connID: connectionID,
     protocolAction: protoActionResponse
   ) {
-    console.warn("unsubscribeToConnectionEvent: currently not supported");
+    // console.warn("unsubscribeToConnectionEvent: currently not supported");
   }
 
   /* API for sending (publishing to) connection events using connection ID */
@@ -114,10 +114,10 @@ export abstract class ConnectionManager implements IConnectionManager {
         `could not find connection with connection id: ${connID}`
       );
     }
-    console.log(
-      `publishing event: connection id: ${connID}, action: `,
-      protocolAction
-    );
+    // console.log(
+      // `publishing event: connection id: ${connID}, action: `,
+    //   protocolAction
+    // );
     return await connectionEvents.publishConnectionEvent(
       connection,
       protocolAction,

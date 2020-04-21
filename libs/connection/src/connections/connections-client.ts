@@ -18,16 +18,16 @@ export class ConnectionClient extends ConnectionManager {
   async connectAndWaitForConnection(addr): Promise<boolean> {
     return new Promise((resolve, reject) => {
       let tid;
-      console.log(`connecting to server: ${addr}`);
+      // console.log(`connecting to server: ${addr}`);
       this._nsp = this._socketServer.connect(addr);
       connectionEvents.registerEventNoDup(this._nsp, "connect", () => {
-        console.log(`connected succesfully.`);
+        // console.log(`connected succesfully.`);
         clearTimeout(tid);
         resolve(true);
       });
 
       tid = setTimeout(() => {
-        console.warn("Timeout expired after connection attampt");
+        // console.warn("Timeout expired after connection attampt");
         return resolve(false);
       }, 1000);
     });
@@ -35,7 +35,7 @@ export class ConnectionClient extends ConnectionManager {
 
   async connect(): Promise<connectionID> {
     const serverAddr = `${this._serverAddr}:${this._serverPort}/${this._channel}`;
-    console.info(`Connection to server in : ${serverAddr}`);
+    // console.info(`Connection to server in : ${serverAddr}`);
     const ATTAMPTS = 10;
     // try to connect for ATTAMPS times
     for(let i = 0; i<ATTAMPTS; i++){
@@ -47,18 +47,18 @@ export class ConnectionClient extends ConnectionManager {
       } 
     }
 
-    console.error("could not connect to server");
+    // console.error("could not connect to server");
     throw new Error("could not connect to server");
   }
 
   config(conf) {
     if (!conf) {
-      console.error(
-        "no configuration object supplied. cannot configure connection client"
-      );
+      // console.error(
+      //   "no configuration object supplied. cannot configure connection client"
+      // );
       throw new Error("can not configure connection client");
     }
-    // console.debug("configuring connection client. configuration: ", conf);
+    // // console.debug("configuring connection client. configuration: ", conf);
     const io = conf["io"];
     const channelName = conf["channel"];
     const serverAddr = conf["address"];
@@ -81,7 +81,7 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   registerToListenToRemoteConnections() {
-    console.log("registering disconnection & reconnect handlers.");
+    // console.log("registering disconnection & reconnect handlers.");
     const bindeddisconnectionHandler = this.disconnectionHandlerClient.bind(
       this._nsp,
       this
@@ -104,13 +104,13 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   disconnectionHandlerClient(manager, Msg) {
-    console.info("Received disconnection event. destroinyg connection.");
+    // console.info("Received disconnection event. destroinyg connection.");
     manager.destroyConnection();
     manager.emit(connectionClientManagerEvents.remoteDisconnected);
   }
 
   reconnectionHandlerClient(manager) {
-    console.info("Received re-connection event. re-creating connection.");
+    // console.info("Received re-connection event. re-creating connection.");
     manager.createConnection();
   }
 

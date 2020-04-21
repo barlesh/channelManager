@@ -10,15 +10,15 @@ export class AgentsManagerServer extends AgentsManager {
   /* Server Class configuration */
   config(conf) {
     if (!conf) {
-      console.error(
-        "no configuration object supplied. cannot configure agent manager server"
-      );
+      // console.error(
+      //   "no configuration object supplied. cannot configure agent manager server"
+      // );
       throw new Error("can not configure agent manager server");
     }
-    console.debug("configuring agent manager server. configuration: ", conf);
+    // console.debug("configuring agent manager server. configuration: ", conf);
     const connectionManager = conf["connectionManager"];
     if (!connectionManager) {
-      console.error("not all parameres supplied.");
+      // console.error("not all parameres supplied.");
       throw new Error("not all parameres supplied");
     }
     this.agentsList = new Map();
@@ -39,9 +39,9 @@ export class AgentsManagerServer extends AgentsManager {
 
   registerToAgentRegistrationEvents(connectionID) {
     if (!connectionID) {
-      console.warn(
-        "cannot regiaster to agent registration event without remote connection. abort"
-      );
+      // console.warn(
+      //   "cannot regiaster to agent registration event without remote connection. abort"
+      // );
       return;
     }
 

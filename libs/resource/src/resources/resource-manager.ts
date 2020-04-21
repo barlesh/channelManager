@@ -57,7 +57,7 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
     requests: protoActionRequest[],
     agentsManager
   ) {
-    console.log("constructing resource manager");
+    // console.log("constructing resource manager");
     if (!attachResourceHandler) {
       throw new Error("no resource detach handler supplied");
     }
@@ -138,11 +138,11 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
   abstract detachAgent(agentID);
 
   unregisterResourceListeners(agentID: agentID) {
-    console.warn("unregisterResourceListeners: currently not supported");
+    // console.warn("unregisterResourceListeners: currently not supported");
   }
 
   loadRequestsToMap(actionRequests: protoActionRequest[]) {
-    console.debug("loading request actions. actions: ", actionRequests);
+    // console.debug("loading request actions. actions: ", actionRequests);
     actionRequests.forEach(action => {
       this._protocolRequest.set(action.event, action);
     });
@@ -154,7 +154,7 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
       id = uid();
     }
     if (this.resourcesList.get(id)) {
-      console.warn("resource with the same id exist. abort");
+      // console.warn("resource with the same id exist. abort");
       throw new Error("resource id already exist");
     }
     this.resourcesList.set(id, resource);
@@ -194,19 +194,19 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
     }
 
     if (!agentID) {
-      console.error("no agent id supplied");
+      // console.error("no agent id supplied");
       throw new Error("no agent id supplied");
     }
 
     const agent = this._agentsManager.get(agentID);
 
     if (!agent) {
-      console.error("no agent found with agent id: ", agentID);
+      // console.error("no agent found with agent id: ", agentID);
       throw new Error(`no agent found with agent id:  ${agentID}`);
     }
-    console.info(
-      `attaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
-    );
+    // console.info(
+    //   `attaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
+    // );
     this._resourceAgentMap.set(resourceID, agent);
 
     // execute users cutome attach resource handler
@@ -218,27 +218,27 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
   }
 
   async publishResourceDetach(rid: resourceID) {
-    console.info(
-      `sending detach resource event for resource ${rid} to the remote resource manager`
-    );
+    // console.info(
+    //   `sending detach resource event for resource ${rid} to the remote resource manager`
+    // );
     await this.publishEvent(rid, resourceProtocolEvents.resouceDetach, rid);
   }
 
   async detachResourceFromAgent(agentID: agentID, resourceID: resourceID) {
     const agent = this._agentsManager.get(agentID);
-    console.info(
-      `detaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
-    );
+    // console.info(
+    //   `detaching agent with agentID: ${agentID} to resource with resourceID: ${resourceID}`
+    // );
     this._resourceAgentMap.delete(resourceID);
 
     // execute users cutome detach resource handler
     try {
       await this.detachResourceHandler(resourceID);
     } catch (err) {
-      console.warn(
-        `handler of resource with id: ${resourceID} detach throwed error. this may happen because a previuos custome protocol action already deleted resource`
-      );
-      console.log("resource is only detached in the resource manager context!");
+      // console.warn(
+      //   `handler of resource with id: ${resourceID} detach throwed error. this may happen because a previuos custome protocol action already deleted resource`
+      // );
+      // console.log("resource is only detached in the resource manager context!");
     }
     this.unregisterProtocolEvents(agent);
     return true;
@@ -250,7 +250,7 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
         agent.registerProtocolEvent(protocolAction);
       });
     } catch (err) {
-      console.warn("could not load protocol. error: ", err);
+      // console.warn("could not load protocol. error: ", err);
       return;
     }
   }
@@ -261,7 +261,7 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
         agent.unregisterProtocolEvent(protocolElement);
       });
     } catch (err) {
-      console.warn("could not load protocol. error: ", err);
+      // console.warn("could not load protocol. error: ", err);
       return;
     }
   }
@@ -269,26 +269,26 @@ export abstract class ResourceManager<T = any> implements IResourceManager {
   async publishEvent(resourceID: resourceID, event: string, data) {
     const agent = this._resourceAgentMap.get(resourceID);
     if (!agent) {
-      console.warn(
-        `could not find agent that hold resource with resource id: ${resourceID}`
-      );
+      // console.warn(
+      //   `could not find agent that hold resource with resource id: ${resourceID}`
+      // );
       throw new Error(
         `can not publish event ${event}. agent  that is attached to resource ${resourceID} was not found`
       );
     }
     const action = this._protocolRequest.get(event);
     if (!action) {
-      console.warn(`could not find action that its event is: ${event}`);
+      // console.warn(`could not find action that its event is: ${event}`);
       throw new Error("can not publish event. action not found");
     }
-    console.log(
-      "resource-manager: publish event: ",
-      event,
-      " using action: ",
-      action,
-      " with data: ",
-      data
-    );
+    // console.log(
+    //   "resource-manager: publish event: ",
+    //   event,
+    //   " using action: ",
+    //   action,
+    //   " with data: ",
+    //   data
+    // );
     await agent.publishEvent(action, data);
   }
 

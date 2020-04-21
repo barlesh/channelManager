@@ -24,8 +24,6 @@ var protocolActions;
             return action;
         }
         catch (err) {
-            console.error(`failed to create protocol action for args: event: ${event}, exec: ${exec}, retTrue: ${retTrue}, retFalse: ${retFalse}`);
-            console.error(err);
             return undefined;
         }
     }
@@ -40,8 +38,6 @@ var protocolActions;
             return action;
         }
         catch (err) {
-            console.error(`failed to create protocol action for args: event: ${event}`);
-            console.error(err);
             return undefined;
         }
     }

@@ -26,17 +26,14 @@ export class Agent implements IAgent {
       const received_id = agentObj["id"];
       this._id = received_id ? received_id : uid();
     } catch (err) {
-      console.error(
-        `did not received a propare agent object: ${agentObj}. error: `,
-        err
-      );
+      // console.error( `did not received a propare agent object: ${agentObj}. error: `,  err);
       return;
     }
     const connectionID = agentObj["connectionID"];
     if (!connectionID) {
-      console.error(
-        "agent object does not hold connection ID. We will not be able to connect with it. cannot create agent."
-      );
+      // console.error(
+      //   "agent object does not hold connection ID. We will not be able to connect with it. cannot create agent."
+      // );
       throw new Error("connection id missing.");
     }
     this._connectionID = connectionID;
@@ -48,9 +45,9 @@ export class Agent implements IAgent {
   }
 
   unregisterProtocolEvent(protocolAction: protoActionResponse) {
-    console.warn(
-      `need to un register action ${protocolAction} from agent ${this}, Currently not supported`
-    );
+    // // console.warn(
+    //   `need to un register action ${protocolAction} from agent ${this}, Currently not supported`
+    // );
     // TODO
   }
 
