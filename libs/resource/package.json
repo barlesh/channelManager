@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@resource-control/agent": "^1.1.2-alpha.0",
-    "@resource-control/protocol": "^1.1.1-alpha.1",
+    "@resource-control/protocol": "^1.1.1-alpha.0",
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3"
   },
