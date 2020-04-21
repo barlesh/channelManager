@@ -39,7 +39,7 @@ export class ConnectionClient extends ConnectionManager {
     // try to connect for ATTAMPS times
     for(let i = 1; i<=ATTAMPTS; i++){
       const ans = await this.connectAndWaitForConnection(serverAddr);
-      if (ans || this._nsp || this._nsp.connected) {
+      if (ans && this._nsp && this._nsp.connected) {
         const connID = this.createConnection();
         console.info(`Successfuly connected to ${serverAddr}. attampt ${i}`);
         return connID;
