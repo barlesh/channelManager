@@ -1,7 +1,6 @@
 import { ConnectionManager } from "./connections-manager";
 import { connectionID } from "../models";
 import * as uid from "uuid";
-import { connectionUtils } from "./connectionUtils";
 import { connectionEvents } from "./connectionEvents";
 
 export enum connectionClientManagerEvents {
