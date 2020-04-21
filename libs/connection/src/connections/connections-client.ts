@@ -37,11 +37,11 @@ export class ConnectionClient extends ConnectionManager {
     // console.info(`Connection to server in : ${serverAddr}`);
     const ATTAMPTS = 10;
     // try to connect for ATTAMPS times
-    for(let i = 0; i<ATTAMPTS; i++){
-
+    for(let i = 1; i<=ATTAMPTS; i++){
       const ans = await this.connectAndWaitForConnection(serverAddr);
       if (ans || this._nsp || this._nsp.connected) {
         const connID = this.createConnection();
+        console.info(`Successfuly connected to ${serverAddr}. attampt ${i}`);
         return connID;
       } 
     }
@@ -103,7 +103,7 @@ export class ConnectionClient extends ConnectionManager {
   }
 
   disconnectionHandlerClient(manager, Msg) {
-    // console.info("Received disconnection event. destroinyg connection.");
+    console.info("Received disconnection event. destroinyg connection.");
     manager.destroyConnection();
     manager.emit(connectionClientManagerEvents.remoteDisconnected);
   }
